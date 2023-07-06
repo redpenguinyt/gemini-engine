@@ -1,6 +1,6 @@
 use std::{usize, cmp::PartialEq, ops::{Add, AddAssign, Sub, Rem, RemAssign}, fmt::{Display, Result}};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy)]
 pub struct Vec2D {
     pub x: isize,
     pub y: isize
@@ -18,6 +18,12 @@ impl Vec2D {
 
     pub fn as_tuple(&self) -> (isize, isize) {
         (self.x, self.y)
+    }
+}
+
+impl Clone for Vec2D {
+    fn clone(&self) -> Self {
+        Self { x: self.x, y: self.y }
     }
 }
 
