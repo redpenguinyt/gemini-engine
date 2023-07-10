@@ -10,11 +10,6 @@ impl Vec2D {
     pub fn new(x: isize, y: isize) -> Self {
         Vec2D { x, y }
     }
-    pub fn to_view_position(&self, view_width: usize) -> usize {
-        let ux = usize::try_from(self.x).expect("Failed to convert Vec2D.x to usize");
-        let uy = usize::try_from(self.y).expect("Failed to convert Vec2D.y to usize");
-        view_width * uy + ux
-    }
 
     pub fn as_tuple(&self) -> (isize, isize) {
         (self.x, self.y)

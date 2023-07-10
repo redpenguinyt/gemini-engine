@@ -47,12 +47,15 @@ impl View {
         self.pixels = vec![self.empty_char; self.width * self.height]
     }
 
-    pub fn plot(&mut self, pos: &Vec2D, c: char) {
-        let in_bounds_pos = *pos % Vec2D::from(&*self);
+    pub fn plot(&mut self, pos: Vec2D, c: char) {
+        let in_bounds_pos = pos % Vec2D::from(&*self);
 
-        assert_eq!(*pos, in_bounds_pos); // TODO: Implement proper error raising here with some error message
+        assert_eq!(pos, in_bounds_pos); // TODO: Implement proper error raising here with some error message
 
-        self.pixels[pos.to_view_position(self.width)] = c;
+        let ux = usize::try_from(pos.x).expect("Failed to convert Vec2D.x to usize");
+        let uy = usize::try_from(pos.y).expect("Failed to convert Vec2D.y to usize");
+
+        self.pixels[self.width * uy + ux] = c;
     }
 
     pub fn blit<T:ViewElement>(&mut self, element: &T) {
