@@ -1,5 +1,6 @@
-use std::{thread::sleep, time::{Duration, Instant}};
+use std::time::Instant;
 mod elements; use elements::{Point, Line, Box, View, Vec2D};
+mod gameloop;
 
 /// Missing from gemini-rust:
 /// input
@@ -14,7 +15,7 @@ mod elements; use elements::{Point, Line, Box, View, Vec2D};
 /// image element
 /// get entities at location (requires parenting)
 
-const FPS: f64 = 20.0;
+const FPS: u32 = 20;
 const FILL_CHAR: char = '█';
 const EMPTY_CHAR: char = '░';
 
@@ -56,7 +57,7 @@ fn main() {
             line1_direction = 1;
         }
 
-        view.plot(&point_pos, FILL_CHAR);
+        view.plot(point_pos, FILL_CHAR);
 
         view.blit(&point1);
         view.blit(&line1);
@@ -67,6 +68,6 @@ fn main() {
         println!("Elapsed: {:.2?} microseconds", elapsed.as_micros());
         println!("Point position: {point_pos}");
 
-        sleep(Duration::from_secs_f64(1.0/FPS));
+        gameloop::sleep_fps(FPS, Some(elapsed)); // not making use of frame_skip as this particular View is very simple and unlikely to exceed frame duraction
     }
 }

@@ -1,4 +1,4 @@
-use std::{usize};
+use std::usize;
 mod vec2d; pub use vec2d::Vec2D;
 
 /// The main struct for housing your view. Blit ViewElements to the View for them to appear on the scene
@@ -62,7 +62,7 @@ impl View {
         let active_pixels = element.active_pixels();
 
         for (pixel, fill_char) in active_pixels {
-            self.plot(&pixel, fill_char);
+            self.plot(pixel, fill_char);
         }
     }
 
