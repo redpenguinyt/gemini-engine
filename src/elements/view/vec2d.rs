@@ -1,4 +1,4 @@
-use std::{usize, cmp::PartialEq, ops::{Add, AddAssign, Sub, Rem, RemAssign}, fmt::{Display, Result}};
+use std::{cmp::PartialEq, ops::{Add, AddAssign, Sub, Rem, RemAssign}, fmt::{Display, Result}};
 
 #[derive(Debug, Copy)]
 pub struct Vec2D {
@@ -6,8 +6,12 @@ pub struct Vec2D {
     pub y: isize
 }
 
+/// A pair of numbers used for coordinates or object size
 impl Vec2D {
-    pub fn new(x: isize, y: isize) -> Self {
+    /// A Vec2D of (0,0)
+    pub const ZERO: Vec2D = Vec2D::new(0, 0);
+
+    pub const fn new(x: isize, y: isize) -> Self {
         Vec2D { x, y }
     }
 
