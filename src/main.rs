@@ -1,5 +1,6 @@
 use std::time::Instant;
-mod elements; use elements::{Point, Line, Box, View, Vec2D};
+mod elements;
+use elements::{Box, Line, Point, Vec2D, View};
 mod gameloop;
 
 /// Missing from gemini-rust:
@@ -22,27 +23,18 @@ const EMPTY_CHAR: char = '░';
 fn main() {
     let mut view = View::new(30, 10, EMPTY_CHAR);
 
-    let mut point_pos = Vec2D::from((5,9));
+    let mut point_pos = Vec2D::ZERO;
+    point_pos += Vec2D::from((5, 9));
     let mut line1_direction = -1;
 
-    let point1 = Point::new(
-        point_pos + Vec2D::new(2, -8),
-        FILL_CHAR,
-    );
+    let point1 = Point::new(point_pos + Vec2D::new(2, -8), FILL_CHAR);
 
-    let mut line1 = Line::new(
-        Vec2D::new(2, 8),
-        Vec2D::new(28, 7),
-        FILL_CHAR,
-    );
+    let mut line1 = Line::new(Vec2D::new(2, 8), Vec2D::new(28, 7), FILL_CHAR);
 
-    let box1 = Box::new(
-        Vec2D { x: 15, y: 1 },
-        Vec2D { x: 11, y: 3 },
-        FILL_CHAR,
-    );
+    let box1 = Box::new(Vec2D { x: 11, y: 1 }, Vec2D { x: 9, y: 3 }, FILL_CHAR);
 
-    loop { // Begin game loop
+    loop {
+        // Begin game loop
         let now = Instant::now();
         view.clear();
 

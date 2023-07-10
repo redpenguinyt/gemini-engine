@@ -1,5 +1,6 @@
 use std::usize;
-mod vec2d; pub use vec2d::Vec2D;
+mod vec2d;
+pub use vec2d::Vec2D;
 
 /// The main struct for housing your view. Blit ViewElements to the View for them to appear on the scene
 pub struct View {
@@ -7,14 +8,14 @@ pub struct View {
     pub height: usize,
     pub empty_char: char,
     pixels: Vec<char>,
-    terminal_prepared: bool
+    terminal_prepared: bool,
 }
 
 impl From<&View> for Vec2D {
     fn from(value: &View) -> Self {
         Vec2D {
             x: isize::try_from(value.width).expect("Failed to convert View.width to isize"),
-            y: isize::try_from(value.height).expect("Failed to convert View.height to isize")
+            y: isize::try_from(value.height).expect("Failed to convert View.height to isize"),
         }
     }
 }
@@ -22,10 +23,11 @@ impl From<&View> for Vec2D {
 impl View {
     pub fn new(width: usize, height: usize, empty_char: char) -> View {
         let mut view = View {
-            width, height,
+            width,
+            height,
             empty_char,
             pixels: Vec::new(),
-            terminal_prepared: false
+            terminal_prepared: false,
         };
 
         view.clear();
@@ -38,7 +40,10 @@ impl View {
         if !self.terminal_prepared {
             let rows = termsize::get().unwrap().rows;
             let rows_us = usize::try_from(rows).expect("u16 couldnt convert to usize");
-            println!("{}", vec!['\n';rows_us].iter().cloned().collect::<String>());
+            println!(
+                "{}",
+                vec!['\n'; rows_us].iter().cloned().collect::<String>()
+            );
         }
         self.terminal_prepared = true
     }
@@ -58,7 +63,7 @@ impl View {
         self.pixels[self.width * uy + ux] = c;
     }
 
-    pub fn blit<T:ViewElement>(&mut self, element: &T) {
+    pub fn blit<T: ViewElement>(&mut self, element: &T) {
         let active_pixels = element.active_pixels();
 
         for (pixel, fill_char) in active_pixels {
@@ -69,7 +74,9 @@ impl View {
     pub fn render(&self) {
         print!("\x1b[H\x1b[J");
         for y in 0..self.height {
-            let row: String = self.pixels[self.width * y..self.width * (y+1)].iter().collect();
+            let row: String = self.pixels[self.width * y..self.width * (y + 1)]
+                .iter()
+                .collect();
 
             println!("{row}");
         }

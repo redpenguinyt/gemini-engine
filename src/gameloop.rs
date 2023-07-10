@@ -19,7 +19,7 @@ use std::{thread::sleep, time::Duration};
 /// }
 pub fn sleep_fps(fps: u32, elapsed: Option<Duration>) -> bool {
     let elapsed = elapsed.unwrap_or(Duration::ZERO);
-    let frame_length = Duration::from_secs_f32(1.0/fps as f32);
+    let frame_length = Duration::from_secs_f32(1.0 / fps as f32);
     if frame_length > elapsed {
         sleep(frame_length - elapsed);
         return false;

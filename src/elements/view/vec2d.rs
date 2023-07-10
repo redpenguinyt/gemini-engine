@@ -1,9 +1,13 @@
-use std::{cmp::PartialEq, ops::{Add, AddAssign, Sub, Rem, RemAssign}, fmt::{Display, Result}};
+use std::{
+    cmp::PartialEq,
+    fmt::{Display, Result},
+    ops::{Add, AddAssign, Rem, RemAssign, Sub},
+};
 
 #[derive(Debug, Copy)]
 pub struct Vec2D {
     pub x: isize,
-    pub y: isize
+    pub y: isize,
 }
 
 /// A pair of numbers used for coordinates or object size
@@ -22,7 +26,10 @@ impl Vec2D {
 
 impl Clone for Vec2D {
     fn clone(&self) -> Self {
-        Self { x: self.x, y: self.y }
+        Self {
+            x: self.x,
+            y: self.y,
+        }
     }
 }
 
@@ -38,11 +45,12 @@ impl PartialEq for Vec2D {
     }
 }
 
-impl Add<Vec2D> for Vec2D { type Output = Vec2D;
+impl Add<Vec2D> for Vec2D {
+    type Output = Vec2D;
     fn add(self, rhs: Vec2D) -> Self::Output {
         Self {
             x: self.x + rhs.x,
-            y: self.y + rhs.y
+            y: self.y + rhs.y,
         }
     }
 }
@@ -54,20 +62,22 @@ impl AddAssign<Vec2D> for Vec2D {
     }
 }
 
-impl Sub<Vec2D> for Vec2D { type Output = Vec2D;
-	fn sub(self, rhs: Vec2D) -> Self::Output {
-		Self {
-			x: self.x - rhs.x,
-            y: self.x - rhs.y
-		}
-	}
+impl Sub<Vec2D> for Vec2D {
+    type Output = Vec2D;
+    fn sub(self, rhs: Vec2D) -> Self::Output {
+        Self {
+            x: self.x - rhs.x,
+            y: self.x - rhs.y,
+        }
+    }
 }
 
-impl Rem<Vec2D> for Vec2D { type Output = Vec2D;
+impl Rem<Vec2D> for Vec2D {
+    type Output = Vec2D;
     fn rem(self, rhs: Self) -> Self::Output {
         Self {
             x: self.x % rhs.x,
-            y: self.y % rhs.y
+            y: self.y % rhs.y,
         }
     }
 }
@@ -81,6 +91,9 @@ impl RemAssign<Vec2D> for Vec2D {
 
 impl From<(isize, isize)> for Vec2D {
     fn from(value: (isize, isize)) -> Self {
-        Vec2D { x: value.0, y: value.1 }
+        Vec2D {
+            x: value.0,
+            y: value.1,
+        }
     }
 }
