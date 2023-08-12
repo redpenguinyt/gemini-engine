@@ -1,27 +1,29 @@
 use std::time::Instant;
 mod elements;
-use elements::{Box, Line, Point, Vec2D, View};
+use elements::{Box, Line, Point, Polygon, Vec2D, View, Sprite};
 mod gameloop;
 
-/// Missing from gemini-rust:
-/// input
-/// cameras
-/// layers
-/// colours
-/// visibility
-/// parenting (redo to function as node tree)
-/// somehow manage pixels out of bounds (maybe on a per-object basis?)
-/// collisions (probably as a separate object but able to accept ViewElement as input to create the hitbox)
-/// polygon element
-/// image element
-/// get entities at location (requires parenting)
+// Missing from gemini-rust:
+// input
+// cameras
+// layers
+// colours
+// visibility
+// parenting (redo to function as node tree (?))
+// somehow manage pixels out of bounds (maybe on a per-object basis?)
+// collisions (probably as a separate object but able to accept ViewElement as input to create the hitbox)
+// polygon element
+// sprite element
+// get entities at location (requires parenting, or given a "collision layer" vec of element references?)
+// solid but charless sections in sprites (just use " " maybe)
+// loop_edges parameter on View.blit?
 
 const FPS: u32 = 20;
 const FILL_CHAR: char = '█';
-const EMPTY_CHAR: char = '░';
+const BACKGROUND_CHAR: char = '░';
 
 fn main() {
-    let mut view = View::new(30, 10, EMPTY_CHAR);
+    let mut view = View::new(60, 10, BACKGROUND_CHAR);
 
     let mut point_pos = Vec2D::ZERO;
     point_pos += Vec2D::from((5, 9));
@@ -33,13 +35,25 @@ fn main() {
 
     let box1 = Box::new(Vec2D { x: 11, y: 1 }, Vec2D { x: 9, y: 3 }, FILL_CHAR);
 
+    let polygon1 = Polygon::new(
+        vec![Vec2D::new(32, 1), Vec2D::new(54, 3), Vec2D::new(40, 5)],
+        FILL_CHAR,
+    );
+
+    let test_image = r"
+  ______
+ /|_||_\`.__
+(   _    _ _\
+=`-(_)--(_)-'   ";
+    let mut sprite1 = Sprite::new(Vec2D::new(10, 1), test_image);
+
     loop {
         // Begin game loop
         let now = Instant::now();
         view.clear();
 
         point_pos.x += 1;
-        point_pos %= Vec2D::from(&view);
+        point_pos %= Vec2D::from(&view); // loop the position back to the other side
 
         line1.pos1.y += line1_direction;
         line1.pos0.y = 10 - line1.pos1.y;
@@ -48,12 +62,18 @@ fn main() {
         } else if line1.pos1.y < 3 {
             line1_direction = 1;
         }
+        line1.generate_cache();
+
+        sprite1.pos.x += 1;
+        sprite1.pos %= Vec2D::from(&view);
 
         view.plot(point_pos, FILL_CHAR);
 
         view.blit(&point1);
         view.blit(&line1);
-        view.blit(&box1);
+        // view.blit(&box1);
+        view.blit(&sprite1);
+        view.blit(&polygon1);
 
         view.render();
         let elapsed = now.elapsed();

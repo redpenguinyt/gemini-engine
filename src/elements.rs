@@ -113,6 +113,48 @@ impl ViewElement for Line {
     }
 }
 
+// A Polygon holds an arbitrary number of Vec2D values that mark each vertex of the drawn polygon
+pub struct Polygon {
+    pub points: Vec<Vec2D>,
+    pub fill_char: char,
+    _private: (),
+}
+
+impl Polygon {
+    pub fn new(points: Vec<Vec2D>, fill_char: char) -> Self {
+        Polygon {
+            points: points,
+            fill_char: fill_char,
+            _private: (),
+        }
+    }
+}
+
+impl ViewElement for Polygon {
+    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
+        // Initializing All of the Edges
+        let mut all_edges: Vec<(isize, isize, isize, f64)> = vec![];
+
+        for i in 0..self.points.len() {
+            let (x0, y0) = self.points.get(i).expect("Element was not Vec2D").as_tuple();
+            let (x1, y1) = self.points.get((i + 1) % self.points.len()).expect("Element was not Vec2D").as_tuple();
+
+            let y0_smaller = y0 < y1;
+            let min_y = if y0_smaller { y0 } else { y1 };
+            let max_y = if y0_smaller { y1 } else { y0 };
+            let min_x = if y0_smaller { x0 } else { x1 };
+            let slope = (y0 - y1) as f64 / (x0 - x1) as f64;
+            all_edges.push((
+                min_y,
+                max_y,
+                min_x,
+                slope
+            ))
+        }
+
+        // TODO: keep writing algorithm (https://www.cs.rit.edu/~icss571/filling/how_to.html)
+
+        return points_to_pixels((&self.points).clone(), self.fill_char);
     }
 }
 
@@ -142,6 +184,42 @@ impl ViewElement for Box {
         for x in 0..self.size.x {
             for y in 0..self.size.y {
                 pixels.push((self.pos + Vec2D { x, y }, self.fill_char))
+            }
+        }
+
+        pixels
+    }
+}
+
+pub struct Sprite {
+    pub pos: Vec2D,
+    pub texture: String,
+    _private: (),
+}
+impl Sprite {
+    pub fn new(pos: Vec2D, texture: &str) -> Self {
+        let mut texture = String::from(texture);
+        if texture.starts_with('\n') {
+            texture.pop();
+        }
+        Self {
+            pos,
+            texture,
+            _private: ()
+        }
+    }
+}
+
+impl ViewElement for Sprite {
+    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
+        let mut pixels: Vec<(Vec2D, char)> = vec![];
+
+        let lines = self.texture.split("\n");
+        for (y, line) in lines.enumerate() {
+            for (x, char) in line.chars().enumerate() {
+                if char != ' ' {
+                    pixels.push((self.pos + Vec2D::new(x as isize, y as isize), char));
+                }
             }
         }
 
