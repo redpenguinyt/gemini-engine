@@ -1,6 +1,16 @@
 mod view;
 pub use view::{Vec2D, View, ViewElement};
 
+fn points_to_pixels(points: Vec<Vec2D>, fill_char: char) -> Vec<(Vec2D, char)> {
+    let mut pixels: Vec<(Vec2D, char)> = Vec::new();
+
+    for point in points {
+        pixels.push((point, fill_char));
+    }
+
+    pixels
+}
+
 /// The most basic object to implement the `ViewElement` trait
 pub struct Point {
     pub pos: Vec2D,
@@ -29,7 +39,7 @@ pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
     pub fill_char: char,
-    _private: (),
+    _cache: (Vec2D, Vec2D, Vec<Vec2D>),
 }
 
 impl Line {
@@ -38,15 +48,22 @@ impl Line {
             pos0,
             pos1,
             fill_char,
-            _private: (),
+            _cache: (Vec2D::ZERO, Vec2D::ZERO, vec![Vec2D::ZERO]),
         }
     }
-}
 
-impl ViewElement for Line {
-    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
+    /// Generate a cache if you intend for the line to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previous cache has the same start and points
+    pub fn generate_cache(&mut self) {
+        if (self._cache.0 != self.pos0) | (self._cache.1 != self.pos1) {
+            let points = self.draw_line();
+
+            self._cache = (self.pos0, self.pos1, points);
+        }
+    }
+
+    fn draw_line(&self) -> Vec<Vec2D> {
         // Use Bresenham's line algorithm to generate active pixels at rendertime
-        let mut pixels: Vec<(Vec2D, char)> = Vec::new();
+        let mut points: Vec<Vec2D> = Vec::new();
 
         let (mut x, mut y) = self.pos0.as_tuple();
         let (x1, y1) = self.pos1.as_tuple();
@@ -59,7 +76,7 @@ impl ViewElement for Line {
 
         loop {
             let pixel = Vec2D { x, y };
-            pixels.push((pixel, self.fill_char));
+            points.push(pixel);
             let e2 = error * 2;
             if e2 >= dy {
                 if x == x1 {
@@ -77,7 +94,25 @@ impl ViewElement for Line {
             };
         }
 
-        pixels
+        points
+    }
+}
+
+impl ViewElement for Line {
+    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
+        let points: Vec<Vec2D>;
+        if self._cache.2 != vec![Vec2D::ZERO] {
+            // if the cache has been used...
+            points = self._cache.2.clone(); //  use the cache
+        } else {
+            points = self.draw_line(); // otherwise draw a line from scratch
+        }
+
+        // add the
+        points_to_pixels(points, self.fill_char)
+    }
+}
+
     }
 }
 
