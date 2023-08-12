@@ -6,7 +6,7 @@ pub use vec2d::Vec2D;
 pub struct View {
     pub width: usize,
     pub height: usize,
-    pub empty_char: char,
+    pub background_char: char,
     pixels: Vec<char>,
     terminal_prepared: bool,
 }
@@ -21,11 +21,11 @@ impl From<&View> for Vec2D {
 }
 
 impl View {
-    pub fn new(width: usize, height: usize, empty_char: char) -> View {
+    pub fn new(width: usize, height: usize, background_char: char) -> View {
         let mut view = View {
             width,
             height,
-            empty_char,
+            background_char,
             pixels: Vec::new(),
             terminal_prepared: false,
         };
@@ -49,7 +49,7 @@ impl View {
     }
 
     pub fn clear(&mut self) {
-        self.pixels = vec![self.empty_char; self.width * self.height]
+        self.pixels = vec![self.background_char; self.width * self.height]
     }
 
     pub fn plot(&mut self, pos: Vec2D, c: char) {
