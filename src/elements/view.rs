@@ -1,6 +1,7 @@
 use std::usize;
 pub mod utils;
 mod vec2d;
+pub use utils::Wrapping;
 pub use vec2d::Vec2D;
 
 /// The main struct for housing your view. Blit ViewElements to the View for them to appear on the scene
@@ -53,11 +54,18 @@ impl View {
         self.pixels = vec![self.background_char; self.width * self.height]
     }
 
-    pub fn plot(&mut self, pos: Vec2D, c: char) {
-        let in_bounds_pos = pos % Vec2D::from(&*self);
+    pub fn plot(&mut self, pos: Vec2D, c: char, wrapping: Wrapping) {
+        let mut pos = pos;
+        let in_bounds_pos = pos.clone() % (Vec2D::from(&*self));
 
-        if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
-            panic!("{} is not within the view's boundaries", pos);
+        match wrapping {
+            Wrapping::Wrap => pos = in_bounds_pos,
+            Wrapping::Ignore => return,
+            Wrapping::Panic => {
+                if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
+                    panic!("{} is not within the view's boundaries", pos);
+                }
+            }
         }
 
         let ux = pos.x as usize;
@@ -66,11 +74,12 @@ impl View {
         self.pixels[self.width * uy + ux] = c;
     }
 
-    pub fn blit<T: ViewElement>(&mut self, element: &T) {
+    /// Blit a ViewElement to the screen. This is usually done before rendering.
+    pub fn blit<T: ViewElement>(&mut self, element: &T, wrapping: Wrapping) {
         let active_pixels = element.active_pixels();
 
         for (pixel, fill_char) in active_pixels {
-            self.plot(pixel, fill_char);
+            self.plot(pixel, fill_char, wrapping);
         }
     }
 

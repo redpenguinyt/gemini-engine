@@ -1,7 +1,9 @@
-mod view;
+pub mod view;
 use view::utils;
-pub use view::{Vec2D, View, ViewElement};
+pub use view::{Vec2D, View};
+use view::ViewElement;
 
+/// Combine a vector of `Vec2D`s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your `ViewElement` only has one fill character across all of it
 fn points_to_pixels(points: Vec<Vec2D>, fill_char: char) -> Vec<(Vec2D, char)> {
     let mut pixels: Vec<(Vec2D, char)> = Vec::new();
 
@@ -12,7 +14,7 @@ fn points_to_pixels(points: Vec<Vec2D>, fill_char: char) -> Vec<(Vec2D, char)> {
     pixels
 }
 
-/// The most basic object to implement the `ViewElement` trait
+/// The most basic object to implement the `ViewElement` trait, a singular point
 pub struct Point {
     pub pos: Vec2D,
     pub fill_char: char,
