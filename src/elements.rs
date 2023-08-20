@@ -1,11 +1,11 @@
 pub mod view;
 use view::utils;
-use view::ViewElement;
+use view::{ColChar, Modifier, ViewElement};
 pub use view::{Vec2D, View};
 
 /// Combine a vector of `Vec2D`s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your `ViewElement` only has one fill character across all of it
-fn points_to_pixels(points: Vec<Vec2D>, fill_char: char) -> Vec<(Vec2D, char)> {
-    let mut pixels: Vec<(Vec2D, char)> = Vec::new();
+fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<(Vec2D, ColChar)> {
+    let mut pixels: Vec<(Vec2D, ColChar)> = Vec::new();
 
     for point in points {
         pixels.push((point, fill_char));
@@ -17,12 +17,12 @@ fn points_to_pixels(points: Vec<Vec2D>, fill_char: char) -> Vec<(Vec2D, char)> {
 /// The most basic object to implement the `ViewElement` trait, a singular point
 pub struct Point {
     pub pos: Vec2D,
-    pub fill_char: char,
+    pub fill_char: ColChar,
     _private: (),
 }
 
 impl Point {
-    pub fn new(pos: Vec2D, fill_char: char) -> Self {
+    pub fn new(pos: Vec2D, fill_char: ColChar) -> Self {
         Self {
             pos,
             fill_char,
@@ -32,7 +32,7 @@ impl Point {
 }
 
 impl ViewElement for Point {
-    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
         return Vec::from([(self.pos, self.fill_char)]);
     }
 }
@@ -41,12 +41,12 @@ impl ViewElement for Point {
 pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
-    pub fill_char: char,
+    pub fill_char: ColChar,
     _cache: (Vec2D, Vec2D, Vec<Vec2D>),
 }
 
 impl Line {
-    pub fn new(pos0: Vec2D, pos1: Vec2D, fill_char: char) -> Self {
+    pub fn new(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Self {
         Line {
             pos0,
             pos1,
@@ -103,7 +103,7 @@ impl Line {
 }
 
 impl ViewElement for Line {
-    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
         let points: Vec<Vec2D>;
         if self._cache.2 != vec![Vec2D::ZERO] {
             // if the cache has been used...
@@ -122,12 +122,12 @@ pub struct Triangle {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
     pub pos2: Vec2D,
-    pub fill_char: char,
+    pub fill_char: ColChar,
     _private: (),
 }
 
 impl Triangle {
-    pub fn new(pos0: Vec2D, pos1: Vec2D, pos2: Vec2D, fill_char: char) -> Self {
+    pub fn new(pos0: Vec2D, pos1: Vec2D, pos2: Vec2D, fill_char: ColChar) -> Self {
         Triangle {
             pos0,
             pos1,
@@ -144,7 +144,7 @@ impl Triangle {
 }
 
 impl ViewElement for Triangle {
-    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
         let mut points = vec![];
 
         let mut corners: Vec<Vec2D> = self.points();
@@ -181,12 +181,12 @@ impl ViewElement for Triangle {
 pub struct Box {
     pub pos: Vec2D,
     pub size: Vec2D,
-    pub fill_char: char,
+    pub fill_char: ColChar,
     _private: (),
 }
 
 impl Box {
-    pub fn new(pos: Vec2D, size: Vec2D, fill_char: char) -> Self {
+    pub fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Self {
         Self {
             pos,
             size,
@@ -197,8 +197,8 @@ impl Box {
 }
 
 impl ViewElement for Box {
-    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
-        let mut pixels: Vec<(Vec2D, char)> = vec![];
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+        let mut pixels: Vec<(Vec2D, ColChar)> = vec![];
 
         for x in 0..self.size.x {
             for y in 0..self.size.y {
@@ -213,10 +213,11 @@ impl ViewElement for Box {
 pub struct Sprite {
     pub pos: Vec2D,
     pub texture: String,
+    pub modifier: Modifier,
     _private: (),
 }
 impl Sprite {
-    pub fn new(pos: Vec2D, texture: &str) -> Self {
+    pub fn new(pos: Vec2D, texture: &str, modifier: Modifier) -> Self {
         let mut texture = String::from(texture);
         if texture.starts_with('\n') {
             texture.pop();
@@ -224,20 +225,27 @@ impl Sprite {
         Self {
             pos,
             texture,
+            modifier,
             _private: (),
         }
     }
 }
 
 impl ViewElement for Sprite {
-    fn active_pixels(&self) -> Vec<(Vec2D, char)> {
-        let mut pixels: Vec<(Vec2D, char)> = vec![];
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+        let mut pixels: Vec<(Vec2D, ColChar)> = vec![];
 
         let lines = self.texture.split("\n");
         for (y, line) in lines.enumerate() {
             for (x, char) in line.chars().enumerate() {
                 if char != ' ' {
-                    pixels.push((self.pos + Vec2D::new(x as isize, y as isize), char));
+                    pixels.push((
+                        self.pos + Vec2D::new(x as isize, y as isize),
+                        ColChar {
+                            fill_char: char,
+                            modifier: self.modifier,
+                        },
+                    ));
                 }
             }
         }

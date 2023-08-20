@@ -1,6 +1,8 @@
 use std::usize;
+mod colchar;
 pub mod utils;
 mod vec2d;
+pub use colchar::{ColChar, Modifier};
 pub use utils::Wrapping;
 pub use vec2d::Vec2D;
 
@@ -8,8 +10,8 @@ pub use vec2d::Vec2D;
 pub struct View {
     pub width: usize,
     pub height: usize,
-    pub background_char: char,
-    pixels: Vec<char>,
+    pub background_char: ColChar,
+    pixels: Vec<ColChar>,
     terminal_prepared: bool,
 }
 
@@ -23,7 +25,7 @@ impl From<&View> for Vec2D {
 }
 
 impl View {
-    pub fn new(width: usize, height: usize, background_char: char) -> View {
+    pub fn new(width: usize, height: usize, background_char: ColChar) -> View {
         let mut view = View {
             width,
             height,
@@ -54,7 +56,7 @@ impl View {
         self.pixels = vec![self.background_char; self.width * self.height]
     }
 
-    pub fn plot(&mut self, pos: Vec2D, c: char, wrapping: Wrapping) {
+    pub fn plot(&mut self, pos: Vec2D, c: ColChar, wrapping: Wrapping) {
         let mut pos = pos;
         let in_bounds_pos = pos.clone() % (Vec2D::from(&*self));
 
@@ -86,9 +88,12 @@ impl View {
     pub fn render(&self) {
         print!("\x1b[H\x1b[J");
         for y in 0..self.height {
-            let row: String = self.pixels[self.width * y..self.width * (y + 1)]
-                .iter()
-                .collect();
+            let row_pixels = self.pixels[self.width * y..self.width * (y + 1)].iter();
+
+            let mut row = String::new();
+            for pixel in row_pixels {
+                row.push_str(pixel.render().as_str());
+            }
 
             println!("{row}");
         }
@@ -99,5 +104,5 @@ impl View {
 /// ViewElement is a trait that must be implemented by any element that can be blitted to a View
 pub trait ViewElement {
     /// Return an array of every pixel where the object exists and the character that should be placed at that pixel
-    fn active_pixels(&self) -> Vec<(Vec2D, char)>;
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)>;
 }
