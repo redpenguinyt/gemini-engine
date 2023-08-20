@@ -3,21 +3,6 @@ mod elements;
 use elements::{Box, Line, Point, Sprite, Triangle, Vec2D, View};
 mod gameloop;
 
-// Missing from gemini-rust:
-// input
-// cameras
-// layers
-// colours
-// visibility
-// parenting (redo to function as node tree (?))
-// somehow manage pixels out of bounds (maybe on a per-object basis?)
-// collisions (probably as a separate object but able to accept ViewElement as input to create the hitbox)
-// polygon element
-// sprite element
-// get entities at location (requires parenting, or given a "collision layer" vec of element references?)
-// solid but charless sections in sprites (just use " " maybe)
-// loop_edges parameter on View.blit?
-
 const FPS: u32 = 20;
 const FILL_CHAR: char = '█';
 const BACKGROUND_CHAR: char = '░';

@@ -1,4 +1,5 @@
 mod view;
+use view::utils;
 pub use view::{Vec2D, View, ViewElement};
 
 fn points_to_pixels(points: Vec<Vec2D>, fill_char: char) -> Vec<(Vec2D, char)> {
@@ -135,75 +136,38 @@ impl Triangle {
     }
 
     /// return triangle's points as an array
-    pub fn points(&self) -> [Vec2D; 3] {
-        [self.pos0, self.pos1, self.pos2]
+    pub fn points(&self) -> Vec<Vec2D> {
+        vec![self.pos0, self.pos1, self.pos2]
     }
 }
 
 impl ViewElement for Triangle {
     fn active_pixels(&self) -> Vec<(Vec2D, char)> {
-        // create triangle borders
-        let mut border_points: Vec<Vec2D> = vec![];
+        let mut points = vec![];
 
-        border_points.append(&mut Line::draw(self.pos0, self.pos1));
-        border_points.append(&mut Line::draw(self.pos1, self.pos2));
-        border_points.append(&mut Line::draw(self.pos2, self.pos0));
+        let mut corners: Vec<Vec2D> = self.points();
+        corners.sort_unstable_by_key(|k| k.y);
+        let (x0, y0) = corners[0].as_tuple();
+        let (x1, y1) = corners[1].as_tuple();
+        let (x2, y2) = corners[2].as_tuple();
 
-        // begin creating set of final points
-        let mut points: Vec<Vec2D> = vec![];
+        let mut x01 = utils::interpolate(y0, x0 as f64, y1, x1 as f64);
+        let x12 = utils::interpolate(y1, x1 as f64, y2, x2 as f64);
+        let x02 = utils::interpolate(y0, x0 as f64, y2, x2 as f64);
 
-        let corners = self.points();
-        let min_max_x = (
-            corners
-                .iter()
-                .min_by_key(|k| k.x)
-                .expect("vector is (somehow) empty"),
-            corners
-                .iter()
-                .max_by_key(|k| k.x)
-                .expect("vector is (somehow) empty"),
-        );
-        let min_max_y = (
-            corners
-                .iter()
-                .min_by_key(|k| k.y)
-                .expect("vector is (somehow) empty"),
-            corners
-                .iter()
-                .max_by_key(|k| k.y)
-                .expect("vector is (somehow) empty"),
-        );
+        x01.pop();
+        let mut x012 = x01;
+        x012.extend(x12);
 
-        for x in min_max_x.0.x..(min_max_x.1.x + 1) {
-            let mut fill = false;
-            let mut first_found_point = None;
-            let mut filled_points = vec![];
-            for y in min_max_y.0.y..(min_max_y.1.y + 1) {
-                let point = Vec2D::new(x, y);
+        let m = (x012.len() as f64 / 2.0).floor() as usize;
+        let (x_left, x_right) = match x02[m] < x012[m] {
+            true => (x02, x012),
+            false => (x012, x02),
+        };
 
-                if border_points.contains(&point) {
-                    fill = !fill;
-                    if !fill {
-                        filled_points.push(Vec2D::new(x, y));
-                        break;
-                    }
-                }
-                if fill {
-                    if first_found_point.is_none() {
-                        first_found_point = Some(point);
-                    }
-                    filled_points.push(point);
-                }
-            }
-
-            match fill {
-                // everything went correctly
-                false => points.append(&mut filled_points),
-                // the triangle was never closed
-                true => match first_found_point {
-                    Some(p) => points.push(p),
-                    None => ()
-                }
+        for (i, y) in (y0..y2).enumerate() {
+            for x in x_left[i]..x_right[i] {
+                points.push(Vec2D::new(x as isize, y));
             }
         }
 
