@@ -56,10 +56,12 @@ impl View {
     pub fn plot(&mut self, pos: Vec2D, c: char) {
         let in_bounds_pos = pos % Vec2D::from(&*self);
 
-        assert_eq!(pos, in_bounds_pos); // TODO: Implement proper error raising here with some error message
+        if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
+            panic!("Vec2D {} is not within the view's boundaries", pos);
+        }
 
-        let ux = usize::try_from(pos.x).expect("Failed to convert Vec2D.x to usize");
-        let uy = usize::try_from(pos.y).expect("Failed to convert Vec2D.y to usize");
+        let ux = pos.x as usize;
+        let uy = pos.y as usize;
 
         self.pixels[self.width * uy + ux] = c;
     }
