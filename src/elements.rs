@@ -55,18 +55,19 @@ impl Line {
     /// Generate a cache if you intend for the line to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previous cache has the same start and points
     pub fn generate_cache(&mut self) {
         if (self._cache.0 != self.pos0) | (self._cache.1 != self.pos1) {
-            let points = self.draw_line();
+            let points = Self::draw(self.pos0, self.pos1);
 
             self._cache = (self.pos0, self.pos1, points);
         }
     }
 
-    fn draw_line(&self) -> Vec<Vec2D> {
+    /// draw line using Bresenham's line algorithm
+    pub fn draw(pos0: Vec2D, pos1: Vec2D) -> Vec<Vec2D> {
         // Use Bresenham's line algorithm to generate active pixels at rendertime
         let mut points: Vec<Vec2D> = Vec::new();
 
-        let (mut x, mut y) = self.pos0.as_tuple();
-        let (x1, y1) = self.pos1.as_tuple();
+        let (mut x, mut y) = pos0.as_tuple();
+        let (x1, y1) = pos1.as_tuple();
 
         let dx = (x1 - x).abs();
         let sx = if x < x1 { 1 } else { -1 };
@@ -75,7 +76,7 @@ impl Line {
         let mut error = dx + dy;
 
         loop {
-            let pixel = Vec2D { x, y };
+            let pixel = Vec2D::new(x, y);
             points.push(pixel);
             let e2 = error * 2;
             if e2 >= dy {
@@ -105,7 +106,7 @@ impl ViewElement for Line {
             // if the cache has been used...
             points = self._cache.2.clone(); //  use the cache
         } else {
-            points = self.draw_line(); // otherwise draw a line from scratch
+            points = Self::draw(self.pos0, self.pos1); // otherwise draw a line from scratch
         }
 
         // add the
@@ -114,46 +115,99 @@ impl ViewElement for Line {
 }
 
 // A Polygon holds an arbitrary number of Vec2D values that mark each vertex of the drawn polygon
-pub struct Polygon {
-    pub points: Vec<Vec2D>,
+pub struct Triangle {
+    pub pos0: Vec2D,
+    pub pos1: Vec2D,
+    pub pos2: Vec2D,
     pub fill_char: char,
     _private: (),
 }
 
-impl Polygon {
-    pub fn new(points: Vec<Vec2D>, fill_char: char) -> Self {
-        Polygon {
-            points: points,
+impl Triangle {
+    pub fn new(pos0: Vec2D, pos1: Vec2D, pos2: Vec2D, fill_char: char) -> Self {
+        Triangle {
+            pos0,
+            pos1,
+            pos2,
             fill_char: fill_char,
             _private: (),
         }
     }
+
+    /// return triangle's points as an array
+    pub fn points(&self) -> [Vec2D; 3] {
+        [self.pos0, self.pos1, self.pos2]
+    }
 }
 
-impl ViewElement for Polygon {
+impl ViewElement for Triangle {
     fn active_pixels(&self) -> Vec<(Vec2D, char)> {
-        // Initializing All of the Edges
-        let mut all_edges: Vec<(isize, isize, isize, f64)> = vec![];
+        // create triangle borders
+        let mut border_points: Vec<Vec2D> = vec![];
 
-        for i in 0..self.points.len() {
-            let (x0, y0) = self.points.get(i).expect("Element was not Vec2D").as_tuple();
-            let (x1, y1) = self.points.get((i + 1) % self.points.len()).expect("Element was not Vec2D").as_tuple();
+        border_points.append(&mut Line::draw(self.pos0, self.pos1));
+        border_points.append(&mut Line::draw(self.pos1, self.pos2));
+        border_points.append(&mut Line::draw(self.pos2, self.pos0));
 
-            let y0_smaller = y0 < y1;
-            let min_y = if y0_smaller { y0 } else { y1 };
-            let max_y = if y0_smaller { y1 } else { y0 };
-            let min_x = if y0_smaller { x0 } else { x1 };
-            let slope = (y0 - y1) as f64 / (x0 - x1) as f64;
-            all_edges.push((
-                min_y,
-                max_y,
-                min_x,
-                slope
-            ))
+        // begin creating set of final points
+        let mut points: Vec<Vec2D> = vec![];
+
+        let corners = self.points();
+        let min_max_x = (
+            corners
+                .iter()
+                .min_by_key(|k| k.x)
+                .expect("vector is (somehow) empty"),
+            corners
+                .iter()
+                .max_by_key(|k| k.x)
+                .expect("vector is (somehow) empty"),
+        );
+        let min_max_y = (
+            corners
+                .iter()
+                .min_by_key(|k| k.y)
+                .expect("vector is (somehow) empty"),
+            corners
+                .iter()
+                .max_by_key(|k| k.y)
+                .expect("vector is (somehow) empty"),
+        );
+
+        for x in min_max_x.0.x..(min_max_x.1.x + 1) {
+            let mut fill = false;
+            let mut first_found_point = None;
+            let mut filled_points = vec![];
+            for y in min_max_y.0.y..(min_max_y.1.y + 1) {
+                let point = Vec2D::new(x, y);
+
+                if border_points.contains(&point) {
+                    fill = !fill;
+                    if !fill {
+                        filled_points.push(Vec2D::new(x, y));
+                        break;
+                    }
+                }
+                if fill {
+                    if first_found_point.is_none() {
+                        first_found_point = Some(point);
+                    }
+                    filled_points.push(point);
+                }
+            }
+
+            match fill {
+                // everything went correctly
+                false => points.append(&mut filled_points),
+                // the triangle was never closed
+                true => match first_found_point {
+                    Some(p) => points.push(p),
+                    None => ()
+                }
+            }
         }
 
-        todo!();
-        // keep writing algorithm (https://www.cs.rit.edu/~icss571/filling/how_to.html)
+        points_to_pixels(points, self.fill_char)
     }
 }
 
@@ -204,7 +258,7 @@ impl Sprite {
         Self {
             pos,
             texture,
-            _private: ()
+            _private: (),
         }
     }
 }

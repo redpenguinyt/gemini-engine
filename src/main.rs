@@ -1,6 +1,6 @@
 use std::time::Instant;
 mod elements;
-use elements::{Box, Line, Point, Polygon, Vec2D, View, Sprite};
+use elements::{Box, Line, Point, Sprite, Triangle, Vec2D, View};
 mod gameloop;
 
 // Missing from gemini-rust:
@@ -35,8 +35,10 @@ fn main() {
 
     let box1 = Box::new(Vec2D { x: 11, y: 1 }, Vec2D { x: 9, y: 3 }, FILL_CHAR);
 
-    let polygon1 = Polygon::new(
-        vec![Vec2D::new(32, 1), Vec2D::new(54, 3), Vec2D::new(40, 5)],
+    let triangle1 = Triangle::new(
+        Vec2D::new(32, 1),
+        Vec2D::new(54, 3),
+        Vec2D::new(40, 5),
         FILL_CHAR,
     );
 
@@ -73,7 +75,7 @@ fn main() {
         view.blit(&line1);
         view.blit(&box1);
         view.blit(&sprite1);
-        view.blit(&polygon1);
+        view.blit(&triangle1);
 
         view.render();
         let elapsed = now.elapsed();
