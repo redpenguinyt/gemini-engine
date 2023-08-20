@@ -57,7 +57,7 @@ impl View {
         let in_bounds_pos = pos % Vec2D::from(&*self);
 
         if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
-            panic!("Vec2D {} is not within the view's boundaries", pos);
+            panic!("{} is not within the view's boundaries", pos);
         }
 
         let ux = pos.x as usize;
