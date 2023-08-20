@@ -71,7 +71,7 @@ fn main() {
 
         view.blit(&point1);
         view.blit(&line1);
-        // view.blit(&box1);
+        view.blit(&box1);
         view.blit(&sprite1);
         view.blit(&polygon1);
 

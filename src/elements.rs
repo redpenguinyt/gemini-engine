@@ -152,9 +152,8 @@ impl ViewElement for Polygon {
             ))
         }
 
-        // TODO: keep writing algorithm (https://www.cs.rit.edu/~icss571/filling/how_to.html)
-
-        return points_to_pixels((&self.points).clone(), self.fill_char);
+        todo!();
+        // keep writing algorithm (https://www.cs.rit.edu/~icss571/filling/how_to.html)
     }
 }
 
