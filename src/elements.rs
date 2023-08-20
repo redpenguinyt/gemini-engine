@@ -1,7 +1,7 @@
 pub mod view;
 use view::utils;
-pub use view::{Vec2D, View};
 use view::ViewElement;
+pub use view::{Vec2D, View};
 
 /// Combine a vector of `Vec2D`s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your `ViewElement` only has one fill character across all of it
 fn points_to_pixels(points: Vec<Vec2D>, fill_char: char) -> Vec<(Vec2D, char)> {
