@@ -4,6 +4,7 @@ use std::{thread::sleep, time::Duration};
 /// ## Example
 /// ```
 /// use std::time::Instant;
+/// use gemini::gameloop;
 ///
 /// let mut frame_skip = false;
 /// let FPS = 60;
@@ -15,7 +16,7 @@ use std::{thread::sleep, time::Duration};
 ///         // calculations and rendering
 ///     }
 ///
-///     frame_skip = sleep_fps(FPS, now.elapsed());
+///     frame_skip = gameloop::sleep_fps(FPS, Some(now.elapsed()));
 /// }
 pub fn sleep_fps(fps: u32, elapsed: Option<Duration>) -> bool {
     let elapsed = elapsed.unwrap_or(Duration::ZERO);
