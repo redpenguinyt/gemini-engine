@@ -67,7 +67,7 @@ impl Sub<Vec2D> for Vec2D {
     fn sub(self, rhs: Vec2D) -> Self::Output {
         Self {
             x: self.x - rhs.x,
-            y: self.x - rhs.y,
+            y: self.y - rhs.y,
         }
     }
 }
@@ -76,16 +76,16 @@ impl Rem<Vec2D> for Vec2D {
     type Output = Vec2D;
     fn rem(self, rhs: Self) -> Self::Output {
         Self {
-            x: self.x % rhs.x,
-            y: self.y % rhs.y,
+            x: self.x.rem_euclid(rhs.x),
+            y: self.y.rem_euclid(rhs.y),
         }
     }
 }
 
 impl RemAssign<Vec2D> for Vec2D {
     fn rem_assign(&mut self, rhs: Vec2D) {
-        self.x %= rhs.x;
-        self.y %= rhs.y;
+        self.x = self.x.rem_euclid(rhs.x);
+        self.y = self.y.rem_euclid(rhs.y);
     }
 }
 
