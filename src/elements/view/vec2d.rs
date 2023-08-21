@@ -4,13 +4,13 @@ use std::{
     ops::{Add, AddAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
+/// A pair of `isize` used for coordinates, size or direction on a 2D plane
 #[derive(Debug, Copy)]
 pub struct Vec2D {
     pub x: isize,
     pub y: isize,
 }
 
-/// A pair of numbers used for coordinates or object size
 impl Vec2D {
     /// A Vec2D of (0,0)
     pub const ZERO: Vec2D = Vec2D::new(0, 0);
