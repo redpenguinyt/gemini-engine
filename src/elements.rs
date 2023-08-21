@@ -3,17 +3,6 @@ use view::utils;
 use view::{ColChar, Modifier, ViewElement};
 pub use view::{Vec2D, View};
 
-/// Combine a vector of `Vec2D`s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your `ViewElement` only has one fill character across all of it
-fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<(Vec2D, ColChar)> {
-    let mut pixels: Vec<(Vec2D, ColChar)> = Vec::new();
-
-    for point in points {
-        pixels.push((point, fill_char));
-    }
-
-    pixels
-}
-
 /// The most basic object to implement the `ViewElement` trait, a singular point
 pub struct Point {
     pub pos: Vec2D,
@@ -113,7 +102,7 @@ impl ViewElement for Line {
         }
 
         // add the
-        points_to_pixels(points, self.fill_char)
+        utils::points_to_pixels(points, self.fill_char)
     }
 }
 
@@ -173,7 +162,7 @@ impl ViewElement for Triangle {
             }
         }
 
-        points_to_pixels(points, self.fill_char)
+        utils::points_to_pixels(points, self.fill_char)
     }
 }
 
