@@ -1,4 +1,4 @@
-use std::{usize, io::Error};
+use std::{io::Error, usize};
 pub mod colchar;
 pub mod utils;
 pub mod vec2d;
@@ -54,7 +54,12 @@ impl View {
 
     fn prepare_terminal(&mut self) -> Result<(), Error> {
         if !self.terminal_prepared {
-            let rows = termsize::get().ok_or(Error::new(std::io::ErrorKind::NotFound, "Couldnt get termsize"))?.rows;
+            let rows = termsize::get()
+                .ok_or(Error::new(
+                    std::io::ErrorKind::NotFound,
+                    "Couldnt get termsize",
+                ))?
+                .rows;
             let rows_us = usize::try_from(rows).expect("u16 couldnt convert to usize");
             println!(
                 "{}",

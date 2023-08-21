@@ -24,8 +24,8 @@
 //! }
 //! ```
 //! Writing your code like this ensures that it wont affect the game's intentional speed too much, and also makes it easy for you to benchmark your game's speed with something like `println!("Elapsed: {:.2?}µs", elapsed.as_micros());` after `let elapsed`.
-pub use std::time::Instant;
-use std::{thread::sleep, time::Duration};
+use std::thread::sleep;
+pub use std::time::{Duration, Instant};
 
 /// Sleep for a single frame depending on the declared FPS, while also subtracting the Duration taken to process the frame. Returns a bool value depending on whether or not the frame took longer to render than the intended fps
 /// ## Example
