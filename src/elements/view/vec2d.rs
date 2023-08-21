@@ -1,7 +1,7 @@
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
-    ops::{Add, AddAssign, Rem, RemAssign, Sub},
+    ops::{Add, AddAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
 #[derive(Debug, Copy)]
@@ -69,6 +69,13 @@ impl Sub<Vec2D> for Vec2D {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
         }
+    }
+}
+
+impl SubAssign<Vec2D> for Vec2D {
+    fn sub_assign(&mut self, rhs: Vec2D) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
     }
 }
 

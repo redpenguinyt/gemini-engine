@@ -25,4 +25,19 @@ mod vec2d_tests {
     fn rem_vec2d_under() {
         assert_eq!(Vec2D::new(4, 1), Vec2D::new(-1, -109) % Vec2D::new(5, 10))
     }
+
+    #[test]
+    fn eq_vec2d_both() {
+        assert_eq!(true, Vec2D::new(5, 4) == Vec2D::new(5, 4))
+    }
+
+    #[test]
+    fn eq_vec2d_only_one() {
+        assert_eq!(false, Vec2D::new(5, 2) == Vec2D::new(5, 4))
+    }
+
+    #[test]
+    fn eq_vec2d_neither() {
+        assert_eq!(false, Vec2D::new(17, 2) == Vec2D::new(5, 4))
+    }
 }
