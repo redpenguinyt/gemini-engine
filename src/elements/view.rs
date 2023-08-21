@@ -62,7 +62,11 @@ impl View {
 
         match wrapping {
             Wrapping::Wrap => pos = in_bounds_pos,
-            Wrapping::Ignore => return,
+            Wrapping::Ignore => {
+                if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
+                    return;
+                }
+            }
             Wrapping::Panic => {
                 if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
                     panic!("{} is not within the view's boundaries", pos);

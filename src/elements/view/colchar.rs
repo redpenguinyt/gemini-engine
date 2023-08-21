@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 #[derive(Copy)]
 pub struct ColChar {
     pub fill_char: char,
@@ -5,9 +7,18 @@ pub struct ColChar {
 }
 
 impl ColChar {
-    pub const SOLID: Self = Self {fill_char: '█', modifier: Modifier::None};
-    pub const BACKGROUND: Self = Self {fill_char: '░', modifier: Modifier::None};
-    pub const EMPTY: Self = Self {fill_char: ' ', modifier: Modifier::None};
+    pub const SOLID: Self = Self {
+        fill_char: '█',
+        modifier: Modifier::None,
+    };
+    pub const BACKGROUND: Self = Self {
+        fill_char: '░',
+        modifier: Modifier::None,
+    };
+    pub const EMPTY: Self = Self {
+        fill_char: ' ',
+        modifier: Modifier::None,
+    };
 
     pub fn new(fill_char: char, modifier: Modifier) -> Self {
         Self {
@@ -35,6 +46,12 @@ impl Clone for ColChar {
             fill_char: self.fill_char,
             modifier: self.modifier,
         }
+    }
+}
+
+impl Debug for ColChar {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Colchar(\"{}\")", self.render())
     }
 }
 
