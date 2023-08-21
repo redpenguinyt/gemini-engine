@@ -1,12 +1,24 @@
-use std::usize;
-mod colchar;
+use std::{usize, io::Error};
+pub mod colchar;
 pub mod utils;
-mod vec2d;
+pub mod vec2d;
 pub use colchar::{ColChar, Modifier};
 pub use utils::Wrapping;
 pub use vec2d::Vec2D;
 
-/// The main struct for housing your view. Blit ViewElements to the View for them to appear on the scene
+/// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Point in the middle
+/// ```
+/// use gemini::elements::{view::{Wrapping, ColChar}, View, Point, Vec2D};
+///
+/// fn main() {
+///     let mut view = View::new(9, 3, ColChar::BACKGROUND);
+///     let point = Point::new(Vec2D::new(4,1), ColChar::SOLID);
+///
+///     view.blit(&point, Wrapping::Panic);
+///
+///     view.render();
+/// }
+/// ```
 pub struct View {
     pub width: usize,
     pub height: usize,
@@ -35,21 +47,23 @@ impl View {
         };
 
         view.clear();
-        view.prepare_terminal();
+        let _ = view.prepare_terminal(); // TODO: handle potential error somehow
 
         view
     }
 
-    fn prepare_terminal(&mut self) {
+    fn prepare_terminal(&mut self) -> Result<(), Error> {
         if !self.terminal_prepared {
-            let rows = termsize::get().unwrap().rows;
+            let rows = termsize::get().ok_or(Error::new(std::io::ErrorKind::NotFound, "Couldnt get termsize"))?.rows;
             let rows_us = usize::try_from(rows).expect("u16 couldnt convert to usize");
             println!(
                 "{}",
                 vec!['\n'; rows_us].iter().cloned().collect::<String>()
             );
         }
-        self.terminal_prepared = true
+        self.terminal_prepared = true;
+
+        Ok(())
     }
 
     pub fn clear(&mut self) {

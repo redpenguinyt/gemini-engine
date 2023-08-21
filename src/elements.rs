@@ -3,7 +3,7 @@ use view::utils;
 use view::{ColChar, Modifier, ViewElement};
 pub use view::{Vec2D, View};
 
-/// The most basic object to implement the `ViewElement` trait, a singular point
+/// The `Point` is the most basic object to implement the `ViewElement` trait
 pub struct Point {
     pub pos: Vec2D,
     pub fill_char: ColChar,
@@ -22,11 +22,11 @@ impl Point {
 
 impl ViewElement for Point {
     fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
-        return Vec::from([(self.pos, self.fill_char)]);
+        vec![(self.pos, self.fill_char)]
     }
 }
 
-/// A Line object holds two `Vec2D` values that signify its start and end position
+/// The `Line` is used to draw a line between two points
 pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
@@ -53,7 +53,7 @@ impl Line {
         }
     }
 
-    /// draw line using Bresenham's line algorithm
+    /// Draw a line using Bresenham's line algorithm. Returns a list of the pixels to print to
     pub fn draw(pos0: Vec2D, pos1: Vec2D) -> Vec<Vec2D> {
         // Use Bresenham's line algorithm to generate active pixels at rendertime
         let mut points: Vec<Vec2D> = Vec::new();
@@ -106,7 +106,7 @@ impl ViewElement for Line {
     }
 }
 
-// A Polygon holds an arbitrary number of Vec2D values that mark each vertex of the drawn polygon
+/// The `Triangle` takes three `Vec2D`s and results in a triangle when blit to a `View`
 pub struct Triangle {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
@@ -126,7 +126,7 @@ impl Triangle {
         }
     }
 
-    /// return triangle's points as an array
+    /// Return the triangle's points as an array
     pub fn points(&self) -> Vec<Vec2D> {
         vec![self.pos0, self.pos1, self.pos2]
     }
@@ -166,7 +166,7 @@ impl ViewElement for Triangle {
     }
 }
 
-// A Box holds two `Vec2D` values that correspond to its position in the view and size respectively
+/// The `Box` has a position and size, with the position corresponding to its top-left corner
 pub struct Box {
     pub pos: Vec2D,
     pub size: Vec2D,
@@ -199,6 +199,7 @@ impl ViewElement for Box {
     }
 }
 
+/// A `ViewElement` that takes a multi-line string as a parameter, and can be used to put ASCII art, text and other such things on the View
 pub struct Sprite {
     pub pos: Vec2D,
     pub texture: String,
