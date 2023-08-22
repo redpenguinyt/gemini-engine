@@ -3,6 +3,31 @@ use view::utils::{self, BlitCache};
 use view::{ColChar, Modifier, ViewElement};
 pub use view::{Vec2D, View};
 
+// A `PixelContainer` only has a `pixels` property, which gets returned directly to the View during blit
+pub struct PixelContainer {
+    pub pixels: Vec<(Vec2D, ColChar)>,
+}
+
+impl PixelContainer {
+    pub fn new() -> Self {
+        Self { pixels: vec![] }
+    }
+
+    pub fn push(&mut self, pixel: (Vec2D, ColChar)) {
+        self.pixels.push(pixel);
+    }
+
+    pub fn append(&mut self, pixels: &mut Vec<(Vec2D, ColChar)>) {
+        self.pixels.append(pixels);
+    }
+}
+
+impl ViewElement for PixelContainer {
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+        self.pixels.clone()
+    }
+}
+
 /// The `Point` is the most basic object to implement the `ViewElement` trait
 pub struct Point {
     pub pos: Vec2D,
