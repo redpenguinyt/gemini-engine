@@ -1,3 +1,4 @@
+//! Gemini's core `View` + `ViewElement` structure is relatively simple. Whenever you want to render a view (e.g. in a gameloop), you clear the view, blit a bunch of elements to it and render. When you "blit" an element to the view, the view asks the element where it should plot pixels to fully add that element to the canvas.
 pub mod view;
 use view::utils::{self, BlitCache};
 use view::{ColChar, Modifier, ViewElement};
