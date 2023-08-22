@@ -2,13 +2,7 @@ use super::{ColChar, Vec2D};
 
 /// Combine a vector of `Vec2D`s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your `ViewElement` only has one fill character across all of it
 pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<(Vec2D, ColChar)> {
-    let mut pixels: Vec<(Vec2D, ColChar)> = Vec::new();
-
-    for point in points {
-        pixels.push((point, fill_char));
-    }
-
-    pixels
+    points.iter().map(|e| (e.clone(), fill_char)).collect()
 }
 
 pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
