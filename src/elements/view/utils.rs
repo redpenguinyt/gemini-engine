@@ -36,7 +36,6 @@ pub fn is_clockwise(points: &Vec<Vec2D>) -> bool {
     m.iter().sum::<isize>() < 0
 }
 
-
 /// Wrapping is used to determine how you want to handle out-of-bounds pixels during plotting pixels to the screen. Here's how each possible value functions:
 ///
 /// `Wrapping::Wrap` wraps any out of bounds pixels around to the other side. This is useful if you have an object that travels the entirety of the screen and appears on the other side when it reaches the end.
@@ -58,5 +57,61 @@ impl Clone for Wrapping {
             Wrapping::Ignore => Wrapping::Ignore,
             Wrapping::Panic => Wrapping::Panic,
         }
+    }
+}
+
+/// `BlitCache` is used if there is chance that you might not have to render something multiple times.
+pub struct BlitCache<T> {
+    independent: Vec<T>,
+    dependent: Vec<Vec2D>,
+}
+
+impl<T> BlitCache<T>
+where
+    T: PartialEq<T>,
+{
+    pub const DEFAULT: BlitCache<T> = BlitCache {
+        independent: vec![],
+        dependent: vec![],
+    };
+
+    pub fn new(independent: Vec<T>, dependent: Vec<Vec2D>) -> Self {
+        Self {
+            independent,
+            dependent,
+        }
+    }
+
+    pub fn is_default(&self) -> bool {
+        self == &BlitCache::DEFAULT
+    }
+
+    /// Returns the stored dependent value. Returns None if the cache is set to its default
+    pub fn dependent(&self) -> Option<Vec<Vec2D>> {
+        match self.is_default() {
+            false => Some(self.dependent.clone()),
+            true => None,
+        }
+    }
+
+    pub fn is_cache_valid(&self, other_independent: &Vec<T>) -> bool {
+        if self.independent.len() != other_independent.len() {
+            return false;
+        }
+        self.independent
+            .iter()
+            .zip(other_independent)
+            .filter(|&(a, b)| a == b)
+            .count()
+            == self.independent.len()
+    }
+}
+
+impl<T> PartialEq for BlitCache<T>
+where
+    T: PartialEq<T>,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.independent == other.independent && self.dependent == other.dependent
     }
 }

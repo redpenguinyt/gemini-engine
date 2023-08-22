@@ -1,5 +1,5 @@
 pub mod view;
-use view::utils;
+use view::utils::{self, BlitCache};
 use view::{ColChar, Modifier, ViewElement};
 pub use view::{Vec2D, View};
 
@@ -31,7 +31,7 @@ pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
     pub fill_char: ColChar,
-    _cache: (Vec2D, Vec2D, Vec<Vec2D>),
+    cache: BlitCache<Vec2D>,
 }
 
 impl Line {
@@ -40,16 +40,16 @@ impl Line {
             pos0,
             pos1,
             fill_char,
-            _cache: (Vec2D::ZERO, Vec2D::ZERO, vec![Vec2D::ZERO]),
+            cache: BlitCache::DEFAULT,
         }
     }
 
-    /// Generate a cache if you intend for the line to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previous cache has the same start and points
+    /// Generate a cache if you intend for the line to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previously generated cache is still valid
     pub fn generate_cache(&mut self) {
-        if (self._cache.0 != self.pos0) | (self._cache.1 != self.pos1) {
+        if !self.cache.is_cache_valid(&vec![self.pos0, self.pos1]) {
             let points = Self::draw(self.pos0, self.pos1);
 
-            self._cache = (self.pos0, self.pos1, points);
+            self.cache = BlitCache::new(vec![self.pos0, self.pos1], points);
         }
     }
 
@@ -93,15 +93,12 @@ impl Line {
 
 impl ViewElement for Line {
     fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
-        let points: Vec<Vec2D>;
-        if self._cache.2 != vec![Vec2D::ZERO] {
-            // if the cache has been used...
-            points = self._cache.2.clone(); //  use the cache
-        } else {
-            points = Self::draw(self.pos0, self.pos1); // otherwise draw a line from scratch
-        }
+        let cache = self.cache.dependent();
+        let points = match cache {
+            Some(c) => c,
+            None => Self::draw(self.pos0, self.pos1),
+        };
 
-        // add the
         utils::points_to_pixels(points, self.fill_char)
     }
 }
