@@ -54,7 +54,7 @@ impl Clone for Wrapping {
     }
 }
 
-/// `BlitCache` is used if there is chance that you might not have to render something multiple times.
+/// `BlitCache` is used if there is chance that you might have to render the same thing multiple times without moving or changing it.
 pub struct BlitCache<T> {
     independent: Vec<T>,
     dependent: Vec<Vec2D>,

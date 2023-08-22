@@ -109,7 +109,7 @@ pub struct Triangle {
     pub pos1: Vec2D,
     pub pos2: Vec2D,
     pub fill_char: ColChar,
-    _private: (),
+    cache: BlitCache<Vec2D>,
 }
 
 impl Triangle {
@@ -119,21 +119,28 @@ impl Triangle {
             pos1,
             pos2,
             fill_char: fill_char,
-            _private: (),
+            cache: BlitCache::DEFAULT,
+        }
+    }
+
+    /// Generate a cache if you intend for the triangle to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previously generated cache is still valid
+    pub fn generate_cache(&mut self) {
+        if !self.cache.is_cache_valid(&vec![self.pos0, self.pos1]) {
+            let points = Self::draw(self.corners());
+
+            self.cache = BlitCache::new(self.corners().to_vec(), points);
         }
     }
 
     /// Return the triangle's points as an array
-    pub fn points(&self) -> Vec<Vec2D> {
-        vec![self.pos0, self.pos1, self.pos2]
+    pub fn corners(&self) -> [Vec2D; 3] {
+        [self.pos0, self.pos1, self.pos2]
     }
-}
 
-impl ViewElement for Triangle {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+    // Takes three corner `Vec2D`s and returns the points you should plot to the screen to make a triangle
+    pub fn draw(corners: [Vec2D; 3]) -> Vec<Vec2D> {
         let mut points = vec![];
-
-        let mut corners: Vec<Vec2D> = self.points();
+        let mut corners = corners;
         corners.sort_unstable_by_key(|k| k.y);
         let (x0, y0) = corners[0].as_tuple();
         let (x1, y1) = corners[1].as_tuple();
@@ -158,6 +165,18 @@ impl ViewElement for Triangle {
                 points.push(Vec2D::new(x as isize, y));
             }
         }
+
+        points
+    }
+}
+
+impl ViewElement for Triangle {
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+        let cache = self.cache.dependent();
+        let points = match cache {
+            Some(c) => c,
+            None => Self::draw(self.corners()),
+        };
 
         utils::points_to_pixels(points, self.fill_char)
     }
