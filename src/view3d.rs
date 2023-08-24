@@ -56,13 +56,7 @@ impl Viewport {
                 }
             }
             DisplayMode::Wireframe => {
-                let mut screen_vertices = vec![];
-                for vertex in &object.vertices {
-                    let pos = vertex.global_position(&self, &object);
-
-                    let screen_coordinates = self.origin + pos.spatial_to_screen(self.fov);
-                    screen_vertices.push(screen_coordinates);
-                }
+                let screen_vertices = object.vertices_on_screen(&self);
 
                 for face in (*object.faces).into_iter() {
                     let mut pixel_container = PixelContainer::new();
@@ -72,7 +66,7 @@ impl Viewport {
                             face.v_indexes[(fi + 1) % face.v_indexes.len()],
                         );
                         pixel_container.append(&mut points_to_pixels(
-                            Line::draw(screen_vertices[i0], screen_vertices[i1]),
+                            Line::draw(screen_vertices[i0].0, screen_vertices[i1].0),
                             face.fill_char,
                         ));
                     }
@@ -81,13 +75,7 @@ impl Viewport {
                 }
             }
             DisplayMode::Solid => {
-                let mut screen_vertices = vec![];
-                for vertex in &object.vertices {
-                    let pos = vertex.global_position(&self, &object);
-
-                    let screen_coordinates = self.origin + pos.spatial_to_screen(self.fov);
-                    screen_vertices.push((screen_coordinates, pos.z));
-                }
+                let screen_vertices = object.vertices_on_screen(&self);
 
                 let mut sorted_faces = vec![];
 
