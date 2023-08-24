@@ -46,7 +46,7 @@
 
 pub mod elements;
 pub mod gameloop;
-pub mod view3d;
+pub mod elements3d;
 
 #[cfg(test)]
 mod vec2d_tests {

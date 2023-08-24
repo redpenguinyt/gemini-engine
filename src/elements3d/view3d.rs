@@ -1,5 +1,5 @@
-//! Gemini's implementation of 3D rendering. Experimental
-pub mod object3d;
+pub mod face;
+pub mod vec3d;
 use crate::elements::{
     view::{
         utils::{self, points_to_pixels, Wrapping},
@@ -7,7 +7,8 @@ use crate::elements::{
     },
     Line, PixelContainer, Sprite, Triangle, Vec2D, View,
 };
-pub use object3d::{Face, Object3D, SpatialAxis, Vec3D};
+pub use face::Face;
+pub use vec3d::{SpatialAxis, Vec3D};
 
 pub enum DisplayMode {
     Solid,
@@ -33,11 +34,16 @@ impl Viewport {
         }
     }
 
-    pub fn blit_to(&self, view: &mut View, object: &Object3D, display_mode: DisplayMode) {
+    pub fn blit_to<T: ViewElement3D>(
+        &self,
+        view: &mut View,
+        object: &T,
+        display_mode: DisplayMode,
+    ) {
         match display_mode {
             DisplayMode::Debug => {
-                for (i, vertex) in (&object.vertices).iter().enumerate() {
-                    let pos = vertex.global_position(&self, &object);
+                for (i, vertex) in (&object.get_vertices()).iter().enumerate() {
+                    let pos = vertex.global_position(&self, object);
 
                     let screen_coordinates = self.origin + pos.spatial_to_screen(self.fov);
                     let index_text = format!("{}", i);
@@ -48,8 +54,8 @@ impl Viewport {
                 }
             }
             DisplayMode::Points => {
-                for vertex in &object.vertices {
-                    let pos = vertex.global_position(&self, &object);
+                for vertex in &object.get_vertices() {
+                    let pos = vertex.global_position(&self, object);
 
                     let screen_coordinates = self.origin + pos.spatial_to_screen(self.fov);
                     view.plot(screen_coordinates, ColChar::SOLID, Wrapping::Ignore);
@@ -58,7 +64,7 @@ impl Viewport {
             DisplayMode::Wireframe => {
                 let screen_vertices = object.vertices_on_screen(&self);
 
-                for face in (*object.faces).into_iter() {
+                for face in (*object.get_faces()).into_iter() {
                     let mut pixel_container = PixelContainer::new();
                     for fi in 0..face.v_indexes.len() {
                         let (i0, i1) = (
@@ -79,7 +85,7 @@ impl Viewport {
 
                 let mut sorted_faces = vec![];
 
-                for face in (*object.faces).into_iter() {
+                for face in (*object.get_faces()).into_iter() {
                     let mut face_vertices = vec![];
                     for vi in &face.v_indexes {
                         face_vertices.push(screen_vertices[*vi]);
@@ -119,4 +125,12 @@ impl Viewport {
             }
         }
     }
+}
+
+pub trait ViewElement3D {
+    fn get_pos(&self) -> Vec3D;
+    fn get_rotation(&self) -> Vec3D;
+    fn get_vertices(&self) -> Vec<Vec3D>;
+    fn get_faces(&self) -> Vec<Face>;
+    fn vertices_on_screen(&self, viewport: &Viewport) -> Vec<(Vec2D, f64)>;
 }

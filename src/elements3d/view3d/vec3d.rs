@@ -1,4 +1,4 @@
-use super::{super::Viewport, Object3D};
+use super::{super::ViewElement3D, Viewport};
 use crate::elements::Vec2D;
 use std::{
     cmp::PartialEq,
@@ -65,11 +65,11 @@ impl Vec3D {
         self.rotate_one_axis(SpatialAxis::Z, rotation.z);
     }
 
-    pub fn global_position(&self, viewport: &Viewport, object: &Object3D) -> Vec3D {
+    pub fn global_position<T: ViewElement3D>(&self, viewport: &Viewport, object: &T) -> Vec3D {
         let mut pos = *self;
 
-        pos.rotate(object.rotation);
-        pos += object.pos;
+        pos.rotate(object.get_rotation());
+        pos += object.get_pos();
 
         pos.rotate(viewport.rotation);
         pos += viewport.offset;
