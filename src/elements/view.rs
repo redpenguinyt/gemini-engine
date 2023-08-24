@@ -16,7 +16,7 @@ pub use vec2d::Vec2D;
 ///
 ///     view.blit(&point, Wrapping::Panic);
 ///
-///     view.render();
+///     View::display_render(view.render());
 /// }
 /// ```
 pub struct View {
@@ -108,8 +108,9 @@ impl View {
         }
     }
 
-    pub fn render(&self) {
-        print!("\x1b[H\x1b[J");
+    /// Render the View to a String
+    pub fn render(&self) -> String {
+        let mut result = String::from("\x1b[H\x1b[J");
         for y in 0..self.height {
             let row_pixels = self.pixels[self.width * y..self.width * (y + 1)].iter();
 
@@ -118,9 +119,15 @@ impl View {
                 row.push_str(pixel.render().as_str());
             }
 
-            println!("{row}");
+            result.push_str(format!("{row}\n").as_str());
         }
-        println!("\x1b[J");
+        result.push_str("\x1b[J");
+        result
+    }
+
+    /// Display the rendered String. Should print the string as quickly as possible
+    pub fn display_render(frame: String) {
+        println!("{}", frame);
     }
 }
 
