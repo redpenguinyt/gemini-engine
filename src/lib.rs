@@ -45,8 +45,8 @@
 //! There you have it! You've written your first program with Gemini! As of me writing this now it's still very much a work in progress, so any feedback or issue requests would be appreciated :)
 
 pub mod elements;
-pub mod gameloop;
 pub mod elements3d;
+pub mod gameloop;
 
 #[cfg(test)]
 mod vec2d_tests {
