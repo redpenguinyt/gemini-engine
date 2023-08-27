@@ -208,6 +208,56 @@ impl ViewElement for Triangle {
     }
 }
 
+/// The `Polygon` takes a vec of `Vec2D`s and returns a polygon with those vertices when blit to a `View`
+pub struct Polygon {
+    pub points: Vec<Vec2D>,
+    pub fill_char: ColChar,
+    cache: BlitCache<Vec2D>,
+}
+
+impl Polygon {
+    pub fn new(points: Vec<Vec2D>, fill_char: ColChar) -> Self {
+        Self {
+            points,
+            fill_char,
+            cache: BlitCache::DEFAULT,
+        }
+    }
+
+    pub fn generate_cache(&mut self) {
+        if !self.cache.is_cache_valid(&self.points) {
+            let points = Self::draw(self.points.clone());
+
+            self.cache = BlitCache::new(self.points.to_vec(), points);
+        }
+    }
+
+    /// Draw a polygon from points. Only supports convex polygons as of now
+    pub fn draw(vertices: Vec<Vec2D>) -> Vec<Vec2D> {
+        let mut points = vec![];
+        for fi in 1..vertices.len() {
+            points.extend(Triangle::draw([
+                vertices[0],
+                vertices[fi],
+                vertices[(fi + 1) % vertices.len()],
+            ]))
+        }
+        points
+    }
+}
+
+impl ViewElement for Polygon {
+    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+        let cache = self.cache.dependent();
+        let points = match cache {
+            Some(c) => c,
+            None => Self::draw(self.points.clone()),
+        };
+
+        utils::points_to_pixels(points, self.fill_char)
+    }
+}
+
 /// The `Box` has a position and size, with the position corresponding to its top-left corner
 pub struct Box {
     pub pos: Vec2D,
