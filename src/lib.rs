@@ -1,5 +1,5 @@
 //! ## Introduction
-//! Gemini is a monospaced ASCII rendering engine, capable of 2D and (soon) 3D rendering. This is a loose port of [GeminiEngine](https://github.com/redpenguinyt/GeminiEngine) which was made in python ended up being quite slow, especially compared to this new version.
+//! Gemini is a monospaced ASCII rendering engine, capable of 2D and 3D rendering. This is a loose port of [GeminiEngine](https://github.com/redpenguinyt/GeminiEngine) which was made in python ended up being quite slow, especially compared to this new version.
 //!
 //! **IMPORTANT**: You HAVE to use a monospace font in the terminal for the engine to render the view properly
 //!
