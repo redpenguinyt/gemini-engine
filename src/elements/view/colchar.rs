@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-/// We use `ColChar` to say exactly what each pixel should look like and what colour it should be. That is, the `View`'s canvas is just a vector of `ColChar`s under the hood. `ColChar` has the `fill_char` and `modifier` properties. `fill_char` is the single ascii character used as the "pixel" when the View is rendered, whereas `modifier` can give that pixel a colour or make it bold/italic
+/// We use `ColChar` to say exactly what each pixel should look like and what colour it should be. That is, the [`View`](super::View)'s canvas is just a vector of `ColChar`s under the hood. `ColChar` has the [`fill_char`](ColChar::fill_char) and [`modifier`](ColChar::modifier) properties. [`fill_char`](ColChar::fill_char) is the single ascii character used as the "pixel" when the [`View`](super::View) is rendered, whereas [`modifier`](ColChar::modifier) can give that pixel a colour or make it bold/italic
 #[derive(Copy)]
 pub struct ColChar {
     pub fill_char: char,
@@ -56,7 +56,7 @@ impl Debug for ColChar {
     }
 }
 
-/// The `Modifier` enum is used for adding modifications to text such as colour, bold/italic/underline and others. It's essentially a wrapper for `\x1b[{x}m`, where {x} is a code or rgb value of some sort. `Modifier` is primarily used by `ColChar` as one of its properties
+/// The `Modifier` enum is used for adding modifications to text such as colour, bold/italic/underline and others. It's essentially a wrapper for `\x1b[{x}m`, where {x} is a code or rgb value of some sort. `Modifier` is primarily used by [`ColChar`] as one of its properties
 #[derive(Copy)]
 pub enum Modifier {
     Coded(u8),

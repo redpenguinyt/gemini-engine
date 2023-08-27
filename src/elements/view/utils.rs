@@ -1,6 +1,6 @@
 use super::{ColChar, Vec2D};
 
-/// Combine a vector of `Vec2D`s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your `ViewElement` only has one fill character across all of it
+/// Combine a vector of [`Vec2D`]s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your [`ViewElement`](super::ViewElement) only has one fill character across all of it
 pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<(Vec2D, ColChar)> {
     points.iter().map(|e| (e.clone(), fill_char)).collect()
 }
@@ -20,6 +20,7 @@ pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
     values
 }
 
+/// Returns true if the points in the vector are arranged in a clockwise orientation
 pub fn is_clockwise(points: &Vec<Vec2D>) -> bool {
     let mut m = vec![];
     for i in 0..points.len() {
@@ -32,11 +33,11 @@ pub fn is_clockwise(points: &Vec<Vec2D>) -> bool {
 
 /// Wrapping is used to determine how you want to handle out-of-bounds pixels during plotting pixels to the screen. Here's how each possible value functions:
 ///
-/// `Wrapping::Wrap` wraps any out of bounds pixels around to the other side. This is useful if you have an object that travels the entirety of the screen and appears on the other side when it reaches the end.
+/// [`Wrapping::Wrap`] wraps any out of bounds pixels around to the other side. This is useful if you have an object that travels the entirety of the screen and appears on the other side when it reaches the end.
 ///
-/// `Wrapping::Ignore` simply skips all out-of-bounds pixels. This is useful if you might have an object clipping through the edge of the screen.
+/// [`Wrapping::Ignore`] simply skips all out-of-bounds pixels. This is useful if you might have an object clipping through the edge of the screen.
 ///
-/// `Wrapping::Panic` will `panic!` if any pixels are out of bounds. You should use this if you have your own wrapping system implemented
+/// [`Wrapping::Panic`] will `panic!` if any pixels are out of bounds. You should use this if you have your own wrapping system implemented
 #[derive(Copy)]
 pub enum Wrapping {
     Wrap,
