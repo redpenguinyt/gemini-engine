@@ -2,7 +2,7 @@
 name = "gemini-engine"
 authors = ["RedPenguin"]
 edition = "2021"
-version = "0.1.0"
+version = "0.1.1"
 description = "A monospaced ASCII rendering engine"
 documentation = "https://docs.rs/gemini-engine"
 readme = "README.md"
