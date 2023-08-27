@@ -1,8 +1,8 @@
-use gemini::elements::{
+use gemini_engine::elements::{
     view::{ColChar, View, Wrapping},
     Point, Vec2D,
 };
-use gemini::gameloop;
+use gemini_engine::gameloop;
 
 const FPS: u32 = 30;
 

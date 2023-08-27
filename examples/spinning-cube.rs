@@ -1,6 +1,6 @@
-use gemini::elements::{view::ColChar, Vec2D, View};
-use gemini::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport};
-use gemini::gameloop;
+use gemini_engine::elements::{view::ColChar, Vec2D, View};
+use gemini_engine::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport};
+use gemini_engine::gameloop;
 
 const FPS: u32 = 20;
 const FOV: f64 = 5000.0;
