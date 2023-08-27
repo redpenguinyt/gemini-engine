@@ -5,15 +5,19 @@ use crate::elements::{
         utils::{self, points_to_pixels, Wrapping},
         ColChar, Modifier,
     },
-    Line, PixelContainer, Sprite, Triangle, Vec2D, View,
+    Line, PixelContainer, Polygon, Sprite, Vec2D, View,
 };
 pub use face::Face;
 pub use vec3d::{SpatialAxis, Vec3D};
 
+/// `DisplayMode` determines how the `Viewport` renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
+/// - `DisplayMode::Points` only renders the object's vertices as single pixels with the `ColChar` chosen with the fill_char enum parameter
+/// - `DisplayMode::Debug` does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
+///
 pub enum DisplayMode {
     Solid,
     Wireframe,
-    Points,
+    Points { fill_char: ColChar },
     Debug,
 }
 
@@ -43,25 +47,21 @@ impl Viewport {
         match display_mode {
             DisplayMode::Debug => {
                 for object in objects {
-                    for (i, vertex) in (&object.get_vertices()).iter().enumerate() {
-                        let pos = vertex.global_position(&self, object);
-
-                        let screen_coordinates = self.origin + pos.spatial_to_screen(self.fov);
+                    for (i, (screen_coordinates, _z)) in
+                        object.vertices_on_screen(self).iter().enumerate()
+                    {
                         let index_text = format!("{}", i);
                         view.blit(
-                            &Sprite::new(screen_coordinates, index_text.as_str(), Modifier::None),
+                            &Sprite::new(*screen_coordinates, index_text.as_str(), Modifier::None),
                             Wrapping::Ignore,
                         );
                     }
                 }
             }
-            DisplayMode::Points => {
+            DisplayMode::Points { fill_char } => {
                 for object in objects {
-                    for vertex in &object.get_vertices() {
-                        let pos = vertex.global_position(&self, object);
-
-                        let screen_coordinates = self.origin + pos.spatial_to_screen(self.fov);
-                        view.plot(screen_coordinates, ColChar::SOLID, Wrapping::Ignore);
+                    for (screen_coordinates, _z) in object.vertices_on_screen(self) {
+                        view.plot(screen_coordinates, fill_char, Wrapping::Ignore);
                     }
                 }
             }
@@ -87,10 +87,10 @@ impl Viewport {
                 }
             }
             DisplayMode::Solid => {
+                let mut screen_faces = vec![];
+
                 for object in objects {
                     let screen_vertices = object.vertices_on_screen(&self);
-
-                    let mut sorted_faces = vec![];
 
                     for face in (*object.get_faces()).into_iter() {
                         let mut face_vertices = vec![];
@@ -109,26 +109,15 @@ impl Viewport {
                         }
                         mean_z /= face_vertices.len() as f64;
 
-                        sorted_faces.push((vertices_only, mean_z, face.fill_char));
+                        screen_faces.push((vertices_only, mean_z, face.fill_char));
                     }
+                }
 
-                    sorted_faces.sort_by_key(|k| (k.1 * 100.0).round() as isize);
+                screen_faces.sort_by_key(|k| (k.1 * 100.0).round() as isize);
 
-                    for face in sorted_faces {
-                        let mut pixel_container = PixelContainer::new();
-                        let face_vertices = face.0;
-                        for fi in 1..face_vertices.len() {
-                            pixel_container.append(&mut points_to_pixels(
-                                Triangle::draw([
-                                    face_vertices[0],
-                                    face_vertices[fi],
-                                    face_vertices[(fi + 1) % face_vertices.len()],
-                                ]),
-                                face.2,
-                            ))
-                        }
-                        view.blit(&pixel_container, Wrapping::Ignore)
-                    }
+                for face in screen_faces {
+                    let polygon = Polygon::new(face.0, face.2);
+                    view.blit(&polygon, Wrapping::Ignore)
                 }
             }
         }
@@ -136,9 +125,14 @@ impl Viewport {
 }
 
 pub trait ViewElement3D {
+    /// This should return the position of the object's origin point
     fn get_pos(&self) -> Vec3D;
+    /// This should return the rotation of the object's origin point
     fn get_rotation(&self) -> Vec3D;
+    /// This should return all of the object's vertices
     fn get_vertices(&self) -> Vec<Vec3D>;
+    /// This should return all of the object's `Face`s
     fn get_faces(&self) -> Vec<Face>;
+    /// This should return a list of its vertices in their screen positions, paired with their distance to the screen
     fn vertices_on_screen(&self, viewport: &Viewport) -> Vec<(Vec2D, f64)>;
 }
