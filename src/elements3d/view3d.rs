@@ -40,6 +40,17 @@ impl Viewport {
         }
     }
 
+    pub fn spatial_to_screen(&self, pos: Vec3D) -> Vec2D {
+        let f = self.fov / pos.z;
+        let (sx, sy) = (pos.x * f, pos.y * f);
+
+        // adjust for non-square pixels
+        let sx = (sx * 2.2).round() as isize;
+        let sy = sy.round() as isize;
+
+        self.origin + Vec2D::new(sx, sy)
+    }
+
     pub fn blit_to<T: ViewElement3D>(
         &self,
         view: &mut View,
@@ -127,9 +138,9 @@ impl Viewport {
 }
 
 pub trait ViewElement3D {
-    /// This should return the position of the object's origin point
+    /// This should return the object's rotation
     fn get_pos(&self) -> Vec3D;
-    /// This should return the rotation of the object's origin point
+    /// This should return the object's rotation
     fn get_rotation(&self) -> Vec3D;
     /// This should return all of the object's vertices
     fn get_vertices(&self) -> Vec<Vec3D>;

@@ -164,7 +164,7 @@ impl ViewElement3D for Mesh3D {
         for vertex in &self.vertices {
             let pos = vertex.global_position(&viewport, self);
 
-            let screen_coordinates = viewport.origin + pos.spatial_to_screen(viewport.fov);
+            let screen_coordinates = viewport.spatial_to_screen(pos);
             screen_vertices.push((screen_coordinates, pos.z));
         }
 

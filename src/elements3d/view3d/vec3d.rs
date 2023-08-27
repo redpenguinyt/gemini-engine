@@ -1,5 +1,4 @@
 use super::{super::ViewElement3D, Viewport};
-use crate::elements::Vec2D;
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
@@ -33,17 +32,6 @@ impl Vec3D {
 
     pub fn as_tuple(&self) -> (f64, f64, f64) {
         (self.x, self.y, self.z)
-    }
-
-    pub fn spatial_to_screen(&self, fov: f64) -> Vec2D {
-        let f = fov / self.z;
-        let (sx, sy) = (self.x * f, self.y * f);
-
-        // adjust for non-square pixels
-        let sx = (sx * 2.2).round() as isize;
-        let sy = sy.round() as isize;
-
-        Vec2D::new(sx, sy)
     }
 
     pub fn rotate_one_axis(&mut self, axis: SpatialAxis, r: f64) {
