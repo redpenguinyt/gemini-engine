@@ -8,7 +8,7 @@ pub use vec2d::Vec2D;
 
 /// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Point in the middle
 /// ```
-/// use gemini::elements::{view::{Wrapping, ColChar}, View, Point, Vec2D};
+/// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Point, Vec2D};
 ///
 /// fn main() {
 ///     let mut view = View::new(9, 3, ColChar::BACKGROUND);

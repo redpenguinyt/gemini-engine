@@ -2,9 +2,9 @@
 //!
 //! ## Quick Start
 //! Let's get started with a simple program to demonstrate how Gemini works:
-//! ```rust,ignore
-//! use gemini::elements::{Point, Vec2D, view::{View, ColChar, Wrapping}};
-//! use gemini::gameloop;
+//! ```rust,no_run
+//! use gemini_engine::elements::{Point, Vec2D, view::{View, ColChar, Wrapping}};
+//! use gemini_engine::gameloop;
 //!
 //! const FPS: u32 = 30;
 //!

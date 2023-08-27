@@ -2,13 +2,13 @@
 //!
 //! ## A Simple 3D Scene
 //! Let's write a simple example program to print a spinning cube:
-//! ```
-//! use gemini::elements::{
+//! ```rust,no_run
+//! use gemini_engine::elements::{
 //! view::ColChar,
 //! Vec2D, View,
 //! };
-//! use gemini::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport};
-//! use gemini::gameloop;
+//! use gemini_engine::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport};
+//! use gemini_engine::gameloop;
 //!
 //! const FPS: u32 = 20;
 //! const FOV: f64 = 5000.0;
@@ -54,7 +54,10 @@
 //! There is a lot of code here, but since it's based off of the [`gameloop`](crate::gameloop) principle (Go to the [`gameloop`](crate::gameloop) documentation page to learn more), we'll only focus on the parts that are different from the [`gameloop`](crate::gameloop) example:
 //!
 //! ### Initialisation
-//! ```
+//! ```rust,no_run
+//! # use gemini_engine::elements::{View, Vec2D, view::ColChar};
+//! # use gemini_engine::elements3d::{Viewport, Vec3D, Mesh3D};
+//! # const FOV: f64 = 5000.0;
 //! let mut view = View::new(350, 90, ColChar::BACKGROUND);
 //!
 //! let mut viewport = Viewport::new(
@@ -74,14 +77,35 @@
 //! In this scenario, we create a [`View`](crate::elements::view::View) of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a [`Viewport`] with an initial position 250 units away from the centre and pivoted 0.5 radians up with an origin point in the middle of the [`View`](crate::elements::view::View) and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
 //!
 //! ### Gameloop process logic
-//! ```
+//! ```rust,no_run
+//! # use gemini_engine::elements::{View, Vec2D, view::ColChar};
+//! # use gemini_engine::elements3d::{Viewport, Vec3D};
+//! # const FOV: f64 = 5000.0;
+//! # let view = View::new(350, 90, ColChar::BACKGROUND);
+//! # let mut viewport = Viewport::new(
+//! #     Vec3D::new(0.0, 0.0, 250.0),
+//! #     Vec3D::new(-0.5, 0.0, 0.0),
+//! #     FOV,
+//! #     Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
+//! # );
 //! viewport.rotation.y -= 0.05;
 //! ```
 //!
 //! This part of the code is where we would put all our physics, collisions, events etc. code, but in this case the only thing we do is rotate the cube 0.05 radians anticlockwise.
 //!
 //! ### Blitting/Rendering
-//! ```
+//! ```rust,no_run
+//! # use gemini_engine::elements::{View, Vec2D, view::ColChar};
+//! # use gemini_engine::elements3d::{Viewport, Vec3D, Mesh3D, DisplayMode};
+//! # const FOV: f64 = 5000.0;
+//! # let mut view = View::new(350, 90, ColChar::BACKGROUND);
+//! # let viewport = Viewport::new(
+//! #     Vec3D::new(0.0, 0.0, 250.0),
+//! #     Vec3D::new(-0.5, 0.0, 0.0),
+//! #     FOV,
+//! #     Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
+//! # );
+//! # let cube = Mesh3D::default_cube();
 //! viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
 //! View::display_render(view.render());
 //! ```

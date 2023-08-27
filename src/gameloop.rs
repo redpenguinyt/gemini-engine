@@ -1,6 +1,6 @@
 //! The gameloop is one of Gemini's most important features. If you read the Quick Start guide, you'll have seen that the example there didnt have a fully written gameloop. When you begin building larger projects with Gemini, this is what your code should look like
-//! ```rust,ignore
-//! use gemini::gameloop;
+//! ```rust,no_run
+//! use gemini_engine::gameloop;
 //!
 //! const FPS: u32 = 30;
 //!
@@ -29,11 +29,11 @@ pub use std::time::{Duration, Instant};
 
 /// Sleep for a single frame depending on the declared FPS, while also subtracting the Duration taken to process the frame. Returns a bool value depending on whether or not the frame took longer to render than the intended fps
 /// ## Example
-/// ```rust,ignore
-/// use gemini::gameloop;
+/// ```rust,no_run
+/// use gemini_engine::gameloop;
 ///
 /// let mut frame_skip = false;
-/// let FPS = 60;
+/// const FPS: u32 = 60;
 /// loop {
 ///     let now = gameloop::Instant::now();
 ///
