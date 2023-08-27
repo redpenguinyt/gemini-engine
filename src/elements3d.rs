@@ -51,7 +51,7 @@
 //!     }
 //! }
 //! ```
-//! There is a lot of code here, but since it's based off of the `gameloop` principle (Go to the `gameloop` documentation page to learn more), we'll only focus on the parts that are different from the `gameloop` example:
+//! There is a lot of code here, but since it's based off of the [`gameloop`](crate::gameloop) principle (Go to the [`gameloop`](crate::gameloop) documentation page to learn more), we'll only focus on the parts that are different from the [`gameloop`](crate::gameloop) example:
 //!
 //! ### Initialisation
 //! ```
@@ -67,11 +67,11 @@
 //! let cube = Mesh3D::default_cube();
 //! ```
 //! `main()` begins with the creation of all the necessary objects to render 3D images:
-//! 1. `elements::view::View` to handle the canvas and printing to the screen
-//! 2. `elements3d::view3d::Viewport` to handle converting 3d objects to 2d images, as well as acting like the scene's camera
-//! 3. The actual objects you intend to use in the scene, all of which should implement the `elements3d::view3d::ViewElement3D` trait
+//! 1. [`View`](crate::elements::view::View) to handle the canvas and printing to the screen
+//! 2. [`Viewport`] to handle converting 3d objects to 2d images, as well as acting like the scene's camera
+//! 3. The actual objects you intend to use in the scene, all of which should implement the [`ViewElement3D`] trait
 //!
-//! In this scenario, we create a `View` of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a `Viewport` with an initial position 250 units away from the centre and pivoted 0.5 radians up with an origin point in the middle of the View and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
+//! In this scenario, we create a [`View`](crate::elements::view::View) of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a [`Viewport`] with an initial position 250 units away from the centre and pivoted 0.5 radians up with an origin point in the middle of the [`View`](crate::elements::view::View) and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
 //!
 //! ### Gameloop process logic
 //! ```
@@ -86,7 +86,7 @@
 //! View::display_render(view.render());
 //! ```
 //!
-//! This part of the code blits all the 3d stuff to the `View` before rendering as usual. `Viewport.blit_to()` takes a mutable reference to the view, a list of all the objects we want to render and a DisplayMode enum (more info in the `DisplayMode` documentation).
+//! This part of the code blits all the 3d stuff to the [`View`](crate::elements::view::View) before rendering as usual. [`Viewport.blit_to()`](Viewport#blit_to) takes a mutable reference to the view, a list of all the objects we want to render and a [`DisplayMode`] enum (more info in the [`DisplayMode`] documentation).
 
 use crate::elements::view::{ColChar, Modifier, Vec2D};
 pub mod view3d;

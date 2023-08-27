@@ -1,10 +1,52 @@
-//! Gemini's core `View` + `ViewElement` structure is relatively simple. Whenever you want to render a view (e.g. in a gameloop), you clear the view, blit a bunch of elements to it and render. When you "blit" an element to the view, the view asks the element where it should plot pixels to fully add that element to the canvas.
+//! Gemini's core elements module. This and the [`view`] module make up Gemini's core rendering pipeline.
+//!
+//! ## Quick Start
+//! Let's get started with a simple program to demonstrate how Gemini works:
+//! ```rust,ignore
+//! use gemini::elements::{Point, Vec2D, view::{View, ColChar, Wrapping}};
+//! use gemini::gameloop;
+//!
+//! const FPS: u32 = 30;
+//!
+//! fn main() {
+//!     let mut view = View::new(40, 8, ColChar::BACKGROUND);
+//!     let mut point = Point::new(Vec2D::new(10,5), ColChar::SOLID);
+//!
+//!     loop {
+//!         view.clear();
+//!
+//!         point.pos.x += 1;
+//!
+//!         view.blit(&point, Wrapping::Wrap);
+//!         View::display_render(view.render());
+//!
+//!         gameloop::sleep_fps(FPS, None);
+//!     }
+//! }
+//! ```
+//! Ok, let's go over this and see what's going on. We start by creating a [`View`] and [`Point`]. the [`View`] takes two numbers for the width and height, as well as a [`ColChar`]. The [`Point`] takes a [`Vec2D`] and a [`ColChar`].
+//!
+//! We use [`ColChar`] to say exactly what each pixel should look like and what colour it should be. Here we used the built in `ColChar::BACKGROUND` and `ColChar::SOLID` to keep the code simple. You can read more in the [`ColChar`] documentation.
+//!
+//! At its heart, [`Vec2D`] is just a pair of `isize` integers for defining things such as position, size and movement. We used it here to define the [`Point`]'s starting position, before the game loop.
+//!
+//! Now that we've got initialisation out of the way, let's get on to the juicy part: the main loop. In Gemini the main loop always goes as follows:
+//! 1. Clear the [`View`]
+//! 2. Work through any logic you might have (moving things around, taking inputs etc.)
+//! 3. Blit all the [`ViewElement`]s to the screen
+//! 4. print the result of `View.render`
+//! 5. Sleep
+//!
+//! In our case, we want to move our [`Point`] one unit to the right every frame, so we increase its value by one here. Next we blit the [`Point`] to the [`View`] (adding it to the [`View`]'s internal canvas) and render. Rendering will display the view in the terminal (make sure your terminal is large enough to fit the whole image!). The last line of our code sleeps for `1/FPS` seconds. We pass None in place of what would normally be a Some(Duration) type, displaying the amount of time it took to blit and render everything so that [`gameloop::sleep_fps`](crate::gameloop::sleep_fps) can accomodate for the time taken to render. Since this example program is quite simple, we've just passed None. You can see how best to write a gameloop in the [`gameloop`](crate::gameloop) documentation.
+//!
+//! There you have it! You've written your first program with Gemini! As of me writing this now it's still very much a work in progress, so any feedback or issue requests would be appreciated :)
+
 pub mod view;
 use view::utils::{self, BlitCache};
 use view::{ColChar, Modifier, ViewElement};
 pub use view::{Vec2D, View};
 
-// A `PixelContainer` only has a `pixels` property, which gets returned directly to the View during blit
+/// A `PixelContainer` only has a [`pixels`](PixelContainer::pixels) property, which gets returned directly to the View during blit
 pub struct PixelContainer {
     pub pixels: Vec<(Vec2D, ColChar)>,
 }
@@ -29,7 +71,7 @@ impl ViewElement for PixelContainer {
     }
 }
 
-/// The `Point` is the most basic object to implement the `ViewElement` trait
+/// The `Point` holds a single [`Vec2D`], the coordinates at which it is printed when blit to a [`View`]
 pub struct Point {
     pub pos: Vec2D,
     pub fill_char: ColChar,
@@ -52,7 +94,7 @@ impl ViewElement for Point {
     }
 }
 
-/// The `Line` is used to draw a line between two points
+/// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`]
 pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
@@ -70,7 +112,7 @@ impl Line {
         }
     }
 
-    /// Generate a cache if you intend for the line to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previously generated cache is still valid
+    /// Generate a [`BlitCache`] if you intend for the line to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previously generated cache is still valid
     pub fn generate_cache(&mut self) {
         if !self.cache.is_cache_valid(&vec![self.pos0, self.pos1]) {
             let points = Self::draw(self.pos0, self.pos1);
@@ -129,7 +171,7 @@ impl ViewElement for Line {
     }
 }
 
-/// The `Triangle` takes three `Vec2D`s and results in a triangle when blit to a `View`
+/// The `Triangle` takes three [`Vec2D`]s and returns a triangle with those vertices when blit to a [`View`]
 pub struct Triangle {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
@@ -149,7 +191,7 @@ impl Triangle {
         }
     }
 
-    /// Generate a cache if you intend for the triangle to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previously generated cache is still valid
+    /// Generate a [`BlitCache`] if you intend for the triangle to not move across multiple frames. If you use this, you MUST call generate_cache if the triangle does move in the future. This function will not generate a new cache if the previously generated cache is still valid
     pub fn generate_cache(&mut self) {
         if !self.cache.is_cache_valid(&vec![self.pos0, self.pos1]) {
             let points = Self::draw(self.corners());
@@ -163,7 +205,7 @@ impl Triangle {
         [self.pos0, self.pos1, self.pos2]
     }
 
-    // Takes three corner `Vec2D`s and returns the points you should plot to the screen to make a triangle
+    /// Takes three corner [`Vec2D`]s and returns the points you should plot to the screen to make a triangle
     pub fn draw(corners: [Vec2D; 3]) -> Vec<Vec2D> {
         let mut points = vec![];
         let mut corners = corners;
@@ -208,7 +250,7 @@ impl ViewElement for Triangle {
     }
 }
 
-/// The `Polygon` takes a vec of `Vec2D`s and returns a polygon with those vertices when blit to a `View`
+/// The `Polygon` takes a vec of [`Vec2D`]s and returns a polygon with those vertices when blit to a [`View`]
 pub struct Polygon {
     pub points: Vec<Vec2D>,
     pub fill_char: ColChar,
@@ -224,6 +266,7 @@ impl Polygon {
         }
     }
 
+    /// Generate a [`BlitCache`] if you intend for the polygin to not move across multiple frames. If you use this, you MUST call generate_cache if the polygon does move in the future. This function will not generate a new cache if the previously generated cache is still valid
     pub fn generate_cache(&mut self) {
         if !self.cache.is_cache_valid(&self.points) {
             let points = Self::draw(self.points.clone());
@@ -258,7 +301,7 @@ impl ViewElement for Polygon {
     }
 }
 
-/// The `Box` has a position and size, with the position corresponding to its top-left corner
+/// The `Polygon` takes a position and size, and returns a box at that position with that width and size when blit to a [`View`]
 pub struct Box {
     pub pos: Vec2D,
     pub size: Vec2D,

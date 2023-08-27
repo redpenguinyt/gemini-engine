@@ -125,7 +125,7 @@ impl View {
         result
     }
 
-    /// Display the rendered String. Should print the string as quickly as possible
+    /// Display the rendered [`String`]. Should print the string as quickly as possible
     pub fn display_render(frame: String) {
         println!("{}", frame);
     }
@@ -133,6 +133,6 @@ impl View {
 
 /// ViewElement is a trait that must be implemented by any element that can be blitted to a View
 pub trait ViewElement {
-    /// Return a vector of every coordinate where a pixel should be placed and its respective `ColChar`. If your whole object is a solid colour, consider using `view::utils::points_to_pixels()` which will add the same `Colchar` to every point and can then be used as this function's output
+    /// Return a vector of every coordinate where a pixel should be placed and its respective [`ColChar`]. If your whole object is a solid colour, consider using [`utils::points_to_pixels()`] which will add the same [`ColChar`] to every point and can then be used as this function's output
     fn active_pixels(&self) -> Vec<(Vec2D, ColChar)>;
 }

@@ -36,6 +36,9 @@ pub use std::time::{Duration, Instant};
 /// let FPS = 60;
 /// loop {
 ///     let now = gameloop::Instant::now();
+///
+///     // all code here will run at 60 FPS
+///
 ///     if frame_skip {
 ///         frame_skip = false;
 ///     } else {

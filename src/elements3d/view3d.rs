@@ -11,7 +11,7 @@ pub use face::Face;
 pub use vec3d::{SpatialAxis, Vec3D};
 
 /// `DisplayMode` determines how the `Viewport` renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
-/// - `DisplayMode::Points` only renders the object's vertices as single pixels with the `ColChar` chosen with the fill_char enum parameter
+/// - [`DisplayMode::Points`] only renders the object's vertices as single pixels with the `ColChar` chosen with the fill_char enum parameter
 /// - `DisplayMode::Debug` does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
 ///
 pub enum DisplayMode {
