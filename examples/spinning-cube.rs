@@ -28,7 +28,7 @@ fn main() {
             true => frame_skip = false,
             false => {
                 viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
-                View::display_render(view.render());
+                view.display_render().unwrap();
             }
         }
 

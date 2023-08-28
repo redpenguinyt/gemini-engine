@@ -18,7 +18,7 @@
 //!         point.pos.x += 1;
 //!
 //!         view.blit(&point, Wrapping::Wrap);
-//!         View::display_render(view.render());
+//!         view.display_render().unwrap();
 //!
 //!         gameloop::sleep_fps(FPS, None);
 //!     }
@@ -34,7 +34,7 @@
 //! 1. Clear the [`View`]
 //! 2. Work through any logic you might have (moving things around, taking inputs etc.)
 //! 3. Blit all the [`ViewElement`]s to the screen
-//! 4. print the result of `View.render`
+//! 4. print the result of `View.display_render`
 //! 5. Sleep
 //!
 //! In our case, we want to move our [`Point`] one unit to the right every frame, so we increase its value by one here. Next we blit the [`Point`] to the [`View`] (adding it to the [`View`]'s internal canvas) and render. Rendering will display the view in the terminal (make sure your terminal is large enough to fit the whole image!). The last line of our code sleeps for `1/FPS` seconds. We pass None in place of what would normally be a Some(Duration) type, displaying the amount of time it took to blit and render everything so that [`gameloop::sleep_fps`](crate::gameloop::sleep_fps) can accomodate for the time taken to render. Since this example program is quite simple, we've just passed None. You can see how best to write a gameloop in the [`gameloop`](crate::gameloop) documentation.

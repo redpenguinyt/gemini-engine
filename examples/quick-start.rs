@@ -16,7 +16,7 @@ fn main() {
         point.pos.x += 1;
 
         view.blit(&point, Wrapping::Wrap);
-        View::display_render(view.render());
+        view.display_render().unwrap();
 
         gameloop::sleep_fps(FPS, None);
     }

@@ -36,7 +36,7 @@
 //!             true => frame_skip = false,
 //!             false => {
 //!                 viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
-//!                 View::display_render(view.render());
+//!                 view.display_render().unwrap();
 //!             }
 //!         }
 //!
@@ -107,7 +107,7 @@
 //! # );
 //! # let cube = Mesh3D::default_cube();
 //! viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
-//! View::display_render(view.render());
+//! view.display_render().unwrap();
 //! ```
 //!
 //! This part of the code blits all the 3d stuff to the [`View`](crate::elements::view::View) before rendering as usual. [`Viewport.blit_to()`](Viewport#blit_to) takes a mutable reference to the view, a list of all the objects we want to render and a [`DisplayMode`] enum (more info in the [`DisplayMode`] documentation).

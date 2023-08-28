@@ -1,7 +1,7 @@
-use std::fmt::Debug;
+use std::fmt::{Debug, Display};
 
 /// We use `ColChar` to say exactly what each pixel should look like and what colour it should be. That is, the [`View`](super::View)'s canvas is just a vector of `ColChar`s under the hood. `ColChar` has the [`fill_char`](ColChar::fill_char) and [`modifier`](ColChar::modifier) properties. [`fill_char`](ColChar::fill_char) is the single ascii character used as the "pixel" when the [`View`](super::View) is rendered, whereas [`modifier`](ColChar::modifier) can give that pixel a colour or make it bold/italic
-#[derive(Copy)]
+#[derive(Debug, Copy)]
 pub struct ColChar {
     pub fill_char: char,
     pub modifier: Modifier,
@@ -30,13 +30,8 @@ impl ColChar {
 
     pub fn render(&self) -> String {
         match self.modifier {
-            Modifier::None => String::from(self.fill_char),
-            _ => format!(
-                "{}{}{}",
-                self.modifier.as_string(),
-                self.fill_char,
-                Modifier::END.as_string()
-            ),
+            Modifier::None => self.fill_char.to_string(),
+            _ => format!("{}{}{}", self.modifier, self.fill_char, Modifier::END),
         }
     }
 }
@@ -50,14 +45,17 @@ impl Clone for ColChar {
     }
 }
 
-impl Debug for ColChar {
+impl Display for ColChar {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Colchar(\"{}\")", self.render())
+        match self.modifier {
+            Modifier::None => write!(f, "{}", self.fill_char),
+            _ => write!(f, "{}{}{}", self.modifier, self.fill_char, Modifier::END),
+        }
     }
 }
 
 /// The `Modifier` enum is used for adding modifications to text such as colour, bold/italic/underline and others. It's essentially a wrapper for `\x1b[{x}m`, where {x} is a code or rgb value of some sort. `Modifier` is primarily used by [`ColChar`] as one of its properties
-#[derive(Copy)]
+#[derive(Debug, Copy)]
 pub enum Modifier {
     Coded(u8),
     Colour { r: u8, g: u8, b: u8 },
@@ -78,14 +76,6 @@ impl Modifier {
     pub const BLUE: Self = Self::Coded(34);
     pub const PURPLE: Self = Self::Coded(35);
     pub const CYAN: Self = Self::Coded(36);
-
-    pub fn as_string(&self) -> String {
-        match self {
-            Self::Coded(code) => format!("\x1b[{}m", code),
-            Self::Colour { r, g, b } => format!("\x1b[38;2;{};{};{}m", r, g, b),
-            Self::None => String::new(),
-        }
-    }
 
     pub fn from_rgb(r: u8, g: u8, b: u8) -> Self {
         Self::Colour { r, g, b }
@@ -129,6 +119,16 @@ impl Clone for Modifier {
                 b: *b,
             },
             Self::None => Self::None,
+        }
+    }
+}
+
+impl Display for Modifier {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Coded(code) => write!(f, "\x1b[{}m", code),
+            Self::Colour { r, g, b } => write!(f, "\x1b[38;2;{};{};{}m", r, g, b),
+            Self::None => Ok(()),
         }
     }
 }

@@ -1,4 +1,8 @@
-use std::{io::Error, usize};
+use std::{
+    fmt::{self, Display, Write},
+    io::{self, Error, Write as ioWrite},
+    usize,
+};
 pub mod colchar;
 pub mod utils;
 pub mod vec2d;
@@ -16,7 +20,7 @@ pub use vec2d::Vec2D;
 ///
 ///     view.blit(&point, Wrapping::Panic);
 ///
-///     View::display_render(view.render());
+///     view.display_render().unwrap();
 /// }
 /// ```
 pub struct View {
@@ -108,26 +112,25 @@ impl View {
         }
     }
 
-    /// Render the View to a String
-    pub fn render(&self) -> String {
-        let mut result = String::from("\x1b[H\x1b[J");
-        for y in 0..self.height {
-            let row_pixels = self.pixels[self.width * y..self.width * (y + 1)].iter();
-
-            let mut row = String::new();
-            for pixel in row_pixels {
-                row.push_str(pixel.render().as_str());
-            }
-
-            result.push_str(format!("{row}\n").as_str());
-        }
-        result.push_str("\x1b[J");
-        result
+    /// Display the View. View implements the Display trait, so you can display it how you wish but this is intended to be the fastest way possible
+    pub fn display_render(&self) -> io::Result<()> {
+        let mut stdout = io::stdout().lock();
+        write!(stdout, "{self}")
     }
+}
 
-    /// Display the rendered [`String`]. Should print the string as quickly as possible
-    pub fn display_render(frame: String) {
-        println!("{}", frame);
+impl Display for View {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("\x1b[H\x1b[J")?;
+        for y in 0..self.height {
+            for pixel in self.pixels[self.width * y..self.width * (y + 1)].iter() {
+                write!(f, "{pixel}")?;
+            }
+            f.write_char('\n')?;
+        }
+        f.write_str("\x1b[J")?;
+
+        Ok(())
     }
 }
 
