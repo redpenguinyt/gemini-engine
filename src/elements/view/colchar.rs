@@ -34,6 +34,22 @@ impl ColChar {
             _ => format!("{}{}{}", self.modifier, self.fill_char, Modifier::END),
         }
     }
+
+    /// return a ColChar with the same `modifier` and new `fill_char`
+    pub fn with_char(&self, fill_char: char) -> Self {
+        Self {
+            fill_char: fill_char,
+            modifier: self.modifier,
+        }
+    }
+
+    /// return a ColChar with the same `fill_char` and new `modifier`
+    pub fn with_mod(&self, modifier: Modifier) -> Self {
+        Self {
+            fill_char: self.fill_char,
+            modifier: modifier,
+        }
+    }
 }
 
 impl Clone for ColChar {
