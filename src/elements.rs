@@ -74,7 +74,7 @@ impl PixelContainer {
 
 impl From<Vec<(Vec2D, ColChar)>> for PixelContainer {
     fn from(pixels: Vec<(Vec2D, ColChar)>) -> Self {
-        Self {pixels}
+        Self { pixels }
     }
 }
 
