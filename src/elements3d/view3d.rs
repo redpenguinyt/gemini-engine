@@ -14,7 +14,7 @@ pub use vec3d::{SpatialAxis, Vec3D};
 /// - [`DisplayMode::Debug`] does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
 /// - [`DisplayMode::Points`] only renders the object's vertices as single pixels with the [`ColChar`] chosen with the fill_char enum parameter
 /// - [`DisplayMode::Wireframe`] renders the edges of the meshes, without filling in the shapes
-/// - [`DisplayMode::Solid`] render the full faces of all the meshes. This is normally the final render
+/// - [`DisplayMode::Solid`] renders the full faces of all the meshes. This is normally the final render
 pub enum DisplayMode {
     Debug,
     Points { fill_char: ColChar },
@@ -41,8 +41,8 @@ impl Viewport {
     }
 
     pub fn spatial_to_screen(&self, pos: Vec3D) -> Vec2D {
-        let f = self.fov / pos.z;
-        let (sx, sy) = (pos.x * f, pos.y * f);
+        let f = self.fov / -pos.z;
+        let (sx, sy) = (-pos.x * f, pos.y * f);
 
         // adjust for non-square pixels
         let sx = (sx * 2.2).round() as isize;
@@ -112,10 +112,12 @@ impl Viewport {
                         }
                         let vertices_only = face_vertices.iter().map(|k| k.0).collect();
 
+                        // Backface culling
                         if !utils::is_clockwise(&vertices_only) {
                             continue;
                         }
 
+                        
                         let mut mean_z: f64 = 0.0;
                         for (_v, z) in &face_vertices {
                             mean_z += z;
@@ -126,7 +128,7 @@ impl Viewport {
                     }
                 }
 
-                screen_faces.sort_by_key(|k| (k.1 * 100.0).round() as isize);
+                screen_faces.sort_by_key(|k| (k.1 * -100.0).round() as isize);
 
                 for face in screen_faces {
                     let polygon = Polygon::new(face.0, face.2);
