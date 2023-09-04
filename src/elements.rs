@@ -63,6 +63,19 @@ impl PixelContainer {
     pub fn append(&mut self, pixels: &mut Vec<(Vec2D, ColChar)>) {
         self.pixels.append(pixels);
     }
+
+    /// Blit a [`ViewElement`] to the PixelContainer.
+    pub fn blit<T: ViewElement>(&mut self, element: &T) {
+        let mut active_pixels = element.active_pixels();
+
+        self.append(&mut active_pixels);
+    }
+}
+
+impl From<Vec<(Vec2D, ColChar)>> for PixelContainer {
+    fn from(pixels: Vec<(Vec2D, ColChar)>) -> Self {
+        Self {pixels}
+    }
 }
 
 impl ViewElement for PixelContainer {
