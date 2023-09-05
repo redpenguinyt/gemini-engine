@@ -3,14 +3,14 @@ use gemini_engine::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport};
 use gemini_engine::gameloop;
 
 const FPS: u32 = 20;
-const FOV: f64 = 5000.0;
+const FOV: f64 = 95.0;
 
 fn main() {
     let mut frame_skip = false;
     let mut view = View::new(350, 90, ColChar::BACKGROUND);
 
     let mut viewport = Viewport::new(
-        Vec3D::new(0.0, 0.0, 250.0),
+        Vec3D::new(0.0, 0.0, 6.0),
         Vec3D::new(-0.5, 0.0, 0.0),
         FOV,
         Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),

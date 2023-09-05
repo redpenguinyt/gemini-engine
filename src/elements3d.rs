@@ -116,6 +116,7 @@ use crate::elements::view::{ColChar, Modifier, Vec2D};
 pub mod view3d;
 pub use view3d::{DisplayMode, Face, SpatialAxis, Vec3D, ViewElement3D, Viewport};
 
+/// The struct for a Mesh3D object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
 pub struct Mesh3D {
     pub pos: Vec3D,
     pub rotation: Vec3D,

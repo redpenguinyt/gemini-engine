@@ -12,13 +12,13 @@ pub use vec3d::{SpatialAxis, Vec3D};
 
 /// `DisplayMode` determines how the [`Viewport`] renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
 /// - [`DisplayMode::Debug`] does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
-/// - [`DisplayMode::Points`] only renders the object's vertices as single pixels with the [`ColChar`] chosen with the fill_char enum parameter
-/// - [`DisplayMode::Wireframe`] renders the edges of the meshes, without filling in the shapes
+/// - [`DisplayMode::Points`] only renders the object's vertices as single pixels with the [`ColChar`] chosen with the `fill_char` enum parameter
+/// - [`DisplayMode::Wireframe`] renders the edges of the meshes, without filling in the shapes. You can choose whether you want to render with backface culling using the `backface_culling` enum parameter
 /// - [`DisplayMode::Solid`] renders the full faces of all the meshes. This is normally the final render
 pub enum DisplayMode {
     Debug,
     Points { fill_char: ColChar },
-    Wireframe,
+    Wireframe { backface_culling: bool },
     Solid,
 }
 
@@ -78,11 +78,23 @@ impl Viewport {
                     }
                 }
             }
-            DisplayMode::Wireframe => {
+            DisplayMode::Wireframe { backface_culling } => {
                 for object in objects {
                     let screen_vertices = object.vertices_on_screen(&self);
 
                     for face in (*object.get_faces()).into_iter() {
+                        if backface_culling {
+                            let face_vertex_indices = face
+                                .v_indexes
+                                .iter()
+                                .map(|vi| screen_vertices[*vi].0)
+                                .collect();
+                            // Backface culling
+                            if !utils::is_clockwise(&face_vertex_indices) {
+                                continue;
+                            }
+                        }
+
                         let mut pixel_container = PixelContainer::new();
                         for fi in 0..face.v_indexes.len() {
                             let (i0, i1) = (
@@ -106,23 +118,23 @@ impl Viewport {
                     let screen_vertices = object.vertices_on_screen(&self);
 
                     for face in (*object.get_faces()).into_iter() {
-                        let mut face_vertices = vec![];
-                        for vi in &face.v_indexes {
-                            face_vertices.push(screen_vertices[*vi]);
-                        }
-                        let vertices_only = face_vertices.iter().map(|k| k.0).collect();
+                        let face_vertex_indices: Vec<(Vec2D, f64)> = face
+                            .v_indexes
+                            .iter()
+                            .map(|vi| screen_vertices[*vi])
+                            .collect();
+                        let vertices_only = face_vertex_indices.iter().map(|k| k.0).collect();
 
                         // Backface culling
                         if !utils::is_clockwise(&vertices_only) {
                             continue;
                         }
 
-                        
                         let mut mean_z: f64 = 0.0;
-                        for (_v, z) in &face_vertices {
+                        for (_v, z) in &face_vertex_indices {
                             mean_z += z;
                         }
-                        mean_z /= face_vertices.len() as f64;
+                        mean_z /= face_vertex_indices.len() as f64;
 
                         screen_faces.push((vertices_only, mean_z, face.fill_char));
                     }
