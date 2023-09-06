@@ -28,14 +28,13 @@ impl ColChar {
         }
     }
 
+    // Return the rendered ColChar
+    #[deprecated = "Please use `ColChar`'s implementation of `std::fmt::Display` instead"]
     pub fn render(&self) -> String {
-        match self.modifier {
-            Modifier::None => self.fill_char.to_string(),
-            _ => format!("{}{}{}", self.modifier, self.fill_char, Modifier::END),
-        }
+        self.to_string()
     }
 
-    /// return a ColChar with the same `modifier` and new `fill_char`
+    /// Return a ColChar with the same `modifier` and new `fill_char`
     pub fn with_char(&self, fill_char: char) -> Self {
         Self {
             fill_char: fill_char,
@@ -43,11 +42,27 @@ impl ColChar {
         }
     }
 
-    /// return a ColChar with the same `fill_char` and new `modifier`
+    /// Return a ColChar with the same `fill_char` and new `modifier`
     pub fn with_mod(&self, modifier: Modifier) -> Self {
         Self {
             fill_char: self.fill_char,
             modifier: modifier,
+        }
+    }
+
+    /// Return a ColChar with the same `fill_char` and new `modifier` of the `Modifier::Colour` enum variant from an RGB value
+    pub fn with_rgb(&self, r: u8, g: u8, b: u8) -> Self {
+        Self {
+            fill_char: self.fill_char,
+            modifier: Modifier::Colour { r, g, b },
+        }
+    }
+
+    /// Return a ColChar with the same `fill_char` and new `modifier` of the `Modifier::Colour` enum variant from an HSV value
+    pub fn with_hsv(&self, h: u8, s: u8, v: u8) -> Self {
+        Self {
+            fill_char: self.fill_char,
+            modifier: Modifier::from_hsv(h, s, v),
         }
     }
 }
