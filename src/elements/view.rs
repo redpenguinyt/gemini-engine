@@ -107,8 +107,8 @@ impl View {
     pub fn blit<T: ViewElement>(&mut self, element: &T, wrapping: Wrapping) {
         let active_pixels = element.active_pixels();
 
-        for (pixel, fill_char) in active_pixels {
-            self.plot(pixel, fill_char, wrapping);
+        for point in active_pixels {
+            self.plot(point.pos, point.fill_char, wrapping);
         }
     }
 
@@ -134,8 +134,45 @@ impl Display for View {
     }
 }
 
+/// The `Point` holds a single [`Vec2D`], the coordinates at which it is printed when blit to a [`View`]
+#[derive(Debug, Copy)]
+pub struct Point {
+    pub pos: Vec2D,
+    pub fill_char: ColChar,
+}
+
+impl Point {
+    pub fn new(pos: Vec2D, fill_char: ColChar) -> Self {
+        Self { pos, fill_char }
+    }
+}
+
+impl Clone for Point {
+    fn clone(&self) -> Self {
+        Self {
+            pos: self.pos,
+            fill_char: self.fill_char,
+        }
+    }
+}
+
+impl From<(Vec2D, ColChar)> for Point {
+    fn from(value: (Vec2D, ColChar)) -> Self {
+        Self {
+            pos: value.0,
+            fill_char: value.1,
+        }
+    }
+}
+
+impl ViewElement for Point {
+    fn active_pixels(&self) -> Vec<Point> {
+        vec![*self]
+    }
+}
+
 /// ViewElement is a trait that must be implemented by any element that can be blitted to a View
 pub trait ViewElement {
     /// Return a vector of every coordinate where a pixel should be placed and its respective [`ColChar`]. If your whole object is a solid colour, consider using [`utils::points_to_pixels()`] which will add the same [`ColChar`] to every point and can then be used as this function's output
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)>;
+    fn active_pixels(&self) -> Vec<Point>;
 }

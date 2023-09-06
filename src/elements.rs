@@ -44,11 +44,11 @@
 pub mod view;
 use view::utils::{self, BlitCache};
 use view::{ColChar, Modifier, ViewElement};
-pub use view::{Vec2D, View};
+pub use view::{Point, Vec2D, View};
 
 /// A `PixelContainer` only has a [`pixels`](PixelContainer::pixels) property, which gets returned directly to the View during blit
 pub struct PixelContainer {
-    pub pixels: Vec<(Vec2D, ColChar)>,
+    pub pixels: Vec<Point>,
 }
 
 impl PixelContainer {
@@ -56,11 +56,11 @@ impl PixelContainer {
         Self { pixels: vec![] }
     }
 
-    pub fn push(&mut self, pixel: (Vec2D, ColChar)) {
+    pub fn push(&mut self, pixel: Point) {
         self.pixels.push(pixel);
     }
 
-    pub fn append(&mut self, pixels: &mut Vec<(Vec2D, ColChar)>) {
+    pub fn append(&mut self, pixels: &mut Vec<Point>) {
         self.pixels.append(pixels);
     }
 
@@ -74,36 +74,15 @@ impl PixelContainer {
 
 impl From<Vec<(Vec2D, ColChar)>> for PixelContainer {
     fn from(pixels: Vec<(Vec2D, ColChar)>) -> Self {
-        Self { pixels }
-    }
-}
-
-impl ViewElement for PixelContainer {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
-        self.pixels.clone()
-    }
-}
-
-/// The `Point` holds a single [`Vec2D`], the coordinates at which it is printed when blit to a [`View`]
-pub struct Point {
-    pub pos: Vec2D,
-    pub fill_char: ColChar,
-    _private: (),
-}
-
-impl Point {
-    pub fn new(pos: Vec2D, fill_char: ColChar) -> Self {
         Self {
-            pos,
-            fill_char,
-            _private: (),
+            pixels: pixels.iter().map(|x| Point::from(*x)).collect(),
         }
     }
 }
 
-impl ViewElement for Point {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
-        vec![(self.pos, self.fill_char)]
+impl ViewElement for PixelContainer {
+    fn active_pixels(&self) -> Vec<Point> {
+        self.pixels.clone()
     }
 }
 
@@ -137,7 +116,7 @@ impl Line {
     /// Draw a line using Bresenham's line algorithm. Returns a list of the pixels to print to
     pub fn draw(pos0: Vec2D, pos1: Vec2D) -> Vec<Vec2D> {
         // Use Bresenham's line algorithm to generate active pixels at rendertime
-        let mut points: Vec<Vec2D> = Vec::new();
+        let mut points = Vec::new();
 
         let (mut x, mut y) = pos0.as_tuple();
         let (x1, y1) = pos1.as_tuple();
@@ -173,7 +152,7 @@ impl Line {
 }
 
 impl ViewElement for Line {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+    fn active_pixels(&self) -> Vec<Point> {
         let cache = self.cache.dependent();
         let points = match cache {
             Some(c) => c,
@@ -252,7 +231,7 @@ impl Triangle {
 }
 
 impl ViewElement for Triangle {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+    fn active_pixels(&self) -> Vec<Point> {
         let cache = self.cache.dependent();
         let points = match cache {
             Some(c) => c,
@@ -303,7 +282,7 @@ impl Polygon {
 }
 
 impl ViewElement for Polygon {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
+    fn active_pixels(&self) -> Vec<Point> {
         let cache = self.cache.dependent();
         let points = match cache {
             Some(c) => c,
@@ -334,16 +313,16 @@ impl Box {
 }
 
 impl ViewElement for Box {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
-        let mut pixels: Vec<(Vec2D, ColChar)> = vec![];
+    fn active_pixels(&self) -> Vec<Point> {
+        let mut points = vec![];
 
         for x in 0..self.size.x {
             for y in 0..self.size.y {
-                pixels.push((self.pos + Vec2D { x, y }, self.fill_char))
+                points.push(self.pos + Vec2D { x, y })
             }
         }
 
-        pixels
+        utils::points_to_pixels(points, self.fill_char)
     }
 }
 
@@ -370,14 +349,14 @@ impl Sprite {
 }
 
 impl ViewElement for Sprite {
-    fn active_pixels(&self) -> Vec<(Vec2D, ColChar)> {
-        let mut pixels: Vec<(Vec2D, ColChar)> = vec![];
+    fn active_pixels(&self) -> Vec<Point> {
+        let mut pixels = vec![];
 
         let lines = self.texture.split("\n");
         for (y, line) in lines.enumerate() {
             for (x, char) in line.chars().enumerate() {
                 if char != ' ' {
-                    pixels.push((
+                    pixels.push(Point::new(
                         self.pos + Vec2D::new(x as isize, y as isize),
                         ColChar {
                             fill_char: char,
