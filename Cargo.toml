@@ -3,14 +3,14 @@ name = "gemini-engine"
 authors = ["RedPenguin"]
 edition = "2021"
 version = "0.3.0"
-description = "A monospaced ASCII rendering engine"
+description = "A 2D/3D monospaced ASCII rendering engine for the terminal"
 documentation = "https://docs.rs/gemini-engine"
 readme = "README.md"
 homepage = "https://github.com/redpenguinyt/gemini-rust"
 repository = "https://github.com/redpenguinyt/gemini-rust"
 license = "MIT"
-keywords = ["gemini", "gamedev", "ascii", "game-engine", "rendering-engine"]
-categories = []
+keywords = ["gemini", "command-line", "ascii", "game-engine", "rendering-engine"]
+categories = ["rendering", "rendering::engine", "graphics", "game-development", "command-line-interface"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
