@@ -75,6 +75,11 @@ impl View {
         Ok(())
     }
 
+    // Return a Vec2D of the centre of the screen
+    pub fn center(&self) -> Vec2D {
+        Vec2D::new((self.width / 2) as isize, (self.height / 2) as isize)
+    }
+
     pub fn clear(&mut self) {
         self.pixels = vec![self.background_char; self.width * self.height]
     }
@@ -112,7 +117,7 @@ impl View {
         }
     }
 
-    /// Display the View. View implements the Display trait, so you can display it how you wish but this is intended to be the fastest way possible
+    /// Display the View. View implements the Display trait so you can display it how you wish, but this is intended to be the fastest way possible
     pub fn display_render(&self) -> io::Result<()> {
         let mut stdout = io::stdout().lock();
         write!(stdout, "{self}")

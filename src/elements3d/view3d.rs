@@ -27,6 +27,7 @@ pub struct Viewport {
     pub offset: Vec3D,
     pub rotation: Vec3D,
     pub fov: f64,
+    /// The center of the view you intend to print to. You can use `View.center()` as the input for this
     pub origin: Vec2D,
 }
 
