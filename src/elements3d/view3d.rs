@@ -29,6 +29,8 @@ pub struct Viewport {
     pub fov: f64,
     /// The center of the view you intend to print to. You can use `View.center()` as the input for this
     pub origin: Vec2D,
+    /// Most terminals don't have perfectly square characters. The value you set here is how much the final image will be stretched in the X axis to account for this. The default value is `2.2` but it will be different in most terminals
+    pub character_width_multiplier: f64,
 }
 
 impl Viewport {
@@ -38,6 +40,7 @@ impl Viewport {
             rotation,
             fov,
             origin,
+            character_width_multiplier: 2.2,
         }
     }
 
@@ -46,7 +49,7 @@ impl Viewport {
         let (sx, sy) = (-pos.x * f, pos.y * f);
 
         // adjust for non-square pixels
-        let sx = (sx * 2.2).round() as isize;
+        let sx = (sx * self.character_width_multiplier).round() as isize;
         let sy = sy.round() as isize;
 
         self.origin + Vec2D::new(sx, sy)
