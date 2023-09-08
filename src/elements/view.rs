@@ -132,8 +132,31 @@ impl Display for View {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
         f.write_str("\x1b[H\x1b[J")?;
         for y in 0..self.height {
-            for pixel in self.pixels[self.width * y..self.width * (y + 1)].iter() {
-                write!(f, "{pixel}")?;
+            let row: Vec<&ColChar> = self.pixels[self.width * y..self.width * (y + 1)]
+                .iter()
+                .collect();
+            write!(f, "{}{}", row[0].modifier, row[0].fill_char)?;
+            for i in 1..row.len() {
+                let curr_mod = row[i].modifier;
+                let prev_mod = match row.get(i - 1) {
+                    Some(m) => m.modifier,
+                    None => Modifier::None,
+                };
+                let next_mod = match row.get(i + 1) {
+                    Some(m) => m.modifier,
+                    None => Modifier::None,
+                };
+
+                let modifier = match prev_mod == curr_mod {
+                    true => Modifier::None,
+                    false => curr_mod,
+                };
+                let end = match next_mod == curr_mod {
+                    true => Modifier::None,
+                    false => Modifier::END,
+                };
+
+                write!(f, "{}{}{}", modifier, row[i].fill_char, end)?;
             }
             f.write_char('\n')?;
         }
