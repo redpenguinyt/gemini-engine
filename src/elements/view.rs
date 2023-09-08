@@ -75,6 +75,10 @@ impl View {
         Ok(())
     }
 
+    pub fn size(&self) -> Vec2D {
+        Vec2D::new(self.width as isize, self.height as isize)
+    }
+
     // Return a Vec2D of the centre of the screen
     pub fn center(&self) -> Vec2D {
         Vec2D::new((self.width / 2) as isize, (self.height / 2) as isize)
