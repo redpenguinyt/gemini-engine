@@ -65,6 +65,15 @@ impl<T: Clone + SubAssign> SubAssign<Vector2<T>> for Vector2<T> {
     }
 }
 
+impl<T: Clone> From<(T, T)> for Vector2<T> {
+    fn from(value: (T, T)) -> Self {
+        Self {
+            x: value.0,
+            y: value.1,
+        }
+    }
+}
+
 /// A pair of `isize` used for coordinates, size or direction on a 2D plane
 pub type Vec2D = Vector2<isize>;
 
@@ -96,11 +105,54 @@ impl RemAssign for Vec2D {
     }
 }
 
-impl From<(isize, isize)> for Vec2D {
-    fn from(value: (isize, isize)) -> Self {
-        Vec2D {
-            x: value.0,
-            y: value.1,
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn add_vec2() {
+        assert_eq!(
+            Vector2::new(15, -3),
+            Vector2::new(13, 4) + Vector2::new(2, -7)
+        );
+    }
+
+    #[test]
+    fn subtract_vec2() {
+        assert_eq!(
+            Vector2::new(2, -10),
+            Vector2::new(17, 4) - Vector2::new(15, 14)
+        );
+    }
+
+    #[test]
+    fn rem_vec2_over() {
+        assert_eq!(
+            Vector2::new(4, 1),
+            Vector2::new(9, 11) % Vector2::new(5, 10)
+        )
+    }
+
+    #[test]
+    fn rem_vec2_under() {
+        assert_eq!(
+            Vector2::new(4, 1),
+            Vector2::new(-1, -109) % Vector2::new(5, 10)
+        )
+    }
+
+    #[test]
+    fn eq_vec2_both() {
+        assert_eq!(Vector2::new(5, 4), Vector2::new(5, 4))
+    }
+
+    #[test]
+    fn eq_vec2_only_one() {
+        assert_ne!(Vector2::new(5, 2), Vector2::new(5, 4))
+    }
+
+    #[test]
+    fn eq_vec2_neither() {
+        assert_ne!(Vector2::new(17, 2), Vector2::new(5, 4))
     }
 }
