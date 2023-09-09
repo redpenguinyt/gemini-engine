@@ -16,42 +16,54 @@ pub mod elements3d;
 pub mod gameloop;
 
 #[cfg(test)]
-mod vec2d_tests {
+mod vec2_tests {
     use super::*;
-    use elements::Vec2D;
+    use elements::view::vec2d::Vector2;
 
     #[test]
-    fn add_vec2d() {
-        assert_eq!(Vec2D::new(15, -3), Vec2D::new(13, 4) + Vec2D::new(2, -7));
+    fn add_vec2() {
+        assert_eq!(
+            Vector2::new(15, -3),
+            Vector2::new(13, 4) + Vector2::new(2, -7)
+        );
     }
 
     #[test]
-    fn subtract_vec2d() {
-        assert_eq!(Vec2D::new(2, -10), Vec2D::new(17, 4) - Vec2D::new(15, 14));
+    fn subtract_vec2() {
+        assert_eq!(
+            Vector2::new(2, -10),
+            Vector2::new(17, 4) - Vector2::new(15, 14)
+        );
     }
 
     #[test]
-    fn rem_vec2d_over() {
-        assert_eq!(Vec2D::new(4, 1), Vec2D::new(9, 11) % Vec2D::new(5, 10))
+    fn rem_vec2_over() {
+        assert_eq!(
+            Vector2::new(4, 1),
+            Vector2::new(9, 11) % Vector2::new(5, 10)
+        )
     }
 
     #[test]
-    fn rem_vec2d_under() {
-        assert_eq!(Vec2D::new(4, 1), Vec2D::new(-1, -109) % Vec2D::new(5, 10))
+    fn rem_vec2_under() {
+        assert_eq!(
+            Vector2::new(4, 1),
+            Vector2::new(-1, -109) % Vector2::new(5, 10)
+        )
     }
 
     #[test]
-    fn eq_vec2d_both() {
-        assert_eq!(Vec2D::new(5, 4), Vec2D::new(5, 4))
+    fn eq_vec2_both() {
+        assert_eq!(Vector2::new(5, 4), Vector2::new(5, 4))
     }
 
     #[test]
-    fn eq_vec2d_only_one() {
-        assert_ne!(Vec2D::new(5, 2), Vec2D::new(5, 4))
+    fn eq_vec2_only_one() {
+        assert_ne!(Vector2::new(5, 2), Vector2::new(5, 4))
     }
 
     #[test]
-    fn eq_vec2d_neither() {
-        assert_ne!(Vec2D::new(17, 2), Vec2D::new(5, 4))
+    fn eq_vec2_neither() {
+        assert_ne!(Vector2::new(17, 2), Vector2::new(5, 4))
     }
 }
