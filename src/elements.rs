@@ -273,17 +273,26 @@ impl Polygon {
         }
     }
 
-    /// Draw a polygon from points. Only supports convex polygons as of now
-    pub fn draw(vertices: Vec<Vec2D>) -> Vec<Vec2D> {
+    /// Split a polygon up into triangles. Returns a vec of coordinate sets for said triangles
+    pub fn triangulate(vertices: Vec<Vec2D>) -> Vec<[Vec2D; 3]> {
         let mut points = vec![];
         for fi in 1..(vertices.len() - 1) {
-            points.extend(Triangle::draw([
+            points.push([
                 vertices[0],
                 vertices[fi],
                 vertices[(fi + 1) % vertices.len()],
-            ]))
+            ])
         }
         points
+    }
+
+    /// Draw a polygon from points. Only supports convex polygons as of now
+    pub fn draw(vertices: Vec<Vec2D>) -> Vec<Vec2D> {
+        Self::triangulate(vertices)
+            .iter()
+            .map(|corners| Triangle::draw(*corners))
+            .flatten()
+            .collect()
     }
 }
 
