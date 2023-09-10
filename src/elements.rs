@@ -308,15 +308,15 @@ impl ViewElement for Polygon {
     }
 }
 
-/// The `Polygon` takes a position and size, and returns a box at that position with that width and size when blit to a [`View`]
-pub struct Box {
+/// The `Rect` takes a position and size, and returns a rectangle at that position with the given width and size when blit to a [`View`]
+pub struct Rect {
     pub pos: Vec2D,
     pub size: Vec2D,
     pub fill_char: ColChar,
     _private: (),
 }
 
-impl Box {
+impl Rect {
     pub fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Self {
         Self {
             pos,
@@ -327,7 +327,7 @@ impl Box {
     }
 }
 
-impl ViewElement for Box {
+impl ViewElement for Rect {
     fn active_pixels(&self) -> Vec<Point> {
         let mut points = vec![];
 
@@ -340,6 +340,9 @@ impl ViewElement for Box {
         utils::points_to_pixels(points, self.fill_char)
     }
 }
+
+#[deprecated = "Please use `Rect` instead"]
+pub type Box = Rect;
 
 /// A `ViewElement` that takes a multi-line string as a parameter, and can be used to put ASCII art, text and other such things on the View
 pub struct Sprite {
