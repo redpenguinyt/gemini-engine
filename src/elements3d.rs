@@ -114,13 +114,12 @@
 
 use crate::elements::view::{ColChar, Modifier, Vec2D};
 pub mod view3d;
-pub use view3d::{DisplayMode, Face, SpatialAxis, Vec3D, ViewElement3D, Viewport};
+pub use view3d::{DisplayMode, Face, Transform3D, Vec3D, ViewElement3D, Viewport};
 
 /// The struct for a Mesh3D object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
 #[derive(Debug)]
 pub struct Mesh3D {
-    pub pos: Vec3D,
-    pub rotation: Vec3D,
+    pub transform: Transform3D,
     pub vertices: Vec<Vec3D>,
     pub faces: Vec<Face>,
 }
@@ -129,8 +128,7 @@ impl Mesh3D {
     /// The gemini_engine equivalent of Blender's default cube. Has side lengths of 2
     pub fn default_cube() -> Self {
         Self::new(
-            Vec3D::ZERO,
-            Vec3D::ZERO,
+            Transform3D::DEFAULT,
             vec![
                 Vec3D::new(1.0, 1.0, -1.0),
                 Vec3D::new(1.0, 1.0, 1.0),
@@ -161,8 +159,7 @@ impl Mesh3D {
     /// This Mesh does not render in `DisplayMode::SOLID` (see [`DisplayMode`] documentation)
     pub fn gimbal() -> Self {
         Self::new(
-            Vec3D::ZERO,
-            Vec3D::ZERO,
+            Transform3D::DEFAULT,
             vec![
                 Vec3D::ZERO,
                 Vec3D::new(1.0, 0.0, 0.0),
@@ -177,12 +174,11 @@ impl Mesh3D {
         )
     }
 
-    pub fn new(pos: Vec3D, rotation: Vec3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
+    pub fn new(transform: Transform3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
         Self {
-            pos: pos,
-            rotation: rotation,
-            vertices: vertices,
-            faces: faces,
+            transform,
+            vertices,
+            faces,
         }
     }
 }
@@ -190,8 +186,7 @@ impl Mesh3D {
 impl Clone for Mesh3D {
     fn clone(&self) -> Self {
         Self {
-            pos: self.pos,
-            rotation: self.rotation,
+            transform: self.transform,
             vertices: self.vertices.clone(),
             faces: self.faces.clone(),
         }
@@ -199,11 +194,8 @@ impl Clone for Mesh3D {
 }
 
 impl ViewElement3D for Mesh3D {
-    fn get_pos(&self) -> Vec3D {
-        self.pos.clone()
-    }
-    fn get_rotation(&self) -> Vec3D {
-        self.rotation.clone()
+    fn get_transform(&self) -> Transform3D {
+        self.transform
     }
     fn get_vertices(&self) -> Vec<Vec3D> {
         self.vertices.clone()
@@ -214,11 +206,18 @@ impl ViewElement3D for Mesh3D {
     fn vertices_on_screen(&self, viewport: &Viewport) -> Vec<(Vec2D, f64)> {
         let mut screen_vertices = vec![];
         for vertex in &self.vertices {
-            let pos = vertex.global_position(&viewport, self);
+            // (viewport.transform * self.transform) *
+            let transformed = (viewport.transform * self.transform) * *vertex;
 
-            let screen_coordinates = viewport.spatial_to_screen(pos);
-            screen_vertices.push((screen_coordinates, pos.z));
+            // println!("{vertex}, {transformed}");
+
+            let screen_coordinates = viewport.spatial_to_screen(transformed);
+            screen_vertices.push((screen_coordinates, transformed.z));
         }
+
+        // println!("{:#?}", screen_vertices);
+
+        // panic!("intentional");
 
         screen_vertices
     }

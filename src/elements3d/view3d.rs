@@ -1,5 +1,3 @@
-pub mod face;
-pub mod vec3d;
 use crate::elements::{
     view::{
         utils::{self, points_to_pixels, Wrapping},
@@ -7,8 +5,12 @@ use crate::elements::{
     },
     Line, PixelContainer, Polygon, Sprite, Vec2D, View,
 };
+pub mod face;
+pub mod transform3d;
+pub mod vec3d;
 pub use face::Face;
-pub use vec3d::{SpatialAxis, Vec3D};
+pub use transform3d::Transform3D;
+pub use vec3d::Vec3D;
 
 /// `DisplayMode` determines how the [`Viewport`] renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
 /// - [`DisplayMode::Debug`] does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
@@ -24,8 +26,9 @@ pub enum DisplayMode {
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`], and also acts as the scene's camera.
 pub struct Viewport {
-    pub offset: Vec3D,
-    pub rotation: Vec3D,
+    /// How the is Viewport is oriented in the 3D scene
+    pub transform: Transform3D,
+    /// The Viewport's field of view
     pub fov: f64,
     /// The center of the view you intend to print to. You can use `View.center()` as the input for this
     pub origin: Vec2D,
@@ -34,10 +37,9 @@ pub struct Viewport {
 }
 
 impl Viewport {
-    pub fn new(offset: Vec3D, rotation: Vec3D, fov: f64, origin: Vec2D) -> Self {
+    pub fn new(transform: Transform3D, fov: f64, origin: Vec2D) -> Self {
         Self {
-            offset,
-            rotation,
+            transform,
             fov,
             origin,
             character_width_multiplier: 2.2,
@@ -156,10 +158,8 @@ impl Viewport {
 }
 
 pub trait ViewElement3D {
-    /// This should return the object's rotation
-    fn get_pos(&self) -> Vec3D;
-    /// This should return the object's rotation
-    fn get_rotation(&self) -> Vec3D;
+    /// This should return the object's transform
+    fn get_transform(&self) -> Transform3D;
     /// This should return all of the object's vertices
     fn get_vertices(&self) -> Vec<Vec3D>;
     /// This should return all of the object's `Face`s

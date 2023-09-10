@@ -1,5 +1,5 @@
 use gemini_engine::elements::{view::ColChar, Vec2D, View};
-use gemini_engine::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport};
+use gemini_engine::elements3d::{DisplayMode, Mesh3D, Transform3D, Vec3D, Viewport};
 use gemini_engine::gameloop;
 
 const FPS: u32 = 20;
@@ -10,8 +10,7 @@ fn main() {
     let mut view = View::new(350, 90, ColChar::BACKGROUND);
 
     let mut viewport = Viewport::new(
-        Vec3D::new(0.0, 0.0, 6.0),
-        Vec3D::new(-0.5, 0.0, 0.0),
+        Transform3D::new_tr(Vec3D::new(0.0, 0.0, 5.0), Vec3D::new(-0.5, 0.3, 0.0)),
         FOV,
         Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
     );
@@ -22,7 +21,7 @@ fn main() {
         let now = gameloop::Instant::now();
         view.clear();
 
-        viewport.rotation.y -= 0.05;
+        viewport.transform.rotation.y -= 0.05;
 
         match frame_skip {
             true => frame_skip = false,

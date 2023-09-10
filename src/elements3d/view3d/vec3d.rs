@@ -1,16 +1,8 @@
-use super::{super::ViewElement3D, Viewport};
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
-
-/// Helper enum for when you need to choose an axis
-pub enum SpatialAxis {
-    X,
-    Y,
-    Z,
-}
 
 #[derive(Copy, Debug)]
 pub struct Vec3D {
@@ -33,37 +25,6 @@ impl Vec3D {
 
     pub fn magnitude(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
-    }
-
-    pub fn rotate_one_axis(&mut self, axis: SpatialAxis, r: f64) {
-        let (x, y) = match axis {
-            SpatialAxis::X => (&mut self.y, &mut self.z),
-            SpatialAxis::Y => (&mut self.x, &mut self.z),
-            SpatialAxis::Z => (&mut self.x, &mut self.y),
-        };
-
-        let s = r.sin();
-        let c = r.cos();
-
-        (*x, *y) = (*x * c - *y * s, *x * s + *y * c)
-    }
-
-    pub fn rotate(&mut self, rotation: Vec3D) {
-        self.rotate_one_axis(SpatialAxis::Y, rotation.y);
-        self.rotate_one_axis(SpatialAxis::X, rotation.x);
-        self.rotate_one_axis(SpatialAxis::Z, rotation.z);
-    }
-
-    pub fn global_position<T: ViewElement3D>(&self, viewport: &Viewport, object: &T) -> Vec3D {
-        let mut pos = *self;
-
-        pos.rotate(object.get_rotation());
-        pos += object.get_pos();
-
-        pos.rotate(viewport.rotation);
-        pos += viewport.offset;
-
-        pos
     }
 }
 
