@@ -43,7 +43,7 @@ impl Viewport {
         }
     }
 
-    pub fn spatial_to_screen(&self, pos: Vec3D) -> Vec2D {
+    pub fn perspective(&self, pos: Vec3D) -> Vec2D {
         let f = self.fov / -pos.z;
         let (sx, sy) = (-pos.x * f, pos.y * f);
 
@@ -54,9 +54,22 @@ impl Viewport {
         self.origin + Vec2D::new(sx, sy)
     }
 
-    pub fn render<T: ViewElement3D>(
+    pub fn get_vertices_on_screen(&self, object: &impl ViewElement3D) -> Vec<(Vec2D, f64)> {
+        object
+            .get_vertices()
+            .iter()
+            .map(|vertex| {
+                let transformed = (self.transform * object.get_transform()) * *vertex;
+                let screen_coordinates = self.perspective(transformed);
+
+                (screen_coordinates, transformed.z)
+            })
+            .collect()
+    }
+
+    pub fn render(
         &self,
-        objects: Vec<&T>,
+        objects: Vec<&impl ViewElement3D>,
         display_mode: DisplayMode,
     ) -> PixelContainer {
         let mut canvas = PixelContainer::new();
@@ -65,7 +78,7 @@ impl Viewport {
             DisplayMode::Debug => {
                 for object in objects {
                     for (i, (screen_coordinates, _z)) in
-                        object.vertices_on_screen(self).iter().enumerate()
+                        self.get_vertices_on_screen(object).iter().enumerate()
                     {
                         let index_text = format!("{}", i);
                         canvas.blit(&Sprite::new(
@@ -78,16 +91,16 @@ impl Viewport {
             }
             DisplayMode::Points { fill_char } => {
                 for object in objects {
-                    for (screen_coordinates, _z) in object.vertices_on_screen(self) {
+                    for (screen_coordinates, _z) in self.get_vertices_on_screen(object) {
                         canvas.push(Point::new(screen_coordinates, fill_char));
                     }
                 }
             }
             DisplayMode::Wireframe { backface_culling } => {
                 for object in objects {
-                    let screen_vertices = object.vertices_on_screen(&self);
+                    let screen_vertices = self.get_vertices_on_screen(object);
 
-                    for face in (*object.get_faces()).into_iter() {
+                    for face in (object.get_faces()).into_iter() {
                         if backface_culling {
                             let face_vertex_indices = face
                                 .v_indexes
@@ -117,9 +130,9 @@ impl Viewport {
                 let mut screen_faces = vec![];
 
                 for object in objects {
-                    let screen_vertices = object.vertices_on_screen(&self);
+                    let screen_vertices = self.get_vertices_on_screen(object);
 
-                    for face in (*object.get_faces()).into_iter() {
+                    for face in (object.get_faces()).into_iter() {
                         let face_vertex_indices: Vec<(Vec2D, f64)> = face
                             .v_indexes
                             .iter()
@@ -159,9 +172,7 @@ pub trait ViewElement3D {
     /// This should return the object's transform
     fn get_transform(&self) -> Transform3D;
     /// This should return all of the object's vertices
-    fn get_vertices(&self) -> Vec<Vec3D>;
+    fn get_vertices(&self) -> &Vec<Vec3D>;
     /// This should return all of the object's `Face`s
-    fn get_faces(&self) -> Vec<Face>;
-    /// This should return a list of its vertices in their screen positions, paired with their distance to the screen
-    fn vertices_on_screen(&self, viewport: &Viewport) -> Vec<(Vec2D, f64)>;
+    fn get_faces(&self) -> &Vec<Face>;
 }
