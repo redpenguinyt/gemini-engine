@@ -1,11 +1,11 @@
 use crate::elements::{
     view::{utils, ColChar, Modifier},
-    Line, PixelContainer, Point, Polygon, Sprite, Vec2D,
+    Line, PixelContainer, Point, Sprite, Triangle, Vec2D,
 };
-pub mod face;
+pub mod faces;
 pub mod transform3d;
 pub mod vec3d;
-pub use face::Face;
+pub use faces::{IndexFace, IndexTriangle};
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
 
@@ -100,27 +100,27 @@ impl Viewport {
                 for object in objects {
                     let screen_vertices = self.get_vertices_on_screen(object);
 
-                    for face in (object.get_faces()).into_iter() {
+                    for triangle in (object.get_triangles()).into_iter() {
                         if backface_culling {
-                            let face_vertex_indices = face
+                            let triangle_vertex_indices = triangle
                                 .v_indexes
                                 .iter()
                                 .map(|vi| screen_vertices[*vi].0)
                                 .collect();
                             // Backface culling
-                            if !utils::is_clockwise(&face_vertex_indices) {
+                            if !utils::is_clockwise(&triangle_vertex_indices) {
                                 continue;
                             }
                         }
 
-                        for fi in 0..face.v_indexes.len() {
+                        for fi in 0..triangle.v_indexes.len() {
                             let (i0, i1) = (
-                                face.v_indexes[fi],
-                                face.v_indexes[(fi + 1) % face.v_indexes.len()],
+                                triangle.v_indexes[fi],
+                                triangle.v_indexes[(fi + 1) % triangle.v_indexes.len()],
                             );
                             canvas.append(&mut utils::points_to_pixels(
                                 Line::draw(screen_vertices[i0].0, screen_vertices[i1].0),
-                                face.fill_char,
+                                triangle.fill_char,
                             ));
                         }
                     }
@@ -132,13 +132,13 @@ impl Viewport {
                 for object in objects {
                     let screen_vertices = self.get_vertices_on_screen(object);
 
-                    for face in (object.get_faces()).into_iter() {
-                        let face_vertex_indices: Vec<(Vec2D, f64)> = face
+                    for triangle in (object.get_triangles()).into_iter() {
+                        let triangle_vertex_indices: Vec<(Vec2D, f64)> = triangle
                             .v_indexes
                             .iter()
                             .map(|vi| screen_vertices[*vi])
                             .collect();
-                        let vertices_only = face_vertex_indices.iter().map(|k| k.0).collect();
+                        let vertices_only = triangle_vertex_indices.iter().map(|k| k.0).collect();
 
                         // Backface culling
                         if !utils::is_clockwise(&vertices_only) {
@@ -146,19 +146,19 @@ impl Viewport {
                         }
 
                         let mut mean_z: f64 = 0.0;
-                        for (_v, z) in &face_vertex_indices {
+                        for (_v, z) in &triangle_vertex_indices {
                             mean_z += z;
                         }
-                        mean_z /= face_vertex_indices.len() as f64;
+                        mean_z /= triangle_vertex_indices.len() as f64;
 
-                        screen_faces.push((vertices_only, mean_z, face.fill_char));
+                        screen_faces.push((vertices_only, mean_z, triangle.fill_char));
                     }
                 }
 
                 screen_faces.sort_by_key(|k| (k.1 * -100.0).round() as isize);
 
                 for face in screen_faces {
-                    let polygon = Polygon::new(face.0, face.2);
+                    let polygon = Triangle::with_array(&face.0, face.2);
                     canvas.blit(&polygon)
                 }
             }
@@ -173,6 +173,6 @@ pub trait ViewElement3D {
     fn get_transform(&self) -> Transform3D;
     /// This should return all of the object's vertices
     fn get_vertices(&self) -> &Vec<Vec3D>;
-    /// This should return all of the object's `Face`s
-    fn get_faces(&self) -> &Vec<Face>;
+    /// This should return all of the object's faces as `IndexTriangle`s
+    fn get_triangles(&self) -> &Vec<IndexTriangle>;
 }

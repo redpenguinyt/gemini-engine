@@ -116,20 +116,23 @@
 
 use crate::elements::view::{ColChar, Modifier};
 pub mod view3d;
-pub use view3d::{DisplayMode, Face, Transform3D, Vec3D, ViewElement3D, Viewport};
+use view3d::IndexFace as Face;
+pub use view3d::{
+    DisplayMode, IndexFace, IndexTriangle, Transform3D, Vec3D, ViewElement3D, Viewport,
+};
 
 /// The struct for a Mesh3D object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
 #[derive(Debug)]
 pub struct Mesh3D {
     pub transform: Transform3D,
     pub vertices: Vec<Vec3D>,
-    pub faces: Vec<Face>,
+    pub triangles: Vec<IndexTriangle>,
 }
 
 impl Mesh3D {
     /// The gemini_engine equivalent of Blender's default cube. Has side lengths of 2
     pub fn default_cube() -> Self {
-        Self::new(
+        Self::with_faces(
             Transform3D::DEFAULT,
             vec![
                 Vec3D::new(1.0, 1.0, -1.0),
@@ -160,7 +163,7 @@ impl Mesh3D {
     /// Think of it like Blender's axes but with Y and Z swapped.
     /// This Mesh does not render in `DisplayMode::SOLID` (see [`DisplayMode`] documentation)
     pub fn gimbal() -> Self {
-        Self::new(
+        Self::with_faces(
             Transform3D::DEFAULT,
             vec![
                 Vec3D::ZERO,
@@ -176,22 +179,36 @@ impl Mesh3D {
         )
     }
 
-    pub fn new(transform: Transform3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
+    pub const fn new(
+        transform: Transform3D,
+        vertices: Vec<Vec3D>,
+        triangles: Vec<IndexTriangle>,
+    ) -> Self {
         Self {
             transform,
             vertices,
-            faces,
+            triangles,
         }
+    }
+
+    pub fn with_faces(transform: Transform3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
+        let triangles = faces
+            .into_iter()
+            .map(IndexFace::triangulate)
+            .flatten()
+            .collect();
+
+        Self::new(transform, vertices, triangles)
     }
 }
 
 impl Clone for Mesh3D {
     fn clone(&self) -> Self {
-        Self {
-            transform: self.transform,
-            vertices: self.vertices.clone(),
-            faces: self.faces.clone(),
-        }
+        Self::new(
+            self.transform,
+            self.vertices.clone(),
+            self.triangles.clone(),
+        )
     }
 }
 
@@ -202,7 +219,7 @@ impl ViewElement3D for Mesh3D {
     fn get_vertices(&self) -> &Vec<Vec3D> {
         &self.vertices
     }
-    fn get_faces(&self) -> &Vec<Face> {
-        &self.faces
+    fn get_triangles(&self) -> &Vec<IndexTriangle> {
+        &self.triangles
     }
 }
