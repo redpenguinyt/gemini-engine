@@ -31,15 +31,6 @@ pub struct View {
     terminal_prepared: bool,
 }
 
-impl From<&View> for Vec2D {
-    fn from(value: &View) -> Self {
-        Vec2D {
-            x: isize::try_from(value.width).expect("Failed to convert View.width to isize"),
-            y: isize::try_from(value.height).expect("Failed to convert View.height to isize"),
-        }
-    }
-}
-
 impl View {
     pub fn new(width: usize, height: usize, background_char: ColChar) -> View {
         let mut view = View {
@@ -90,7 +81,7 @@ impl View {
 
     pub fn plot(&mut self, pos: Vec2D, c: ColChar, wrapping: Wrapping) {
         let mut pos = pos;
-        let in_bounds_pos = pos.clone() % (Vec2D::from(&*self));
+        let in_bounds_pos = pos.clone() % self.size();
 
         match wrapping {
             Wrapping::Wrap => pos = in_bounds_pos,
