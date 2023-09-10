@@ -2,7 +2,7 @@ use super::{super::ViewElement3D, Viewport};
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
-    ops::{Add, AddAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign},
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
 
 /// Helper enum for when you need to choose an axis
@@ -29,6 +29,10 @@ impl Vec3D {
 
     pub fn as_tuple(&self) -> (f64, f64, f64) {
         (self.x, self.y, self.z)
+    }
+
+    pub fn magnitude(&self) -> f64 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
     pub fn rotate_one_axis(&mut self, axis: SpatialAxis, r: f64) {
@@ -82,6 +86,13 @@ impl Display for Vec3D {
 impl PartialEq for Vec3D {
     fn eq(&self, other: &Self) -> bool {
         self.x == other.x && self.y == other.y && self.z == other.z
+    }
+}
+
+impl Neg for Vec3D {
+    type Output = Self;
+    fn neg(self) -> Self::Output {
+        Self::ZERO - self
     }
 }
 
@@ -152,6 +163,22 @@ impl MulAssign<f64> for Vec3D {
         self.x *= rhs;
         self.y *= rhs;
         self.z *= rhs;
+    }
+}
+
+impl Div<f64> for Vec3D {
+    type Output = Vec3D;
+
+    fn div(self, rhs: f64) -> Self::Output {
+        Self::new(self.x / rhs, self.y / rhs, self.z / rhs)
+    }
+}
+
+impl DivAssign<f64> for Vec3D {
+    fn div_assign(&mut self, rhs: f64) {
+        self.x /= rhs;
+        self.y /= rhs;
+        self.z /= rhs;
     }
 }
 
