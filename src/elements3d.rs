@@ -4,8 +4,8 @@
 //! Let's write a simple example program to print a spinning cube:
 //! ```rust,no_run
 //! use gemini_engine::elements::{
-//! view::ColChar,
-//! Vec2D, View,
+//!     view::{View, ColChar, Wrapping},
+//!     Vec2D,
 //! };
 //! use gemini_engine::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport, Transform3D};
 //! use gemini_engine::gameloop;
@@ -37,7 +37,10 @@
 //!         match frame_skip {
 //!             true => frame_skip = false,
 //!             false => {
-//!                 viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
+//!                 view.blit(
+//!                     &viewport.render(vec![&cube], DisplayMode::Solid),
+//!                     Wrapping::Ignore
+//!                 );
 //!                 view.display_render().unwrap();
 //!             }
 //!         }
@@ -95,7 +98,7 @@
 //!
 //! ### Blitting/Rendering
 //! ```rust,no_run
-//! # use gemini_engine::elements::{View, Vec2D, view::ColChar};
+//! # use gemini_engine::elements::{view::{View, ColChar, Wrapping}, Vec2D};
 //! # use gemini_engine::elements3d::{Viewport, Mesh3D, DisplayMode, Transform3D};
 //! # const FOV: f64 = 5000.0;
 //! # let mut view = View::new(350, 90, ColChar::BACKGROUND);
@@ -105,11 +108,11 @@
 //! #     view.size(),
 //! # );
 //! # let cube = Mesh3D::default_cube();
-//! viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
+//! view.blit(&viewport.render(vec![&cube], DisplayMode::Solid), Wrapping::Ignore);
 //! view.display_render().unwrap();
 //! ```
 //!
-//! This part of the code blits all the 3d stuff to the [`View`](crate::elements::view::View) before rendering as usual. [`Viewport.blit_to()`](Viewport#blit_to) takes a mutable reference to the view, a list of all the objects we want to render and a [`DisplayMode`] enum (more info in the [`DisplayMode`] documentation).
+//! This part of the code renders all the 3d stuff to the [`View`](crate::elements::view::View) and blits it to the view before rendering as usual. [`Viewport.render()`](Viewport) takes a list of all the objects we want to render and a [`DisplayMode`] enum (more info in the [`DisplayMode`] documentation).
 
 use crate::elements::view::{ColChar, Modifier, Vec2D};
 pub mod view3d;

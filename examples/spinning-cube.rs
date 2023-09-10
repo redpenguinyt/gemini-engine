@@ -1,4 +1,7 @@
-use gemini_engine::elements::{view::ColChar, Vec2D, View};
+use gemini_engine::elements::{
+    view::{ColChar, View, Wrapping},
+    Vec2D,
+};
 use gemini_engine::elements3d::{DisplayMode, Mesh3D, Transform3D, Vec3D, Viewport};
 use gemini_engine::gameloop;
 
@@ -26,7 +29,10 @@ fn main() {
         match frame_skip {
             true => frame_skip = false,
             false => {
-                viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
+                view.blit(
+                    &viewport.render(vec![&cube], DisplayMode::Solid),
+                    Wrapping::Ignore,
+                );
                 view.display_render().unwrap();
             }
         }

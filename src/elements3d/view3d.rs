@@ -1,9 +1,6 @@
 use crate::elements::{
-    view::{
-        utils::{self, points_to_pixels, Wrapping},
-        ColChar, Modifier,
-    },
-    Line, PixelContainer, Polygon, Sprite, Vec2D, View,
+    view::{utils, ColChar, Modifier},
+    Line, PixelContainer, Point, Polygon, Sprite, Vec2D,
 };
 pub mod face;
 pub mod transform3d;
@@ -57,12 +54,13 @@ impl Viewport {
         self.origin + Vec2D::new(sx, sy)
     }
 
-    pub fn blit_to<T: ViewElement3D>(
+    pub fn render<T: ViewElement3D>(
         &self,
-        view: &mut View,
         objects: Vec<&T>,
         display_mode: DisplayMode,
-    ) {
+    ) -> PixelContainer {
+        let mut canvas = PixelContainer::new();
+
         match display_mode {
             DisplayMode::Debug => {
                 for object in objects {
@@ -70,17 +68,18 @@ impl Viewport {
                         object.vertices_on_screen(self).iter().enumerate()
                     {
                         let index_text = format!("{}", i);
-                        view.blit(
-                            &Sprite::new(*screen_coordinates, index_text.as_str(), Modifier::None),
-                            Wrapping::Ignore,
-                        );
+                        canvas.blit(&Sprite::new(
+                            *screen_coordinates,
+                            index_text.as_str(),
+                            Modifier::None,
+                        ));
                     }
                 }
             }
             DisplayMode::Points { fill_char } => {
                 for object in objects {
                     for (screen_coordinates, _z) in object.vertices_on_screen(self) {
-                        view.plot(screen_coordinates, fill_char, Wrapping::Ignore);
+                        canvas.push(Point::new(screen_coordinates, fill_char));
                     }
                 }
             }
@@ -101,19 +100,16 @@ impl Viewport {
                             }
                         }
 
-                        let mut pixel_container = PixelContainer::new();
                         for fi in 0..face.v_indexes.len() {
                             let (i0, i1) = (
                                 face.v_indexes[fi],
                                 face.v_indexes[(fi + 1) % face.v_indexes.len()],
                             );
-                            pixel_container.append(&mut points_to_pixels(
+                            canvas.append(&mut utils::points_to_pixels(
                                 Line::draw(screen_vertices[i0].0, screen_vertices[i1].0),
                                 face.fill_char,
                             ));
                         }
-
-                        view.blit(&pixel_container, Wrapping::Ignore)
                     }
                 }
             }
@@ -150,10 +146,12 @@ impl Viewport {
 
                 for face in screen_faces {
                     let polygon = Polygon::new(face.0, face.2);
-                    view.blit(&polygon, Wrapping::Ignore)
+                    canvas.blit(&polygon)
                 }
             }
         }
+
+        canvas
     }
 }
 
