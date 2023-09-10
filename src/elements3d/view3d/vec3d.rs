@@ -2,7 +2,7 @@ use super::{super::ViewElement3D, Viewport};
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
-    ops::{Add, AddAssign, Rem, RemAssign, Sub, SubAssign},
+    ops::{Add, AddAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
 /// Helper enum for when you need to choose an axis
@@ -20,14 +20,11 @@ pub struct Vec3D {
 }
 
 impl Vec3D {
-    pub const ZERO: Self = Vec3D {
-        x: 0.0,
-        y: 0.0,
-        z: 0.0,
-    };
+    pub const ZERO: Self = Vec3D::new(0.0, 0.0, 0.0);
+    pub const ONE: Self = Vec3D::new(1.0, 1.0, 1.0);
 
-    pub fn new(x: f64, y: f64, z: f64) -> Self {
-        Self { x: x, y: y, z: z }
+    pub const fn new(x: f64, y: f64, z: f64) -> Self {
+        Self { x, y, z }
     }
 
     pub fn as_tuple(&self) -> (f64, f64, f64) {
@@ -126,8 +123,41 @@ impl SubAssign<Vec3D> for Vec3D {
     }
 }
 
-impl Rem<Vec3D> for Vec3D {
+impl Mul<Vec3D> for Vec3D {
+    type Output = Self;
+
+    fn mul(self, rhs: Vec3D) -> Self::Output {
+        Self::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
+    }
+}
+
+impl MulAssign<Vec3D> for Vec3D {
+    fn mul_assign(&mut self, rhs: Self) {
+        self.x *= rhs.x;
+        self.y *= rhs.y;
+        self.z *= rhs.z;
+    }
+}
+
+impl Mul<f64> for Vec3D {
     type Output = Vec3D;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Self::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
+}
+
+impl MulAssign<f64> for Vec3D {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.x *= rhs;
+        self.y *= rhs;
+        self.z *= rhs;
+    }
+}
+
+impl Rem<Vec3D> for Vec3D {
+    type Output = Self;
+
     fn rem(self, rhs: Self) -> Self::Output {
         Self {
             x: self.x.rem_euclid(rhs.x),
