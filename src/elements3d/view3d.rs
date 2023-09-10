@@ -26,7 +26,7 @@ pub enum DisplayMode {
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`], and also acts as the scene's camera.
 pub struct Viewport {
-    /// How the is Viewport is oriented in the 3D scene
+    /// How the Viewport is oriented in the 3D scene
     pub transform: Transform3D,
     /// The Viewport's field of view
     pub fov: f64,

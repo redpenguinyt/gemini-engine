@@ -7,19 +7,21 @@
 //! view::ColChar,
 //! Vec2D, View,
 //! };
-//! use gemini_engine::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport};
+//! use gemini_engine::elements3d::{DisplayMode, Mesh3D, Vec3D, Viewport, Transform3D};
 //! use gemini_engine::gameloop;
 //!
 //! const FPS: u32 = 20;
-//! const FOV: f64 = 5000.0;
+//! const FOV: f64 = 95.0;
 //!
 //! fn main() {
 //!     let mut frame_skip = false;
 //!     let mut view = View::new(350, 90, ColChar::BACKGROUND);
 //!
 //!     let mut viewport = Viewport::new(
-//!         Vec3D::new(0.0, 0.0, 250.0),
-//!         Vec3D::new(-0.5, 0.0, 0.0),
+//!         Transform3D::new_tr(
+//!             Vec3D::new(0.0, 0.0, 5.0),
+//!             Vec3D::new(-0.5, 0.0, 0.0)
+//!         ),
 //!         FOV,
 //!         Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
 //!     );
@@ -30,7 +32,7 @@
 //!         let now = gameloop::Instant::now();
 //!         view.clear();
 //!
-//!         viewport.rotation.y -= 0.05;
+//!         viewport.transform.rotation.y -= 0.05;
 //!
 //!         match frame_skip {
 //!             true => frame_skip = false,
@@ -51,20 +53,19 @@
 //!     }
 //! }
 //! ```
-//! There is a lot of code here, but since it's based off of the [`gameloop`](crate::gameloop) principle (Go to the [`gameloop`](crate::gameloop) documentation page to learn more), we'll only focus on the parts that are different from the [`gameloop`](crate::gameloop) example:
+//! There is a lot of code here, but since the main loop is based off of the [`gameloop`](crate::gameloop) principle (Go to the [`gameloop`](crate::gameloop) documentation page to learn more), we'll only focus on the parts that are different from the [`gameloop`](crate::gameloop) example:
 //!
 //! ### Initialisation
 //! ```rust,no_run
 //! # use gemini_engine::elements::{View, Vec2D, view::ColChar};
-//! # use gemini_engine::elements3d::{Viewport, Vec3D, Mesh3D};
-//! # const FOV: f64 = 5000.0;
+//! # use gemini_engine::elements3d::{Viewport, Mesh3D, Transform3D};
+//! # const FOV: f64 = 95.0;
 //! let mut view = View::new(350, 90, ColChar::BACKGROUND);
 //!
 //! let mut viewport = Viewport::new(
-//!     Vec3D::new(0.0, 0.0, 250.0),
-//!     Vec3D::new(-0.5, 0.0, 0.0),
+//!     Transform3D::DEFAULT,
 //!     FOV,
-//!     Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
+//!     view.size(),
 //! );
 //!
 //! let cube = Mesh3D::default_cube();
@@ -74,21 +75,20 @@
 //! 2. [`Viewport`] to handle converting 3d objects to 2d images, as well as acting like the scene's camera
 //! 3. The actual objects you intend to use in the scene, all of which should implement the [`ViewElement3D`] trait
 //!
-//! In this scenario, we create a [`View`](crate::elements::view::View) of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a [`Viewport`] with an initial position 250 units away from the centre and pivoted 0.5 radians up with an origin point in the middle of the [`View`](crate::elements::view::View) and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
+//! In this scenario, we create a [`View`](crate::elements::view::View) of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a [`Viewport`] with a transform of rotation 0.5 radians and translation 5 units away from the centre, our desired FOV and origin point (the centre of t) in the middle of the [`View`](crate::elements::view::View) and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
 //!
 //! ### Gameloop process logic
 //! ```rust,no_run
 //! # use gemini_engine::elements::{View, Vec2D, view::ColChar};
-//! # use gemini_engine::elements3d::{Viewport, Vec3D};
+//! # use gemini_engine::elements3d::{Viewport, Transform3D};
 //! # const FOV: f64 = 5000.0;
 //! # let view = View::new(350, 90, ColChar::BACKGROUND);
 //! # let mut viewport = Viewport::new(
-//! #     Vec3D::new(0.0, 0.0, 250.0),
-//! #     Vec3D::new(-0.5, 0.0, 0.0),
+//! #     Transform3D::DEFAULT,
 //! #     FOV,
-//! #     Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
+//! #     view.size(),
 //! # );
-//! viewport.rotation.y -= 0.05;
+//! viewport.transform.rotation.y -= 0.05;
 //! ```
 //!
 //! This part of the code is where we would put all our physics, collisions, events etc. code, but in this case the only thing we do is rotate the cube 0.05 radians anticlockwise.
@@ -96,14 +96,13 @@
 //! ### Blitting/Rendering
 //! ```rust,no_run
 //! # use gemini_engine::elements::{View, Vec2D, view::ColChar};
-//! # use gemini_engine::elements3d::{Viewport, Vec3D, Mesh3D, DisplayMode};
+//! # use gemini_engine::elements3d::{Viewport, Mesh3D, DisplayMode, Transform3D};
 //! # const FOV: f64 = 5000.0;
 //! # let mut view = View::new(350, 90, ColChar::BACKGROUND);
 //! # let viewport = Viewport::new(
-//! #     Vec3D::new(0.0, 0.0, 250.0),
-//! #     Vec3D::new(-0.5, 0.0, 0.0),
+//! #     Transform3D::DEFAULT,
 //! #     FOV,
-//! #     Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
+//! #     view.size(),
 //! # );
 //! # let cube = Mesh3D::default_cube();
 //! viewport.blit_to(&mut view, vec![&cube], DisplayMode::Solid);
