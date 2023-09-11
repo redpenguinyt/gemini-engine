@@ -63,12 +63,12 @@ impl Viewport {
             .collect()
     }
 
-    /// Return all the screen coordinates for each vertex, paired with the distance from the view
-    pub fn get_vertices_on_screen(&self, object: &impl ViewElement3D) -> Vec<(Vec2D, f64)> {
+    /// Return the screen coordinates and distance from the view for each vertex, as parallel vectors
+    pub fn get_vertices_on_screen(&self, object: &impl ViewElement3D) -> (Vec<Vec2D>, Vec<f64>) {
         self.transform_vertices(object)
             .iter()
             .map(|vertex| (self.perspective(*vertex), vertex.z))
-            .collect()
+            .unzip()
     }
 
     pub fn render(
@@ -81,8 +81,8 @@ impl Viewport {
         match display_mode {
             DisplayMode::Debug => {
                 for object in objects {
-                    for (i, (screen_coordinates, _z)) in
-                        self.get_vertices_on_screen(object).iter().enumerate()
+                    for (i, screen_coordinates) in
+                        self.get_vertices_on_screen(object).0.iter().enumerate()
                     {
                         let index_text = format!("{}", i);
                         canvas.blit(&Sprite::new(
@@ -95,24 +95,20 @@ impl Viewport {
             }
             DisplayMode::Points { fill_char } => {
                 for object in objects {
-                    for (screen_coordinates, _z) in self.get_vertices_on_screen(object) {
+                    for screen_coordinates in self.get_vertices_on_screen(object).0 {
                         canvas.push(Point::new(screen_coordinates, fill_char));
                     }
                 }
             }
             DisplayMode::Wireframe { backface_culling } => {
                 for object in objects {
-                    let screen_vertices = self.get_vertices_on_screen(object);
+                    let screen_coordinates = self.get_vertices_on_screen(object).0;
 
                     for face in (object.get_faces()).into_iter() {
                         if backface_culling {
-                            let face_vertex_indices = face
-                                .v_indexes
-                                .iter()
-                                .map(|vi| screen_vertices[*vi].0)
-                                .collect();
+                            let face_vertexes = face.index_into(&screen_coordinates);
                             // Backface culling
-                            if !utils::is_clockwise(&face_vertex_indices) {
+                            if !utils::is_clockwise(&face_vertexes) {
                                 continue;
                             }
                         }
@@ -123,7 +119,7 @@ impl Viewport {
                                 face.v_indexes[(fi + 1) % face.v_indexes.len()],
                             );
                             canvas.append(&mut utils::points_to_pixels(
-                                Line::draw(screen_vertices[i0].0, screen_vertices[i1].0),
+                                Line::draw(screen_coordinates[i0], screen_coordinates[i1]),
                                 face.fill_char,
                             ));
                         }
@@ -134,28 +130,21 @@ impl Viewport {
                 let mut screen_faces = vec![];
 
                 for object in objects {
-                    let screen_vertices = self.get_vertices_on_screen(object);
+                    let (screen_coordinates, vertex_depths) = self.get_vertices_on_screen(object);
 
                     for face in (object.get_faces()).into_iter() {
-                        let face_vertex_indices: Vec<(Vec2D, f64)> = face
-                            .v_indexes
-                            .iter()
-                            .map(|vi| screen_vertices[*vi])
-                            .collect();
-                        let vertices_only = face_vertex_indices.iter().map(|k| k.0).collect();
+                        let face_vertexes = face.index_into(&screen_coordinates);
+                        let face_depths = face.index_into(&vertex_depths);
 
                         // Backface culling
-                        if !utils::is_clockwise(&vertices_only) {
+                        if !utils::is_clockwise(&face_vertexes) {
                             continue;
                         }
 
-                        let mut mean_z: f64 = 0.0;
-                        for (_v, z) in &face_vertex_indices {
-                            mean_z += z;
-                        }
-                        mean_z /= face_vertex_indices.len() as f64;
+                        let mut mean_z: f64 = face_depths.into_iter().sum();
+                        mean_z /= face_vertexes.len() as f64;
 
-                        screen_faces.push((vertices_only, mean_z, face.fill_char));
+                        screen_faces.push((face_vertexes, mean_z, face.fill_char));
                     }
                 }
 
