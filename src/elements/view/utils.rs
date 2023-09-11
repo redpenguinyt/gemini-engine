@@ -31,7 +31,7 @@ pub fn is_clockwise(points: &Vec<Vec2D>) -> bool {
         m.push((p1.x - p2.x) * (p1.y + p2.y));
     }
 
-    m.iter().sum::<isize>() < 0
+    m.iter().sum::<isize>() <= 0
 }
 
 /// Wrapping is used to determine how you want to handle out-of-bounds pixels during plotting pixels to the screen. Here's how each possible value functions:
