@@ -5,7 +5,7 @@ use std::{
 };
 
 /// Raw Vector2 type
-#[derive(Debug, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vector2<T: Clone> {
     pub x: T,
     pub y: T,
@@ -18,15 +18,6 @@ impl<T: Clone> Vector2<T> {
 
     pub fn as_tuple(&self) -> (T, T) {
         (self.x.clone(), self.y.clone())
-    }
-}
-
-impl<T: Clone> Clone for Vector2<T> {
-    fn clone(&self) -> Self {
-        Self {
-            x: self.x.clone(),
-            y: self.y.clone(),
-        }
     }
 }
 
@@ -81,6 +72,8 @@ impl Vec2D {
     /// A Vec2D of (0,0)
     pub const ZERO: Vec2D = Vec2D::new(0, 0);
 }
+
+impl Eq for Vec2D {}
 
 impl Rem for Vec2D {
     type Output = Self;

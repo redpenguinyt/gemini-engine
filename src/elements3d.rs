@@ -119,7 +119,7 @@ pub mod view3d;
 pub use view3d::{DisplayMode, Face, Transform3D, Vec3D, ViewElement3D, Viewport};
 
 /// The struct for a Mesh3D object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Mesh3D {
     pub transform: Transform3D,
     pub vertices: Vec<Vec3D>,
@@ -181,16 +181,6 @@ impl Mesh3D {
             transform,
             vertices,
             faces,
-        }
-    }
-}
-
-impl Clone for Mesh3D {
-    fn clone(&self) -> Self {
-        Self {
-            transform: self.transform,
-            vertices: self.vertices.clone(),
-            faces: self.faces.clone(),
         }
     }
 }

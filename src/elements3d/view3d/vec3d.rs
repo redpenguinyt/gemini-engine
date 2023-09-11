@@ -4,7 +4,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
 
-#[derive(Copy, Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Vec3D {
     pub x: f64,
     pub y: f64,
@@ -29,16 +29,6 @@ impl Vec3D {
 
     pub fn magnitude(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
-    }
-}
-
-impl Clone for Vec3D {
-    fn clone(&self) -> Self {
-        Vec3D {
-            x: self.x,
-            y: self.y,
-            z: self.z,
-        }
     }
 }
 

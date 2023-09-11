@@ -158,7 +158,7 @@ impl Display for View {
 }
 
 /// The `Point` holds a single [`Vec2D`], the coordinates at which it is printed when blit to a [`View`]
-#[derive(Debug, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point {
     pub pos: Vec2D,
     pub fill_char: ColChar,
@@ -167,15 +167,6 @@ pub struct Point {
 impl Point {
     pub fn new(pos: Vec2D, fill_char: ColChar) -> Self {
         Self { pos, fill_char }
-    }
-}
-
-impl Clone for Point {
-    fn clone(&self) -> Self {
-        Self {
-            pos: self.pos,
-            fill_char: self.fill_char,
-        }
     }
 }
 

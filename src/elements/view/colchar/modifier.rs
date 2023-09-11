@@ -2,7 +2,7 @@ use super::Colour;
 use std::fmt::Display;
 
 /// The `Modifier` enum is used for adding modifications to text such as colour, bold/italic/underline and others. It's essentially a wrapper for `\x1b[{x}m`, where {x} is a code or rgb value of some sort. `Modifier` is primarily used by [`ColChar`] as one of its properties
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Modifier {
     Coded(u8),
     Colour(Colour),

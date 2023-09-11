@@ -5,7 +5,7 @@ mod colour;
 pub use colour::Colour;
 
 /// We use `ColChar` to say exactly what each pixel should look like and what colour it should be. That is, the [`View`](super::View)'s canvas is just a vector of `ColChar`s under the hood. `ColChar` has the [`fill_char`](ColChar::fill_char) and [`modifier`](ColChar::modifier) properties. [`fill_char`](ColChar::fill_char) is the single ascii character used as the "pixel" when the [`View`](super::View) is rendered, whereas [`modifier`](ColChar::modifier) can give that pixel a colour or make it bold/italic
-#[derive(Debug, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ColChar {
     pub fill_char: char,
     pub modifier: Modifier,
@@ -75,15 +75,6 @@ impl ColChar {
         Self {
             fill_char: self.fill_char,
             modifier: Modifier::Colour(colour),
-        }
-    }
-}
-
-impl Clone for ColChar {
-    fn clone(&self) -> Self {
-        Self {
-            fill_char: self.fill_char,
-            modifier: self.modifier,
         }
     }
 }

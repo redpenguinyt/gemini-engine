@@ -41,34 +41,21 @@ pub fn is_clockwise(points: &Vec<Vec2D>) -> bool {
 /// [`Wrapping::Ignore`] simply skips all out-of-bounds pixels. This is useful if you might have an object clipping through the edge of the screen.
 ///
 /// [`Wrapping::Panic`] will `panic!` if any pixels are out of bounds. You should use this if you have your own wrapping system implemented
-#[derive(Copy)]
+#[derive(Debug, Clone, Copy)]
 pub enum Wrapping {
     Wrap,
     Ignore,
     Panic,
 }
 
-impl Clone for Wrapping {
-    fn clone(&self) -> Self {
-        match self {
-            Wrapping::Wrap => Wrapping::Wrap,
-            Wrapping::Ignore => Wrapping::Ignore,
-            Wrapping::Panic => Wrapping::Panic,
-        }
-    }
-}
-
 /// `BlitCache` is used if there is chance that you might have to render the same thing multiple times without moving or changing it.
-#[derive(Debug)]
-pub struct BlitCache<T> {
+#[derive(Debug, Clone)]
+pub struct BlitCache<T: Clone + PartialEq<T>> {
     independent: Vec<T>,
     dependent: Vec<Vec2D>,
 }
 
-impl<T> BlitCache<T>
-where
-    T: PartialEq<T>,
-{
+impl<T: Clone + PartialEq<T>> BlitCache<T> {
     pub const DEFAULT: BlitCache<T> = BlitCache {
         independent: vec![],
         dependent: vec![],
@@ -106,23 +93,7 @@ where
     }
 }
 
-impl<T> Clone for BlitCache<T>
-where
-    T: PartialEq<T>,
-    T: Clone,
-{
-    fn clone(&self) -> Self {
-        Self {
-            independent: self.independent.clone(),
-            dependent: self.dependent.clone(),
-        }
-    }
-}
-
-impl<T> PartialEq for BlitCache<T>
-where
-    T: PartialEq<T>,
-{
+impl<T: PartialEq<T> + Clone> PartialEq for BlitCache<T> {
     fn eq(&self, other: &Self) -> bool {
         self.independent == other.independent && self.dependent == other.dependent
     }
