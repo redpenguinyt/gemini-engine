@@ -56,16 +56,18 @@ impl Viewport {
 
     /// Return the object's vertices, transformed
     pub fn transform_vertices(&self, object: &impl ViewElement3D) -> Vec<Vec3D> {
-        object.get_vertices().iter().map(|v| (self.transform * object.get_transform()) * *v).collect()
+        object
+            .get_vertices()
+            .iter()
+            .map(|v| (self.transform * object.get_transform()) * *v)
+            .collect()
     }
 
     /// Return all the screen coordinates for each vertex, paired with the distance from the view
     pub fn get_vertices_on_screen(&self, object: &impl ViewElement3D) -> Vec<(Vec2D, f64)> {
         self.transform_vertices(object)
             .iter()
-            .map(|vertex| {
-                (self.perspective(*vertex), vertex.z)
-            })
+            .map(|vertex| (self.perspective(*vertex), vertex.z))
             .collect()
     }
 
