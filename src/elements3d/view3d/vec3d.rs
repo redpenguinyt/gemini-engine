@@ -23,6 +23,10 @@ impl Vec3D {
         (self.x, self.y, self.z)
     }
 
+    pub fn dot(&self, other: Vec3D) -> f64 {
+        self.x * other.x + self.y * other.y + self.z * other.z
+    }
+
     pub fn magnitude(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
