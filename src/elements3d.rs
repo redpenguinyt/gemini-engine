@@ -114,7 +114,7 @@
 //!
 //! This part of the code renders all the 3d stuff to the [`View`](crate::elements::view::View) and blits it to the view before rendering as usual. [`Viewport.render()`](Viewport) takes a list of all the objects we want to render and a [`DisplayMode`] enum (more info in the [`DisplayMode`] documentation).
 
-use crate::elements::view::{ColChar, Modifier, Vec2D};
+use crate::elements::view::{ColChar, Modifier};
 pub mod view3d;
 pub use view3d::{DisplayMode, Face, Transform3D, Vec3D, ViewElement3D, Viewport};
 
@@ -199,28 +199,10 @@ impl ViewElement3D for Mesh3D {
     fn get_transform(&self) -> Transform3D {
         self.transform
     }
-    fn get_vertices(&self) -> Vec<Vec3D> {
-        self.vertices.clone()
+    fn get_vertices(&self) -> &Vec<Vec3D> {
+        &self.vertices
     }
-    fn get_faces(&self) -> Vec<Face> {
-        self.faces.clone()
-    }
-    fn vertices_on_screen(&self, viewport: &Viewport) -> Vec<(Vec2D, f64)> {
-        let mut screen_vertices = vec![];
-        for vertex in &self.vertices {
-            // (viewport.transform * self.transform) *
-            let transformed = (viewport.transform * self.transform) * *vertex;
-
-            // println!("{vertex}, {transformed}");
-
-            let screen_coordinates = viewport.spatial_to_screen(transformed);
-            screen_vertices.push((screen_coordinates, transformed.z));
-        }
-
-        // println!("{:#?}", screen_vertices);
-
-        // panic!("intentional");
-
-        screen_vertices
+    fn get_faces(&self) -> &Vec<Face> {
+        &self.faces
     }
 }
