@@ -52,16 +52,23 @@ pub struct PixelContainer {
 }
 
 impl PixelContainer {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self { pixels: vec![] }
     }
 
+    /// Add a single pixel to the `PixelContainer`
     pub fn push(&mut self, pixel: Point) {
         self.pixels.push(pixel);
     }
 
+    /// Moves all the pixels into the `PixelContainer`, leaving the input empty.
     pub fn append(&mut self, pixels: &mut Vec<Point>) {
         self.pixels.append(pixels);
+    }
+
+    /// Append vector of coordinates and a single [`ColChar`] for all of them.
+    pub fn append_points(&mut self, points: Vec<Vec2D>, fill_char: ColChar) {
+        self.append(&mut utils::points_to_pixels(points, fill_char));
     }
 
     /// Blit a [`ViewElement`] to the PixelContainer.
