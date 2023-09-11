@@ -179,7 +179,7 @@ pub struct Triangle {
 }
 
 impl Triangle {
-    pub fn new(pos0: Vec2D, pos1: Vec2D, pos2: Vec2D, fill_char: ColChar) -> Self {
+    pub const fn new(pos0: Vec2D, pos1: Vec2D, pos2: Vec2D, fill_char: ColChar) -> Self {
         Triangle {
             pos0,
             pos1,
@@ -187,6 +187,16 @@ impl Triangle {
             fill_char: fill_char,
             cache: BlitCache::DEFAULT,
         }
+    }
+
+    /// Takes the corners of the triangle as an array rather than as separate parameters
+    pub const fn with_array(points: &[Vec2D], fill_char: ColChar) -> Self {
+        if points.len() != 3 {
+            panic!(
+                "points parameter should have exactly 3 items, one for each point of the triangle"
+            )
+        }
+        Self::new(points[0], points[1], points[2], fill_char)
     }
 
     /// Generate a [`BlitCache`] if you intend for the triangle to not move across multiple frames. If you use this, you MUST call generate_cache if the triangle does move in the future. This function will not generate a new cache if the previously generated cache is still valid
