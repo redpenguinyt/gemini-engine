@@ -1,6 +1,6 @@
 use crate::elements::{
     view::{utils, ColChar, Modifier},
-    Line, PixelContainer, Point, Polygon, Sprite, Vec2D,
+    Line, PixelContainer, Point, Polygon, Text, Vec2D,
 };
 pub mod face;
 pub mod transform3d;
@@ -71,6 +71,44 @@ impl Viewport {
             .unzip()
     }
 
+    pub fn project_faces(
+        &self,
+        objects: Vec<&impl ViewElement3D>,
+        sort_faces: bool,
+        backface_culling: bool,
+    ) -> Vec<(Vec<Vec2D>, ColChar)> {
+        let mut screen_faces = vec![];
+
+        for object in objects {
+            let (screen_coordinates, vertex_depths) = self.get_vertices_on_screen(object);
+
+            for face in (object.get_faces()).into_iter() {
+                let face_vertices = face.index_into(&screen_coordinates);
+
+                // Backface culling
+                if !utils::is_clockwise(&face_vertices) && backface_culling {
+                    continue;
+                }
+
+                let mean_z = match sort_faces {
+                    true => Some(
+                        face.index_into(&vertex_depths).into_iter().sum::<f64>()
+                            / face_vertices.len() as f64,
+                    ),
+                    false => None,
+                };
+
+                screen_faces.push((face_vertices, face.fill_char, mean_z));
+            }
+        }
+
+        if sort_faces {
+            screen_faces.sort_by_key(|k| (k.2.unwrap() * -100.0).round() as isize);
+        }
+
+        screen_faces.into_iter().map(|(vs, c, _)| (vs, c)).collect()
+    }
+
     pub fn render(
         &self,
         objects: Vec<&impl ViewElement3D>,
@@ -84,12 +122,8 @@ impl Viewport {
                     for (i, screen_coordinates) in
                         self.get_vertices_on_screen(object).0.iter().enumerate()
                     {
-                        let index_text = format!("{}", i);
-                        canvas.blit(&Sprite::new(
-                            *screen_coordinates,
-                            index_text.as_str(),
-                            Modifier::None,
-                        ));
+                        let index_text = i.to_string();
+                        canvas.blit(&Text::new(*screen_coordinates, &index_text, Modifier::None));
                     }
                 }
             }
@@ -101,58 +135,23 @@ impl Viewport {
                 }
             }
             DisplayMode::Wireframe { backface_culling } => {
-                for object in objects {
-                    let screen_coordinates = self.get_vertices_on_screen(object).0;
+                let screen_faces = self.project_faces(objects, false, backface_culling);
 
-                    for face in (object.get_faces()).into_iter() {
-                        if backface_culling {
-                            let face_vertexes = face.index_into(&screen_coordinates);
-                            // Backface culling
-                            if !utils::is_clockwise(&face_vertexes) {
-                                continue;
-                            }
-                        }
-
-                        for fi in 0..face.v_indexes.len() {
-                            let (i0, i1) = (
-                                face.v_indexes[fi],
-                                face.v_indexes[(fi + 1) % face.v_indexes.len()],
-                            );
-                            canvas.append(&mut utils::points_to_pixels(
-                                Line::draw(screen_coordinates[i0], screen_coordinates[i1]),
-                                face.fill_char,
-                            ));
-                        }
+                for (face_vertices, fill_char) in screen_faces {
+                    for fi in 0..face_vertices.len() {
+                        let (i0, i1) = (
+                            face_vertices[fi],
+                            face_vertices[(fi + 1) % face_vertices.len()],
+                        );
+                        canvas.append_points(Line::draw(i0, i1), fill_char);
                     }
                 }
             }
             DisplayMode::Solid => {
-                let mut screen_faces = vec![];
+                let screen_faces = self.project_faces(objects, true, true);
 
-                for object in objects {
-                    let (screen_coordinates, vertex_depths) = self.get_vertices_on_screen(object);
-
-                    for face in (object.get_faces()).into_iter() {
-                        let face_vertexes = face.index_into(&screen_coordinates);
-                        let face_depths = face.index_into(&vertex_depths);
-
-                        // Backface culling
-                        if !utils::is_clockwise(&face_vertexes) {
-                            continue;
-                        }
-
-                        let mut mean_z: f64 = face_depths.into_iter().sum();
-                        mean_z /= face_vertexes.len() as f64;
-
-                        screen_faces.push((face_vertexes, mean_z, face.fill_char));
-                    }
-                }
-
-                screen_faces.sort_by_key(|k| (k.1 * -100.0).round() as isize);
-
-                for face in screen_faces {
-                    let polygon = Polygon::new(face.0, face.2);
-                    canvas.blit(&polygon)
+                for (face_vertices, fill_char) in screen_faces {
+                    canvas.append_points(Polygon::draw(face_vertices), fill_char)
                 }
             }
         }
