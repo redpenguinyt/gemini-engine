@@ -6,7 +6,7 @@ use std::{
 pub mod colchar;
 pub mod utils;
 pub mod vec2d;
-pub use colchar::{ColChar, Modifier};
+pub use colchar::{ColChar, Colour, Modifier};
 pub use utils::Wrapping;
 pub use vec2d::Vec2D;
 
