@@ -71,6 +71,11 @@ impl PixelContainer {
         self.append(&mut utils::points_to_pixels(points, fill_char));
     }
 
+    /// Plot a pixel to the PixelContainer
+    pub fn plot(&mut self, pos: Vec2D, c: ColChar) {
+        self.push(Point::new(pos, c))
+    }
+
     /// Blit a [`ViewElement`] to the PixelContainer.
     pub fn blit<T: ViewElement>(&mut self, element: &T) {
         let mut active_pixels = element.active_pixels();
