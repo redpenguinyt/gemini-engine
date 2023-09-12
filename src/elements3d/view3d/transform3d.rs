@@ -73,6 +73,12 @@ impl Transform3D {
     }
 }
 
+impl Default for Transform3D {
+    fn default() -> Self {
+        Self::DEFAULT
+    }
+}
+
 impl Mul<Transform3D> for Transform3D {
     type Output = Transform3D;
 
