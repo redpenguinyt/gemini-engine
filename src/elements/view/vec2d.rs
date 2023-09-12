@@ -1,7 +1,7 @@
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
-    ops::{Add, AddAssign, Rem, RemAssign, Sub, SubAssign},
+    ops::{Add, AddAssign, Div, DivAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
 /// Raw Vector2 type
@@ -53,6 +53,23 @@ impl<T: Clone + SubAssign> SubAssign<Vector2<T>> for Vector2<T> {
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
         self.y -= rhs.y;
+    }
+}
+
+impl<T: Clone + Div<Output = T>> Div<T> for Vector2<T> {
+    type Output = Self;
+    fn div(self, rhs: T) -> Self::Output {
+        Self {
+            x: self.x / rhs.clone(),
+            y: self.y / rhs,
+        }
+    }
+}
+
+impl<T: Clone + DivAssign> DivAssign<T> for Vector2<T> {
+    fn div_assign(&mut self, rhs: T) {
+        self.x /= rhs.clone();
+        self.y /= rhs;
     }
 }
 
