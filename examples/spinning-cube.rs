@@ -3,13 +3,13 @@ use gemini_engine::elements::{
     Vec2D,
 };
 use gemini_engine::elements3d::{DisplayMode, Mesh3D, Transform3D, Vec3D, Viewport};
+use gemini_engine::fps_gameloop;
 use gemini_engine::gameloop;
 
-const FPS: u32 = 20;
+const FPS: u32 = 30;
 const FOV: f64 = 95.0;
 
 fn main() {
-    let mut frame_skip = false;
     let mut view = View::new(350, 90, ColChar::BACKGROUND);
 
     let mut viewport = Viewport::new(
@@ -20,30 +20,25 @@ fn main() {
 
     let cube = Mesh3D::default_cube();
 
-    loop {
-        let now = gameloop::Instant::now();
-        view.clear();
-
-        viewport.transform.rotation.y -= 0.05;
-
-        match frame_skip {
-            true => frame_skip = false,
-            false => {
-                view.blit(
-                    &viewport.render(vec![&cube], DisplayMode::Solid),
-                    Wrapping::Ignore,
-                );
-                view.display_render().unwrap();
-            }
+    fps_gameloop!(
+        {
+            view.clear();
+            viewport.transform.rotation.y -= 0.05;
+        },
+        {
+            view.blit(
+                &viewport.render(vec![&cube], DisplayMode::Solid),
+                Wrapping::Ignore,
+            );
+            view.display_render().unwrap();
+        },
+        FPS,
+        |elapsed: gameloop::Duration, frame_skip| {
+            println!(
+                "Elapsed: {:.2?}µs | Frame skip: {}",
+                elapsed.as_micros(),
+                frame_skip
+            );
         }
-
-        let elapsed = now.elapsed();
-        println!(
-            "Elapsed: {:.2?}µs | Frame skip: {}",
-            elapsed.as_micros(),
-            frame_skip
-        );
-
-        frame_skip = gameloop::sleep_fps(FPS, Some(elapsed));
-    }
+    );
 }
