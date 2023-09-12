@@ -21,7 +21,7 @@ pub enum DisplayMode {
     Solid,
 }
 
-/// The `Viewport` handles printing 3D objects to a 2D [`View`], and also acts as the scene's camera.
+/// The `Viewport` handles printing 3D objects to a 2D [`View`](crate::elements::View), and also acts as the scene's camera.
 pub struct Viewport {
     /// How the Viewport is oriented in the 3D scene
     pub transform: Transform3D,
