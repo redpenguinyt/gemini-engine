@@ -128,14 +128,20 @@ impl Display for View {
             let row: Vec<&ColChar> = self.pixels[self.width * y..self.width * (y + 1)]
                 .iter()
                 .collect();
-            write!(f, "{}{}", row[0].modifier, row[0].fill_char)?;
-            for i in 1..row.len() {
-                let curr_mod = row[i].modifier;
-                let prev_mod = match row.get(i - 1) {
-                    Some(m) => m.modifier,
-                    None => Modifier::None,
-                };
-                let next_mod = match row.get(i + 1) {
+            write!(
+                f,
+                "{}{}{}",
+                row[0].modifier,
+                row[0].fill_char,
+                match row[0].modifier == row[1].modifier {
+                    true => Modifier::None,
+                    false => Modifier::END
+                }
+            )?;
+            for x in 1..row.len() {
+                let curr_mod = row[x].modifier;
+                let prev_mod = row[x - 1].modifier;
+                let next_mod = match row.get(x + 1) {
                     Some(m) => m.modifier,
                     None => Modifier::None,
                 };
@@ -149,7 +155,7 @@ impl Display for View {
                     false => Modifier::END,
                 };
 
-                write!(f, "{}{}{}", modifier, row[i].fill_char, end)?;
+                write!(f, "{}{}{}", modifier, row[x].fill_char, end)?;
             }
             f.write_char('\n')?;
         }

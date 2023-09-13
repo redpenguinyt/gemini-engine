@@ -24,6 +24,11 @@ impl ColChar {
         fill_char: ' ',
         modifier: Modifier::None,
     };
+    /// For use with the [`Sprite`](crate::elements::Sprite) and [`Text`](crate::elements::Text) elements, which consider a regular whitespace a transparent character
+    pub const VOID: Self = Self {
+        fill_char: '\u{2008}',
+        modifier: Modifier::None,
+    };
 
     pub fn new(fill_char: char, modifier: Modifier) -> Self {
         Self {
