@@ -132,17 +132,17 @@ macro_rules! fps_gameloop {
         loop {
             let now = Instant::now();
 
-            // logic
-            $logic
+            $logic // Logic
 
             match frame_skip {
                 true => frame_skip = false,
-                false => $render
+                false => $render // Rendering
             }
+
+            // Debug info and such
+            ($handle_elapsed)(now.elapsed(), frame_skip);
+
             let elapsed = now.elapsed();
-
-            ($handle_elapsed)(elapsed, frame_skip);
-
             frame_skip = sleep_fps($fps, Some(elapsed));
         }
     };
