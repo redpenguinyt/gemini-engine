@@ -250,7 +250,7 @@ impl Triangle {
 
         for (i, y) in (y0..y2).enumerate() {
             for x in x_left[i]..x_right[i] {
-                points.push(Vec2D::new(x as isize, y));
+                points.push(Vec2D::new(x, y));
             }
         }
 

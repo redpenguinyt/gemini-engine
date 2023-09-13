@@ -48,10 +48,10 @@ impl Viewport {
         let (sx, sy) = (-pos.x * f, pos.y * f);
 
         // adjust for non-square pixels
-        let sx = (sx * self.character_width_multiplier).round() as isize;
-        let sy = sy.round() as isize;
+        let sx = (sx * self.character_width_multiplier).round();
+        let sy = sy.round();
 
-        self.origin + Vec2D::new(sx, sy)
+        self.origin + Vec2D::new(sx as isize, sy as isize)
     }
 
     /// Return the object's vertices, transformed
@@ -103,7 +103,7 @@ impl Viewport {
         }
 
         if sort_faces {
-            screen_faces.sort_by_key(|k| (k.2.unwrap() * -100.0).round() as isize);
+            screen_faces.sort_by_key(|k| (k.2.unwrap() * -100.0).round() as i64);
         }
 
         screen_faces.into_iter().map(|(vs, c, _)| (vs, c)).collect()
