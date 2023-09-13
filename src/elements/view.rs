@@ -23,6 +23,7 @@ pub use vec2d::Vec2D;
 ///     view.display_render().unwrap();
 /// }
 /// ```
+#[derive(Debug, Clone)]
 pub struct View {
     pub width: usize,
     pub height: usize,
