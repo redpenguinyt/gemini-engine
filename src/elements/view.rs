@@ -135,7 +135,7 @@ impl Display for View {
                 row[0].fill_char,
                 match row[0].modifier == row[1].modifier {
                     true => Modifier::None,
-                    false => Modifier::END
+                    false => Modifier::END,
                 }
             )?;
             for x in 1..row.len() {
