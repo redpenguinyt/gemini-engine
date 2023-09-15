@@ -6,6 +6,7 @@ Gemini is a monospaced ASCII rendering engine, capable of rendering 2D and 3D gr
 
 **IMPORTANT**: You HAVE to use a monospace font in the terminal for the engine to render the view properly
 
+- [Changelog](https://github.com/redpenguinyt/gemini-rust/commits)
 - [Crates.io](https://crates.io/crates/gemini-engine)
 - [Documentation](https://docs.rs/gemini-engine)
 
