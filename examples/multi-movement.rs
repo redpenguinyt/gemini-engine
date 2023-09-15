@@ -47,6 +47,6 @@ fn main() {
                 thread::sleep(Duration::from_secs(2));
             };
         },
-        200
+        200.0
     );
 }

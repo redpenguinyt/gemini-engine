@@ -3,7 +3,7 @@ use gemini_engine::elements3d::{DisplayMode, Mesh3D, Transform3D, Vec3D, Viewpor
 use gemini_engine::fps_gameloop;
 use gemini_engine::gameloop;
 
-const FPS: u32 = 30;
+const FPS: f32 = 30.0;
 const FOV: f64 = 95.0;
 
 fn main() {

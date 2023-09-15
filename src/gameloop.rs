@@ -26,10 +26,11 @@
 //! Writing your code like this ensures that it wont affect the game's intentional speed too much, and also makes it easy for you to benchmark your game's speed with something like `println!("Elapsed: {:.2?}µs", elapsed.as_micros());` after `let elapsed`.
 //!
 //! You can also use the `fps_gameloop!` macro to achieve the same result. Read about how to use it in the [`fps_gameloop!`]() documentation
+
 use std::thread::sleep;
 pub use std::time::{Duration, Instant};
 
-/// Sleep for a single frame depending on the declared FPS, while also subtracting the Duration taken to process the frame. Returns a bool value depending on whether or not the frame took longer to render than the intended fps
+/// Sleep for a single frame at the declared FPS, while also subtracting the Duration taken to process the frame. Returns a bool value depending on whether or not the frame took longer to render than the intended fps
 /// ## Example
 /// ```rust,no_run
 /// use gemini_engine::gameloop;
@@ -49,9 +50,9 @@ pub use std::time::{Duration, Instant};
 ///
 ///     frame_skip = gameloop::sleep_fps(FPS, Some(now.elapsed()));
 /// }
-pub fn sleep_fps(fps: u32, elapsed: Option<Duration>) -> bool {
+pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
     let elapsed = elapsed.unwrap_or(Duration::ZERO);
-    let frame_length = Duration::from_secs_f32(1.0 / fps as f32);
+    let frame_length = Duration::from_secs_f32(1.0 / fps);
     if frame_length > elapsed {
         sleep(frame_length - elapsed);
         return false;
@@ -107,7 +108,7 @@ pub fn sleep_fps(fps: u32, elapsed: Option<Duration>) -> bool {
 ///     FPS
 /// );
 /// ```
-/// The code is now a lot less cluttered. This macro accepts three fragments (and an optional fourth fragment). A logic block fragment (contained inside `{}` brackets) for code that should run every single frame, a render block fragment for code related to displaying to the terminal (all plots, blits and renders) and a `u32` fragment. The fourth optional fragment is to be a function that accepts a [`Duration`] parameter representing the time taken to render everything and a `bool` parameter representing whether the last frame was skipped or not. It can be used to, say, print debug info. Here's an example:
+/// The code is now a lot less cluttered. This macro accepts three fragments (and an optional fourth fragment). A logic block fragment (contained inside `{}` brackets) for code that should run every single frame, a render block fragment for code related to displaying to the terminal (all plots, blits and renders) and a `f32` fragment representing the desired frames per second. The fourth optional fragment is to be a function that accepts a [`Duration`] parameter representing the time taken to render everything and a `bool` parameter representing whether the last frame was skipped or not. It can be used to, say, print debug info. Here's an example:
 /// ```rust,no_run
 /// # use gemini_engine::{fps_gameloop, gameloop};
 /// fps_gameloop!(
