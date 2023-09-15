@@ -2,7 +2,7 @@
 //! ```rust,no_run
 //! use gemini_engine::gameloop;
 //!
-//! const FPS: u32 = 30;
+//! const FPS: f32 = 30.0;
 //!
 //! fn main() {
 //!     // --initialisation--
@@ -36,7 +36,7 @@ pub use std::time::{Duration, Instant};
 /// use gemini_engine::gameloop;
 ///
 /// let mut frame_skip = false;
-/// const FPS: u32 = 60;
+/// const FPS: f32 = 60.0;
 /// loop {
 ///     let now = gameloop::Instant::now();
 ///
@@ -68,7 +68,7 @@ pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
 /// # let viewport = Viewport::new(Transform3D::default(), 0.0, Vec2D::ZERO);
 /// let mut cube = Mesh3D::default_cube();
 ///
-/// let FPS = 30;
+/// let FPS = 30.0;
 /// let mut frame_skip = false;
 /// loop {
 ///     let now = gameloop::Instant::now();
@@ -95,7 +95,7 @@ pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
 /// # let viewport = Viewport::new(Transform3D::default(), 0.0, Vec2D::ZERO);
 /// let mut cube = Mesh3D::default_cube();
 ///
-/// let FPS = 30;
+/// let FPS = 30.0;
 /// fps_gameloop!(
 ///     {
 ///         view.clear();
@@ -113,7 +113,7 @@ pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
 /// # use gemini_engine::{fps_gameloop, gameloop};
 /// fps_gameloop!(
 ///     // -- other fields --
-/// #   {}, {}, 0,
+/// #   {}, {}, 0.0,
 ///     |elapsed: gameloop::Duration, frame_skip: bool| {
 ///         println!(
 ///             "Elapsed: {:.2?}µs | Frame skip: {}",

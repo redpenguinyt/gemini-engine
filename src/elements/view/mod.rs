@@ -100,7 +100,7 @@ impl View {
 
 impl Display for View {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
-        utils::prepare_terminal(f).unwrap();
+        let _ = utils::prepare_terminal(f);
         f.write_str("\x1b[H\x1b[J")?;
         for y in 0..self.height {
             let row: Vec<&ColChar> = self.pixels[self.width * y..self.width * (y + 1)]

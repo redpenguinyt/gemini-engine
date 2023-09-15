@@ -6,7 +6,7 @@
 //! use gemini_engine::elements::{Point, Vec2D, view::{View, ColChar, Wrapping}};
 //! use gemini_engine::gameloop;
 //!
-//! const FPS: u32 = 30;
+//! const FPS: f32 = 30.0;
 //!
 //! fn main() {
 //!     let mut view = View::new(40, 8, ColChar::BACKGROUND);
