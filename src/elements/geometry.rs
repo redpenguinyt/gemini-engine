@@ -1,7 +1,4 @@
-use super::view::{
-    utils,
-    ColChar, Point, Vec2D, ViewElement,
-};
+use super::view::{utils, ColChar, Point, Vec2D, ViewElement};
 
 /// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`]
 pub struct Line {
@@ -143,10 +140,7 @@ pub struct Polygon {
 
 impl Polygon {
     pub fn new(points: Vec<Vec2D>, fill_char: ColChar) -> Self {
-        Self {
-            points,
-            fill_char,
-        }
+        Self { points, fill_char }
     }
 
     /// Split a polygon up into triangles. Returns a vec of coordinate sets for said triangles
@@ -210,6 +204,3 @@ impl ViewElement for Rect {
         utils::points_to_pixels(points, self.fill_char)
     }
 }
-
-#[deprecated = "Please use `Rect` instead"]
-pub type Box = Rect;
