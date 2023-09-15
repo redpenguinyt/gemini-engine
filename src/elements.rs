@@ -104,6 +104,27 @@ impl ViewElement for PixelContainer {
     }
 }
 
+/// `VisibilityToggle` is a container for a `ViewElement` with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
+pub struct VisibilityToggle<T: ViewElement> {
+    pub element: T,
+    pub visible: bool
+}
+
+impl<T: ViewElement> VisibilityToggle<T> {
+    pub fn new(element: T, visible: bool) -> Self {
+        Self { element, visible }
+    }
+}
+
+impl<T: ViewElement> ViewElement for VisibilityToggle<T> {
+    fn active_pixels(&self) -> Vec<Point> {
+        match self.visible {
+            true => self.element.active_pixels(),
+            false => vec![]
+        }
+    }
+}
+
 /// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`]
 pub struct Line {
     pub pos0: Vec2D,
