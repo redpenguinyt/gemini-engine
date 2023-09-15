@@ -12,7 +12,7 @@ fn main() {
     let mut viewport = Viewport::new(
         Transform3D::new_tr(Vec3D::new(0.0, 0.0, 5.0), Vec3D::new(-0.5, 0.3, 0.0)),
         FOV,
-        view.center()
+        view.center(),
     );
 
     let cube = Mesh3D::default_cube();
