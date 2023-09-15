@@ -189,10 +189,10 @@ impl ViewElement3D for Mesh3D {
     fn get_transform(&self) -> Transform3D {
         self.transform
     }
-    fn get_vertices(&self) -> &Vec<Vec3D> {
+    fn get_vertices(&self) -> &[Vec3D] {
         &self.vertices
     }
-    fn get_faces(&self) -> &Vec<Face> {
+    fn get_faces(&self) -> &[Face] {
         &self.faces
     }
 }

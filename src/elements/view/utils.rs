@@ -52,7 +52,7 @@ pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
 }
 
 /// Returns true if the points in the vector are arranged in a clockwise orientation
-pub fn is_clockwise(points: &Vec<Vec2D>) -> bool {
+pub fn is_clockwise(points: &[Vec2D]) -> bool {
     let mut m = vec![];
     for i in 0..points.len() {
         let (p1, p2) = (points[i], points[(i + 1) % points.len()]);

@@ -164,7 +164,7 @@ pub trait ViewElement3D {
     /// This should return the object's transform
     fn get_transform(&self) -> Transform3D;
     /// This should return all of the object's vertices
-    fn get_vertices(&self) -> &Vec<Vec3D>;
+    fn get_vertices(&self) -> &[Vec3D];
     /// This should return all of the object's `Face`s
-    fn get_faces(&self) -> &Vec<Face>;
+    fn get_faces(&self) -> &[Face];
 }
