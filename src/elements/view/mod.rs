@@ -25,9 +25,14 @@ pub use vec2d::Vec2D;
 /// ```
 #[derive(Debug, Clone)]
 pub struct View {
+    /// The width of the View
     pub width: usize,
+    /// The height of the View
     pub height: usize,
+    /// The character that the View will be filled with by default on clear
     pub background_char: ColChar,
+    /// A boolean determining whether the render should contain numbers on the top and left signifying the corresponding pixels' X/Y value values
+    pub coord_numbers_in_render: bool,
     pixels: Vec<ColChar>,
 }
 
@@ -37,6 +42,7 @@ impl View {
             width,
             height,
             background_char,
+            coord_numbers_in_render: false,
             pixels: Vec::new(),
         };
         view.clear();
@@ -102,10 +108,18 @@ impl Display for View {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
         let _ = utils::prepare_terminal(f);
         f.write_str("\x1b[H\x1b[J")?;
+        if self.coord_numbers_in_render {
+            let nums: String = (0..self.width).map(|i| i.to_string().chars().last().unwrap_or(' ')).collect();
+            writeln!(f, " {}", nums).unwrap();
+        }
         for y in 0..self.height {
             let row: Vec<&ColChar> = self.pixels[self.width * y..self.width * (y + 1)]
                 .iter()
                 .collect();
+            if self.coord_numbers_in_render {
+                let num = y.to_string().chars().last().unwrap_or(' ');
+                write!(f, "{num}").unwrap();
+            }
             write!(
                 f,
                 "{}{}{}",
