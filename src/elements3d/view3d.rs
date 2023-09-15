@@ -151,7 +151,7 @@ impl Viewport {
                 let screen_faces = self.project_faces(objects, true, true);
 
                 for (face_vertices, fill_char) in screen_faces {
-                    canvas.append_points(Polygon::draw(face_vertices), fill_char)
+                    canvas.append_points(Polygon::draw(&face_vertices), fill_char)
                 }
             }
         }

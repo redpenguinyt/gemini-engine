@@ -1,5 +1,5 @@
 use super::view::{
-    utils::{self, BlitCache},
+    utils,
     ColChar, Point, Vec2D, ViewElement,
 };
 
@@ -8,7 +8,6 @@ pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
     pub fill_char: ColChar,
-    cache: BlitCache<Vec2D>,
 }
 
 impl Line {
@@ -17,16 +16,6 @@ impl Line {
             pos0,
             pos1,
             fill_char,
-            cache: BlitCache::DEFAULT,
-        }
-    }
-
-    /// Generate a [`BlitCache`] if you intend for the line to not move across multiple frames. If you use this, you MUST call generate_cache if the line does move in the future. This function will not generate a new cache if the previously generated cache is still valid
-    pub fn generate_cache(&mut self) {
-        if !self.cache.is_cache_valid(&vec![self.pos0, self.pos1]) {
-            let points = Self::draw(self.pos0, self.pos1);
-
-            self.cache = BlitCache::new(vec![self.pos0, self.pos1], points);
         }
     }
 
@@ -70,13 +59,7 @@ impl Line {
 
 impl ViewElement for Line {
     fn active_pixels(&self) -> Vec<Point> {
-        let cache = self.cache.dependent();
-        let points = match cache {
-            Some(c) => c,
-            None => Self::draw(self.pos0, self.pos1),
-        };
-
-        utils::points_to_pixels(points, self.fill_char)
+        utils::points_to_pixels(Self::draw(self.pos0, self.pos1), self.fill_char)
     }
 }
 
@@ -86,7 +69,6 @@ pub struct Triangle {
     pub pos1: Vec2D,
     pub pos2: Vec2D,
     pub fill_char: ColChar,
-    cache: BlitCache<Vec2D>,
 }
 
 impl Triangle {
@@ -96,7 +78,6 @@ impl Triangle {
             pos1,
             pos2,
             fill_char: fill_char,
-            cache: BlitCache::DEFAULT,
         }
     }
 
@@ -108,15 +89,6 @@ impl Triangle {
             )
         }
         Self::new(points[0], points[1], points[2], fill_char)
-    }
-
-    /// Generate a [`BlitCache`] if you intend for the triangle to not move across multiple frames. If you use this, you MUST call generate_cache if the triangle does move in the future. This function will not generate a new cache if the previously generated cache is still valid
-    pub fn generate_cache(&mut self) {
-        if !self.cache.is_cache_valid(&vec![self.pos0, self.pos1, self.pos2]) {
-            let points = Self::draw(self.corners());
-
-            self.cache = BlitCache::new(self.corners().to_vec(), points);
-        }
     }
 
     /// Return the triangle's points as an array
@@ -159,13 +131,7 @@ impl Triangle {
 
 impl ViewElement for Triangle {
     fn active_pixels(&self) -> Vec<Point> {
-        let cache = self.cache.dependent();
-        let points = match cache {
-            Some(c) => c,
-            None => Self::draw(self.corners()),
-        };
-
-        utils::points_to_pixels(points, self.fill_char)
+        utils::points_to_pixels(Self::draw(self.corners()), self.fill_char)
     }
 }
 
@@ -173,7 +139,6 @@ impl ViewElement for Triangle {
 pub struct Polygon {
     pub points: Vec<Vec2D>,
     pub fill_char: ColChar,
-    cache: BlitCache<Vec2D>,
 }
 
 impl Polygon {
@@ -181,21 +146,11 @@ impl Polygon {
         Self {
             points,
             fill_char,
-            cache: BlitCache::DEFAULT,
-        }
-    }
-
-    /// Generate a [`BlitCache`] if you intend for the polygin to not move across multiple frames. If you use this, you MUST call generate_cache if the polygon does move in the future. This function will not generate a new cache if the previously generated cache is still valid
-    pub fn generate_cache(&mut self) {
-        if !self.cache.is_cache_valid(&self.points) {
-            let points = Self::draw(self.points.clone());
-
-            self.cache = BlitCache::new(self.points.to_vec(), points);
         }
     }
 
     /// Split a polygon up into triangles. Returns a vec of coordinate sets for said triangles
-    pub fn triangulate(vertices: Vec<Vec2D>) -> Vec<[Vec2D; 3]> {
+    pub fn triangulate(vertices: &[Vec2D]) -> Vec<[Vec2D; 3]> {
         let mut points = vec![];
         for fi in 1..(vertices.len() - 1) {
             points.push([
@@ -208,7 +163,7 @@ impl Polygon {
     }
 
     /// Draw a polygon from points. Only supports convex polygons as of now
-    pub fn draw(vertices: Vec<Vec2D>) -> Vec<Vec2D> {
+    pub fn draw(vertices: &[Vec2D]) -> Vec<Vec2D> {
         Self::triangulate(vertices)
             .iter()
             .map(|corners| Triangle::draw(*corners))
@@ -219,13 +174,7 @@ impl Polygon {
 
 impl ViewElement for Polygon {
     fn active_pixels(&self) -> Vec<Point> {
-        let cache = self.cache.dependent();
-        let points = match cache {
-            Some(c) => c,
-            None => Self::draw(self.points.clone()),
-        };
-
-        utils::points_to_pixels(points, self.fill_char)
+        utils::points_to_pixels(Self::draw(&self.points), self.fill_char)
     }
 }
 
