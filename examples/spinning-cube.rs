@@ -1,7 +1,4 @@
-use gemini_engine::elements::{
-    view::{ColChar, View, Wrapping},
-    Vec2D,
-};
+use gemini_engine::elements::view::{ColChar, View, Wrapping};
 use gemini_engine::elements3d::{DisplayMode, Mesh3D, Transform3D, Vec3D, Viewport};
 use gemini_engine::fps_gameloop;
 use gemini_engine::gameloop;
@@ -15,7 +12,7 @@ fn main() {
     let mut viewport = Viewport::new(
         Transform3D::new_tr(Vec3D::new(0.0, 0.0, 5.0), Vec3D::new(-0.5, 0.3, 0.0)),
         FOV,
-        Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
+        view.center()
     );
 
     let cube = Mesh3D::default_cube();

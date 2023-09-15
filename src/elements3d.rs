@@ -23,7 +23,7 @@
 //!             Vec3D::new(-0.5, 0.0, 0.0)
 //!         ),
 //!         FOV,
-//!         Vec2D::new((view.width / 2) as isize, (view.height / 2) as isize),
+//!         view.center(),
 //!     );
 //!
 //!     let cube = Mesh3D::default_cube();
