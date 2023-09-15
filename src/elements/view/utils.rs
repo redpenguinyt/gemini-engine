@@ -1,3 +1,5 @@
+use std::{fmt, io, sync::OnceLock};
+
 use super::{ColChar, Point, Vec2D};
 
 /// Combine a vector of [`Vec2D`]s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your [`ViewElement`](super::ViewElement) only has one fill character across all of it
@@ -6,6 +8,32 @@ pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Point> {
         .iter()
         .map(|e| Point::new(e.clone(), fill_char))
         .collect()
+}
+
+static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
+
+/// Prepare the terminal by printing lines to move all terminal history out of the way. Can only ever be called once
+pub(crate) fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> io::Result<()> {
+    let cell = TERMINAL_PREPARED.get();
+    if cell.is_none() {
+        let rows = termsize::get()
+            .ok_or(io::Error::new(
+                std::io::ErrorKind::NotFound,
+                "Couldnt get termsize",
+            ))?
+            .rows;
+        let rows_us = usize::try_from(rows).expect("u16 couldnt convert to usize");
+        writeln!(
+            f,
+            "{}",
+            vec!['\n'; rows_us].iter().cloned().collect::<String>()
+        )
+        .unwrap();
+        println!("terminal prepared");
+        TERMINAL_PREPARED.get_or_init(|| true);
+    }
+
+    Ok(())
 }
 
 pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {

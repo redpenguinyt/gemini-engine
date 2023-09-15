@@ -1,6 +1,6 @@
 use std::{
     fmt::{self, Display, Write},
-    io::{self, Error, Write as ioWrite},
+    io::{self, Write as ioWrite},
     usize,
 };
 pub mod colchar;
@@ -29,7 +29,6 @@ pub struct View {
     pub height: usize,
     pub background_char: ColChar,
     pixels: Vec<ColChar>,
-    terminal_prepared: bool,
 }
 
 impl View {
@@ -39,32 +38,10 @@ impl View {
             height,
             background_char,
             pixels: Vec::new(),
-            terminal_prepared: false,
         };
-
         view.clear();
-        let _ = view.prepare_terminal(); // TODO: handle potential error somehow
 
         view
-    }
-
-    fn prepare_terminal(&mut self) -> Result<(), Error> {
-        if !self.terminal_prepared {
-            let rows = termsize::get()
-                .ok_or(Error::new(
-                    std::io::ErrorKind::NotFound,
-                    "Couldnt get termsize",
-                ))?
-                .rows;
-            let rows_us = usize::try_from(rows).expect("u16 couldnt convert to usize");
-            println!(
-                "{}",
-                vec!['\n'; rows_us].iter().cloned().collect::<String>()
-            );
-        }
-        self.terminal_prepared = true;
-
-        Ok(())
     }
 
     /// Return the size of the [`View`] as a [`Vec2D`](vec2d)
@@ -123,6 +100,7 @@ impl View {
 
 impl Display for View {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
+        utils::prepare_terminal(f).unwrap();
         f.write_str("\x1b[H\x1b[J")?;
         for y in 0..self.height {
             let row: Vec<&ColChar> = self.pixels[self.width * y..self.width * (y + 1)]
