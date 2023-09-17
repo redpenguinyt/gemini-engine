@@ -109,7 +109,9 @@ impl Display for View {
         let _ = utils::prepare_terminal(f);
         f.write_str("\x1b[H\x1b[J")?;
         if self.coord_numbers_in_render {
-            let nums: String = (0..self.width).map(|i| i.to_string().chars().last().unwrap_or(' ')).collect();
+            let nums: String = (0..self.width)
+                .map(|i| i.to_string().chars().last().unwrap_or(' '))
+                .collect();
             writeln!(f, " {}", nums).unwrap();
         }
         for y in 0..self.height {
