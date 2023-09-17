@@ -147,11 +147,7 @@ impl Polygon {
     pub fn triangulate(vertices: &[Vec2D]) -> Vec<[Vec2D; 3]> {
         let mut points = vec![];
         for fi in 1..(vertices.len() - 1) {
-            points.push([
-                vertices[0],
-                vertices[fi],
-                vertices[(fi + 1) % vertices.len()],
-            ])
+            points.push([vertices[0], vertices[fi], vertices[fi + 1]])
         }
         points
     }
