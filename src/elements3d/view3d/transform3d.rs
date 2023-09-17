@@ -43,7 +43,7 @@ impl Transform3D {
     /// Create a Transform3D with chosen translation
     pub const fn new_t(translation: Vec3D) -> Self {
         Self {
-            translation: translation,
+            translation,
             rotation: Vec3D::ZERO,
             scale: Vec3D::ONE,
         }
@@ -64,6 +64,7 @@ impl Transform3D {
         translation
     }
 
+    #[allow(clippy::let_and_return)]
     pub fn rotate(&self, value: Vec3D) -> Vec3D {
         let ry = Self::rotate_one_axis(value, SpatialAxis::Y, self.rotation.y);
         let rx = Self::rotate_one_axis(ry, SpatialAxis::X, self.rotation.x);
@@ -94,6 +95,7 @@ impl Mul<Transform3D> for Transform3D {
 impl Mul<Vec3D> for Transform3D {
     type Output = Vec3D;
 
+    #[allow(clippy::let_and_return)]
     fn mul(self, rhs: Vec3D) -> Self::Output {
         let scaled = rhs * self.scale;
         let rotated = self.rotate(scaled);

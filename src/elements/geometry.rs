@@ -74,7 +74,7 @@ impl Triangle {
             pos0,
             pos1,
             pos2,
-            fill_char: fill_char,
+            fill_char,
         }
     }
 
@@ -156,8 +156,7 @@ impl Polygon {
     pub fn draw(vertices: &[Vec2D]) -> Vec<Vec2D> {
         Self::triangulate(vertices)
             .iter()
-            .map(|corners| Triangle::draw(*corners))
-            .flatten()
+            .flat_map(|corners| Triangle::draw(*corners))
             .collect()
     }
 }
@@ -173,7 +172,6 @@ pub struct Rect {
     pub pos: Vec2D,
     pub size: Vec2D,
     pub fill_char: ColChar,
-    _private: (),
 }
 
 impl Rect {
@@ -182,7 +180,6 @@ impl Rect {
             pos,
             size,
             fill_char,
-            _private: (),
         }
     }
 }

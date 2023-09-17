@@ -82,7 +82,7 @@ impl Viewport {
         for object in objects {
             let (screen_coordinates, vertex_depths) = self.get_vertices_on_screen(object);
 
-            for face in (object.get_faces()).into_iter() {
+            for face in object.get_faces().iter() {
                 let face_vertices = face.index_into(&screen_coordinates);
 
                 // Backface culling

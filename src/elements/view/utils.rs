@@ -6,7 +6,7 @@ use super::{ColChar, Point, Vec2D};
 pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Point> {
     points
         .iter()
-        .map(|e| Point::new(e.clone(), fill_char))
+        .map(|point| Point::new(*point, fill_char))
         .collect()
 }
 
@@ -45,7 +45,7 @@ pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
     let a = (d1 - d0) / (i1 - i0) as f64;
     let mut d = d0;
     for _i in i0..(i1 + 1) {
-        values.push(d.clone().round() as isize);
+        values.push(d.round() as isize);
         d += a;
     }
     values

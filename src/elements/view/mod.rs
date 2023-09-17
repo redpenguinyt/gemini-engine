@@ -14,14 +14,12 @@ pub use vec2d::Vec2D;
 /// ```
 /// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Point, Vec2D};
 ///
-/// fn main() {
-///     let mut view = View::new(9, 3, ColChar::BACKGROUND);
-///     let point = Point::new(Vec2D::new(4,1), ColChar::SOLID);
+/// let mut view = View::new(9, 3, ColChar::BACKGROUND);
+/// let point = Point::new(Vec2D::new(4,1), ColChar::SOLID);
 ///
-///     view.blit(&point, Wrapping::Panic);
+/// view.blit(&point, Wrapping::Panic);
 ///
-///     view.display_render().unwrap();
-/// }
+/// view.display_render().unwrap();
 /// ```
 #[derive(Debug, Clone)]
 pub struct View {
@@ -66,7 +64,7 @@ impl View {
 
     pub fn plot(&mut self, pos: Vec2D, c: ColChar, wrapping: Wrapping) {
         let mut pos = pos;
-        let in_bounds_pos = pos.clone() % self.size();
+        let in_bounds_pos = pos % self.size();
 
         match wrapping {
             Wrapping::Wrap => pos = in_bounds_pos,

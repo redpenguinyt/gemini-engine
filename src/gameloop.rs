@@ -55,9 +55,9 @@ pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
     let frame_length = Duration::from_secs_f32(1.0 / fps);
     if frame_length > elapsed {
         sleep(frame_length - elapsed);
-        return false;
+        false
     } else {
-        return true;
+        true
     }
 }
 
