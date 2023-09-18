@@ -1,6 +1,7 @@
 //! A GeminiEngine (py) example, recreated in its rusty successor
 //! You can find the original here:
 //! https://github.com/redpenguinyt/GeminiExamples/blob/master/test_multiple_movement.py
+
 use std::{thread, time::Duration};
 
 use gemini_engine::{
