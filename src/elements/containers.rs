@@ -90,7 +90,7 @@ pub struct CollisionContainer<'a> {
 }
 
 impl<'a> CollisionContainer<'a> {
-    ///	Create a new CollisionLayer
+    /// Create a new CollisionLayer
     pub const fn new() -> CollisionContainer<'a> {
         CollisionContainer { elements: vec![] }
     }
