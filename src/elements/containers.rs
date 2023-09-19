@@ -4,6 +4,27 @@ use std::fmt::Debug;
 
 use super::{utils, ColChar, Point, Vec2D, ViewElement};
 
+/// `VisibilityToggle` is a container for a `ViewElement` with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
+pub struct VisibilityToggle<T: ViewElement> {
+    pub element: T,
+    pub visible: bool,
+}
+
+impl<T: ViewElement> VisibilityToggle<T> {
+    pub fn new(element: T, visible: bool) -> Self {
+        Self { element, visible }
+    }
+}
+
+impl<T: ViewElement> ViewElement for VisibilityToggle<T> {
+    fn active_pixels(&self) -> Vec<Point> {
+        match self.visible {
+            true => self.element.active_pixels(),
+            false => vec![],
+        }
+    }
+}
+
 /// A `PixelContainer` only has a [`pixels`](PixelContainer::pixels) property, which gets returned directly to the View during blit
 #[derive(Debug, Clone)]
 pub struct PixelContainer {

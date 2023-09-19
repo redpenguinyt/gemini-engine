@@ -42,33 +42,16 @@
 //! There you have it! You've written your first program with Gemini! As of me writing this now it's still very much a work in progress, so any feedback or issue requests would be appreciated :)
 
 pub mod ascii;
-pub mod containers;
-pub mod geometry;
-pub mod view;
 pub use ascii::{Sprite, Text};
-pub use containers::PixelContainer;
+
+pub mod containers;
+pub use containers::{PixelContainer, VisibilityToggle};
+
+pub mod geometry;
 pub use geometry::{Line, Polygon, Rect, Triangle};
-use view::utils;
-use view::{ColChar, ViewElement};
+
+pub mod view;
 pub use view::{Point, Vec2D, View};
 
-/// `VisibilityToggle` is a container for a `ViewElement` with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
-pub struct VisibilityToggle<T: ViewElement> {
-    pub element: T,
-    pub visible: bool,
-}
-
-impl<T: ViewElement> VisibilityToggle<T> {
-    pub fn new(element: T, visible: bool) -> Self {
-        Self { element, visible }
-    }
-}
-
-impl<T: ViewElement> ViewElement for VisibilityToggle<T> {
-    fn active_pixels(&self) -> Vec<Point> {
-        match self.visible {
-            true => self.element.active_pixels(),
-            false => vec![],
-        }
-    }
-}
+use view::utils;
+use view::{ColChar, ViewElement};
