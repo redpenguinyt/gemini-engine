@@ -42,71 +42,15 @@
 //! There you have it! You've written your first program with Gemini! As of me writing this now it's still very much a work in progress, so any feedback or issue requests would be appreciated :)
 
 pub mod ascii;
+pub mod containers;
 pub mod geometry;
 pub mod view;
 pub use ascii::{Sprite, Text};
+pub use containers::PixelContainer;
 pub use geometry::{Line, Polygon, Rect, Triangle};
 use view::utils;
 use view::{ColChar, ViewElement};
 pub use view::{Point, Vec2D, View};
-
-/// A `PixelContainer` only has a [`pixels`](PixelContainer::pixels) property, which gets returned directly to the View during blit
-pub struct PixelContainer {
-    pub pixels: Vec<Point>,
-}
-
-impl PixelContainer {
-    pub const fn new() -> Self {
-        Self { pixels: vec![] }
-    }
-
-    /// Add a single pixel to the `PixelContainer`
-    pub fn push(&mut self, pixel: Point) {
-        self.pixels.push(pixel);
-    }
-
-    /// Moves all the pixels into the `PixelContainer`, leaving the input empty.
-    pub fn append(&mut self, pixels: &mut Vec<Point>) {
-        self.pixels.append(pixels);
-    }
-
-    /// Append vector of coordinates and a single [`ColChar`] for all of them.
-    pub fn append_points(&mut self, points: Vec<Vec2D>, fill_char: ColChar) {
-        self.append(&mut utils::points_to_pixels(points, fill_char));
-    }
-
-    /// Plot a pixel to the PixelContainer
-    pub fn plot(&mut self, pos: Vec2D, c: ColChar) {
-        self.push(Point::new(pos, c))
-    }
-
-    /// Blit a [`ViewElement`] to the PixelContainer.
-    pub fn blit<T: ViewElement>(&mut self, element: &T) {
-        let mut active_pixels = element.active_pixels();
-
-        self.append(&mut active_pixels);
-    }
-}
-
-impl From<Vec<Point>> for PixelContainer {
-    fn from(pixels: Vec<Point>) -> Self {
-        Self { pixels }
-    }
-}
-
-impl From<Vec<(Vec2D, ColChar)>> for PixelContainer {
-    fn from(pixels: Vec<(Vec2D, ColChar)>) -> Self {
-        Self {
-            pixels: pixels.iter().map(|x| Point::from(*x)).collect(),
-        }
-    }
-}
-
-impl ViewElement for PixelContainer {
-    fn active_pixels(&self) -> Vec<Point> {
-        self.pixels.clone()
-    }
-}
 
 /// `VisibilityToggle` is a container for a `ViewElement` with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
 pub struct VisibilityToggle<T: ViewElement> {
