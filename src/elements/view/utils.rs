@@ -10,6 +10,11 @@ pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Point> {
         .collect()
 }
 
+/// Extract the positions from a vector of [`Point`]s
+pub fn pixels_to_points(pixels: Vec<Point>) -> Vec<Vec2D> {
+    pixels.iter().map(|p| p.pos).collect()
+}
+
 static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
 
 /// Prepare the terminal by printing lines to move all terminal history out of the way. Can only ever be called once
