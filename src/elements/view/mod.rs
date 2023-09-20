@@ -1,5 +1,5 @@
 use std::{
-    fmt::{self, Display, Write},
+    fmt::{self, Display},
     io::{self, Write as ioWrite},
     usize,
 };
@@ -149,7 +149,7 @@ impl Display for View {
 
                 write!(f, "{}{}{}", modifier, row[x].fill_char, end)?;
             }
-            f.write_char('\n')?;
+            f.write_str("\r\n")?;
         }
         f.write_str("\x1b[J")?;
 
