@@ -52,7 +52,10 @@ pub struct Sprite {
 }
 impl Sprite {
     pub fn new(pos: Vec2D, texture: &str, modifier: Modifier) -> Self {
-        let texture = String::from(texture.trim());
+        let mut texture = String::from(texture);
+        if texture.starts_with('\n') {
+            texture.pop();
+        }
         Self {
             pos,
             texture,
