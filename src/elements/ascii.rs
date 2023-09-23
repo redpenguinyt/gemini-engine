@@ -8,7 +8,7 @@ pub struct Text<'a> {
     pub modifier: Modifier,
 }
 
-impl Text<'_> {
+impl<'a> Text<'a> {
     pub fn new(pos: Vec2D, content: &str, modifier: Modifier) -> Text {
         assert!(!content.contains('\n'));
 
@@ -18,24 +18,28 @@ impl Text<'_> {
             modifier,
         }
     }
-}
 
-impl ViewElement for Text<'_> {
-    fn active_pixels(&self) -> Vec<Point> {
+    pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Point> {
         let mut pixels = vec![];
-        for (x, char) in self.content.chars().enumerate() {
+        for (x, char) in content.chars().enumerate() {
             if char != ' ' {
                 pixels.push(Point::new(
-                    self.pos + Vec2D::new(x as isize, 0),
+                    pos + Vec2D::new(x as isize, 0),
                     ColChar {
                         fill_char: char,
-                        modifier: self.modifier,
+                        modifier,
                     },
                 ));
             }
         }
 
         pixels
+    }
+}
+
+impl ViewElement for Text<'_> {
+    fn active_pixels(&self) -> Vec<Point> {
+        Text::draw(self.pos, self.content, self.modifier)
     }
 }
 
@@ -48,10 +52,7 @@ pub struct Sprite {
 }
 impl Sprite {
     pub fn new(pos: Vec2D, texture: &str, modifier: Modifier) -> Self {
-        let mut texture = String::from(texture);
-        if texture.starts_with('\n') {
-            texture.pop();
-        }
+        let texture = String::from(texture.trim());
         Self {
             pos,
             texture,
@@ -66,10 +67,11 @@ impl ViewElement for Sprite {
 
         let lines = self.texture.split('\n');
         for (y, line) in lines.enumerate() {
-            pixels.extend(
-                Text::new(self.pos + Vec2D::new(0, y as isize), line, self.modifier)
-                    .active_pixels(),
-            );
+            pixels.extend(Text::draw(
+                self.pos + Vec2D::new(0, y as isize),
+                line,
+                self.modifier,
+            ));
         }
 
         pixels
