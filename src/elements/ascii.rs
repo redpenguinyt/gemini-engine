@@ -21,12 +21,12 @@ impl<'a> Text<'a> {
 
     pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Point> {
         let mut pixels = vec![];
-        for (x, char) in content.chars().enumerate() {
-            if char != ' ' {
+        for (x, text_char) in content.chars().enumerate() {
+            if text_char != ' ' {
                 pixels.push(Point::new(
                     pos + Vec2D::new(x as isize, 0),
                     ColChar {
-                        fill_char: char,
+                        text_char,
                         modifier,
                     },
                 ));

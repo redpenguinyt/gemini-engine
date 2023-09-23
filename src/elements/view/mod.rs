@@ -113,42 +113,24 @@ impl Display for View {
             writeln!(f, " {}", nums).unwrap();
         }
         for y in 0..self.height {
-            let row: Vec<&ColChar> = self.pixels[self.width * y..self.width * (y + 1)]
-                .iter()
-                .collect();
+            let row = &self.pixels[self.width * y..self.width * (y + 1)];
             if self.coord_numbers_in_render {
                 let num = y.to_string().chars().last().unwrap_or(' ');
                 write!(f, "{num}").unwrap();
             }
-            write!(
-                f,
-                "{}{}{}",
-                row[0].modifier,
-                row[0].fill_char,
-                match row[0].modifier == row[1].modifier {
-                    true => Modifier::None,
-                    false => Modifier::END,
-                }
-            )?;
-            for x in 1..row.len() {
-                let curr_mod = row[x].modifier;
-                let prev_mod = row[x - 1].modifier;
-                let next_mod = match row.get(x + 1) {
-                    Some(m) => m.modifier,
-                    None => Modifier::None,
-                };
-
-                let modifier = match prev_mod == curr_mod {
-                    true => Modifier::None,
-                    false => curr_mod,
-                };
-                let end = match next_mod == curr_mod {
-                    true => Modifier::None,
-                    false => Modifier::END,
-                };
-
-                write!(f, "{}{}{}", modifier, row[x].fill_char, end)?;
+            row[0].display_with_prev_and_next(f, None, Some(row[1].modifier))?;
+            for x in 1..(row.len() - 1) {
+                row[x].display_with_prev_and_next(
+                    f,
+                    Some(row[x - 1].modifier),
+                    Some(row[x + 1].modifier),
+                )?;
             }
+            row[row.len() - 1].display_with_prev_and_next(
+                f,
+                Some(row[row.len() - 2].modifier),
+                None,
+            )?;
             f.write_str("\r\n")?;
         }
         f.write_str("\x1b[J")?;
