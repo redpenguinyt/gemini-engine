@@ -138,8 +138,8 @@ macro_rules! fps_gameloop {
             match frame_skip {
                 true => frame_skip = false,
                 false => {
-                    $render;
-                } // Rendering
+                    $render; // Rendering
+                }
             }
 
             // Debug info and such
