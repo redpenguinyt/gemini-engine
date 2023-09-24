@@ -68,15 +68,12 @@ pub fn is_clockwise(points: &[Vec2D]) -> bool {
 }
 
 /// Wrapping is used to determine how you want to handle out-of-bounds pixels during plotting pixels to the screen. Here's how each possible value functions:
-///
-/// [`Wrapping::Wrap`] wraps any out of bounds pixels around to the other side. This is useful if you have an object that travels the entirety of the screen and appears on the other side when it reaches the end.
-///
-/// [`Wrapping::Ignore`] simply skips all out-of-bounds pixels. This is useful if you might have an object clipping through the edge of the screen.
-///
-/// [`Wrapping::Panic`] will `panic!` if any pixels are out of bounds. You should use this if you have your own wrapping system implemented
 #[derive(Debug, Clone, Copy)]
 pub enum Wrapping {
+    /// [`Wrapping::Wrap`] wraps any out of bounds pixels around to the other side. This is useful if you have an object that travels the entirety of the screen and appears on the other side when it reaches the end.
     Wrap,
+    /// [`Wrapping::Ignore`] simply skips all out-of-bounds pixels. This is useful if you might have an object clipping through the edge of the screen but don't want it to appear on the other side like with [`Wrapping::Wrap`]
     Ignore,
+    /// [`Wrapping::Panic`] will `panic!` if any pixels are out of bounds. You should use this if you have your own wrapping system implemented
     Panic,
 }
