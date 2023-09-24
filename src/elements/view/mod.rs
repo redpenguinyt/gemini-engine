@@ -36,33 +36,36 @@ pub struct View {
 }
 
 impl View {
+    /// Create a new `View` using [`width`](View::width), [`height`](View::height) and [`background_char`](View::background_char) parameters
     pub fn new(width: usize, height: usize, background_char: ColChar) -> View {
         let mut view = View {
             width,
             height,
             background_char,
             coord_numbers_in_render: false,
-            pixels: Vec::new(),
+            pixels: Vec::with_capacity(width * height),
         };
         view.clear();
 
         view
     }
 
-    /// Return the size of the [`View`] as a [`Vec2D`](vec2d)
+    /// Return the size of the [`View`] as a [`Vec2D`]
     pub fn size(&self) -> Vec2D {
         Vec2D::new(self.width as isize, self.height as isize)
     }
 
-    /// Return a Vec2D of the centre of the screen
+    /// Return a [`Vec2D`] representing the centre of the `View`
     pub fn center(&self) -> Vec2D {
         self.size() / 2
     }
 
+    /// Clear the `View` of all pixels
     pub fn clear(&mut self) {
         self.pixels = vec![self.background_char; self.width * self.height]
     }
 
+    /// Plot a pixel to the `View`. Accepts a [`Vec2D`] (the position of the pixel), [`ColChar`] (what the pixel should look like/what colour it should be), and a [`Wrapping`] enum variant (Please see the [Wrapping] documentation for more info)
     pub fn plot(&mut self, pos: Vec2D, c: ColChar, wrapping: Wrapping) {
         let mut pos = pos;
         let in_bounds_pos = pos % self.size();
@@ -70,33 +73,28 @@ impl View {
         match wrapping {
             Wrapping::Wrap => pos = in_bounds_pos,
             Wrapping::Ignore => {
-                if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
+                if pos != in_bounds_pos {
                     return;
                 }
             }
             Wrapping::Panic => {
-                if pos.x < 0 || pos.y < 0 || pos != in_bounds_pos {
-                    panic!("{} is not within the view's boundaries", pos);
+                if pos != in_bounds_pos {
+                    panic!("{} is out of bounds", pos);
                 }
             }
         }
 
-        let ux = pos.x as usize;
-        let uy = pos.y as usize;
-
-        self.pixels[self.width * uy + ux] = c;
+        self.pixels[self.width * (pos.y as usize) + (pos.x as usize)] = c;
     }
 
-    /// Blit a ViewElement to the screen. This is usually done before rendering.
-    pub fn blit<T: ViewElement>(&mut self, element: &T, wrapping: Wrapping) {
-        let active_pixels = element.active_pixels();
-
-        for point in active_pixels {
+    /// Blit a struct implementing [`ViewElement`] to the `View`
+    pub fn blit(&mut self, element: &impl ViewElement, wrapping: Wrapping) {
+        for point in element.active_pixels() {
             self.plot(point.pos, point.fill_char, wrapping);
         }
     }
 
-    /// Display the View. View implements the Display trait so you can display it how you wish, but this is intended to be the fastest way possible
+    /// Display the `View`. `View` implements the `Display` trait and so can be rendered in many ways (such as `println!("{view}");`), but this is intended to be the fastest way possible.
     pub fn display_render(&self) -> io::Result<()> {
         let mut stdout = io::stdout().lock();
         write!(stdout, "{self}")
@@ -140,7 +138,7 @@ impl Display for View {
     }
 }
 
-/// ViewElement is a trait that must be implemented by any element that can be blitted to a View
+/// `ViewElement` is a trait that must be implemented by any element that can be blitted to a [`View`]
 pub trait ViewElement {
     /// Return a vector of every coordinate where a pixel should be placed and its respective [`ColChar`]. If your whole object is a solid colour, consider using [`utils::points_to_pixels()`] which will add the same [`ColChar`] to every point and can then be used as this function's output
     fn active_pixels(&self) -> Vec<Point>;

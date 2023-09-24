@@ -74,12 +74,12 @@ pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
 ///     let now = gameloop::Instant::now();
 ///
 ///     // Logic
-///     view.clear();
 ///     cube.transform.rotation.y += 0.1;
 ///
 ///     if frame_skip {
 ///         frame_skip = false;
 ///     } else {
+///         view.clear();
 ///         // Rendering
 ///         view.blit(&viewport.render(vec![&cube], DisplayMode::Solid), Wrapping::Ignore);
 ///         view.display_render().unwrap();
@@ -98,10 +98,10 @@ pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
 /// let FPS = 30.0;
 /// fps_gameloop!(
 ///     {
-///         view.clear();
 ///         cube.transform.rotation.y += 0.1;
 ///     },
 ///     {
+///         view.clear();
 ///         view.blit(&viewport.render(vec![&cube], DisplayMode::Solid), Wrapping::Ignore);
 ///         view.display_render().unwrap();
 ///     },

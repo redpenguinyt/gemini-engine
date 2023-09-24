@@ -1,16 +1,20 @@
 use super::view::{ColChar, Modifier, Point, Vec2D, ViewElement};
 
-/// Displays text starting at the given position
+/// Displays text at the given position
 #[non_exhaustive]
 pub struct Text<'a> {
     pub pos: Vec2D,
     pub content: &'a str,
+    /// A raw [`Modifier`], determining the appearance of the `Sprite`
     pub modifier: Modifier,
+    // TODO: Add align property
 }
 
 impl<'a> Text<'a> {
     pub fn new(pos: Vec2D, content: &str, modifier: Modifier) -> Text {
-        assert!(!content.contains('\n'));
+        if content.contains('\n') {
+            panic!("Text was created with a content string containing a \n character")
+        }
 
         Text {
             pos,
@@ -19,6 +23,7 @@ impl<'a> Text<'a> {
         }
     }
 
+    /// Return a vector of Points to display the given content
     pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Point> {
         let mut pixels = vec![];
         for (x, text_char) in content.chars().enumerate() {
@@ -43,11 +48,13 @@ impl ViewElement for Text<'_> {
     }
 }
 
-/// A `ViewElement` that takes a multi-line string as a parameter, and can be used to put ASCII art, text and other such things on the View
+/// The `Sprite` takes a multi-line string as a parameter, and can be used to put ASCII art, text and other such things on the `View`
 #[non_exhaustive]
 pub struct Sprite {
     pub pos: Vec2D,
+    /// The ACII texture (pun intended) displayed by the `Sprite`
     pub texture: String,
+    /// A raw [`Modifier`], determining the appearance of the `Sprite`
     pub modifier: Modifier,
 }
 impl Sprite {

@@ -7,24 +7,31 @@ fn mul_u8_by_f64(value: u8, rhs: f64) -> u8 {
 /// A struct to contain colour values. Can be created from RGB, HSV or greyscale values, but is ultimately stored as RGB.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Colour {
+    /// The red channel of the colour
     pub r: u8,
+    /// The green channel of the colour
     pub g: u8,
+    /// The blue channel of the colour
     pub b: u8,
 }
 
 impl Colour {
-    pub const BLACK: Self = Self::rgb(0, 0, 0);
-    pub const WHITE: Self = Self::rgb(255, 255, 255);
+    /// A white `Colour` of RGB (0,0,0)
+    pub const BLACK: Self = Self::greyscale(0);
+    /// A white `Colour` of RGB (255,255,255)
+    pub const WHITE: Self = Self::greyscale(255);
 
-    /// Create a `Colour` object
+    /// Create a `Colour` from an RGB value
     pub const fn rgb(r: u8, g: u8, b: u8) -> Self {
         Self { r, g, b }
     }
 
+    /// Create a `Colour` from a single brightness value, resulting in a shade of grey
     pub const fn greyscale(v: u8) -> Self {
         Self::rgb(v, v, v)
     }
 
+    /// Create a `Colour` from an HSV value
     pub fn hsv(h: u8, s: u8, v: u8) -> Self {
         let h = h as f32 / 255.0;
         let s = s as f32 / 255.0;

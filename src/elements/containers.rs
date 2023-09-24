@@ -28,10 +28,12 @@ impl<T: ViewElement> ViewElement for VisibilityToggle<T> {
 /// A `PixelContainer` only has a [`pixels`](PixelContainer::pixels) property, which gets returned directly to the View during blit
 #[derive(Debug, Clone)]
 pub struct PixelContainer {
+    /// This is the value that gets returned by [`active_pixels()`](ViewElement::active_pixels)
     pub pixels: Vec<Point>,
 }
 
 impl PixelContainer {
+    /// Create a new, empty `PixelContainer`
     pub const fn new() -> Self {
         Self { pixels: vec![] }
     }

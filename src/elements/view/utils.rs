@@ -41,6 +41,7 @@ pub(crate) fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> io::Result<()> {
     Ok(())
 }
 
+/// Draw a pseudo-line between the independent and dependent positions. Used by [`Triangle`](super::super::Triangle)
 pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
     if i0 == i1 {
         return vec![d0.round() as isize];
@@ -56,7 +57,7 @@ pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
     values
 }
 
-/// Returns true if the points in the vector are arranged in a clockwise orientation
+/// Returns true if the [`Vec2D`]s in the vector are arranged clockwise
 pub fn is_clockwise(points: &[Vec2D]) -> bool {
     let mut m = vec![];
     for i in 0..points.len() {

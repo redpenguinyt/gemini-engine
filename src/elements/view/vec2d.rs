@@ -15,10 +15,12 @@ impl Vec2D {
     /// A Vec2D of (0,0)
     pub const ZERO: Vec2D = Vec2D::new(0, 0);
 
+    /// Create a new `Vec2D` value from two isize values
     pub const fn new(x: isize, y: isize) -> Self {
         Vec2D { x, y }
     }
 
+    /// Return the `Vec2D` as a tuple
     pub fn as_tuple(&self) -> (isize, isize) {
         (self.x, self.y)
     }

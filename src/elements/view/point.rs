@@ -1,13 +1,16 @@
 use super::{ColChar, Vec2D, ViewElement};
 
-/// The `Point` holds a single [`Vec2D`] (the coordinates at which it is printed when blit to a [`View`]) and a [ColChar]
+/// The `Point` holds a single [`Vec2D`] (the coordinates at which it is printed when blit to a [`View`](super::View)) and a [`ColChar`]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point {
+    /// The position of the `Point`
     pub pos: Vec2D,
+    /// The appearance/colour of the `Point`
     pub fill_char: ColChar,
 }
 
 impl Point {
+    /// Create a new Point from a [`Vec2D`] and [`ColChar`]
     pub fn new(pos: Vec2D, fill_char: ColChar) -> Self {
         Self { pos, fill_char }
     }

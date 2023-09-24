@@ -169,7 +169,9 @@ impl ViewElement for Polygon {
 
 /// The `Rect` takes a position and size, and returns a rectangle at that position with the given width and size when blit to a [`View`](super::View)
 pub struct Rect {
+    /// The position of the top-left corner of the `Rect`
     pub pos: Vec2D,
+    /// The size of the `Rect`, extending from [`Rect::pos`]
     pub size: Vec2D,
     pub fill_char: ColChar,
 }

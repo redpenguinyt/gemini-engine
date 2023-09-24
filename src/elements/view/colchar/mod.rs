@@ -14,14 +14,22 @@ pub struct ColChar {
 }
 
 impl ColChar {
+    /// A solid █ character with no [`Modifier`].
+    ///
+    /// Using a sequence like this will create a red █ `ColChar`
+    /// ```rs
+    /// ColChar::SOLID.with_rgb(255,0,0)
+    /// ```
     pub const SOLID: Self = Self {
         text_char: '█',
         modifier: Modifier::None,
     };
+    /// A less solid ░ character with no [`Modifier`]
     pub const BACKGROUND: Self = Self {
         text_char: '░',
         modifier: Modifier::None,
     };
+    /// A whitespace character with no [`Modifier`]
     pub const EMPTY: Self = Self {
         text_char: ' ',
         modifier: Modifier::None,
@@ -32,6 +40,7 @@ impl ColChar {
         modifier: Modifier::None,
     };
 
+    /// Create a new `ColChar` with a text character and a [`Modifier`]
     pub fn new(text_char: char, modifier: Modifier) -> Self {
         Self {
             text_char,
