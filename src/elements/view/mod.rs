@@ -138,7 +138,7 @@ impl Display for View {
     }
 }
 
-/// The `Point` holds a single [`Vec2D`], the coordinates at which it is printed when blit to a [`View`]
+/// The `Point` holds a single [`Vec2D`] (the coordinates at which it is printed when blit to a [`View`]) and a [ColChar]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point {
     pub pos: Vec2D,

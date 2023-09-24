@@ -1,4 +1,4 @@
-//! Gemini's core elements module. This and the [`view`] module make up Gemini's core rendering pipeline.
+//! Gemini's core elements module. This and the [`view`] module make up Gemini's core rendering system.
 //!
 //! ## Quick Start
 //! Let's get started with a simple program to demonstrate how Gemini works:

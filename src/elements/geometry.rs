@@ -1,6 +1,6 @@
 use super::view::{utils, ColChar, Point, Vec2D, ViewElement};
 
-/// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`]
+/// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`](super::View)
 pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
@@ -60,7 +60,7 @@ impl ViewElement for Line {
     }
 }
 
-/// The `Triangle` takes three [`Vec2D`]s and returns a triangle with those vertices when blit to a [`View`]
+/// The `Triangle` takes three [`Vec2D`]s and returns a triangle with those vertices when blit to a [`View`](super::View)
 pub struct Triangle {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
@@ -132,7 +132,7 @@ impl ViewElement for Triangle {
     }
 }
 
-/// The `Polygon` takes a vec of [`Vec2D`]s and returns a polygon with those vertices when blit to a [`View`]
+/// The `Polygon` takes a vec of [`Vec2D`]s and returns a polygon with those vertices when blit to a [`View`](super::View)
 pub struct Polygon {
     pub points: Vec<Vec2D>,
     pub fill_char: ColChar,
@@ -167,7 +167,7 @@ impl ViewElement for Polygon {
     }
 }
 
-/// The `Rect` takes a position and size, and returns a rectangle at that position with the given width and size when blit to a [`View`]
+/// The `Rect` takes a position and size, and returns a rectangle at that position with the given width and size when blit to a [`View`](super::View)
 pub struct Rect {
     pub pos: Vec2D,
     pub size: Vec2D,
