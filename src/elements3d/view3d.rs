@@ -4,9 +4,9 @@ use crate::elements::{
     view::{utils, ColChar, Modifier},
     Line, PixelContainer, Point, Polygon, Text, Vec2D,
 };
-pub mod face;
-pub mod transform3d;
-pub mod vec3d;
+mod face;
+mod transform3d;
+mod vec3d;
 pub use face::Face;
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
