@@ -4,6 +4,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
 
+/// A point in 3D space, using `f64`s
 #[derive(Debug, Clone, Copy)]
 pub struct Vec3D {
     pub x: f64,
@@ -12,7 +13,9 @@ pub struct Vec3D {
 }
 
 impl Vec3D {
+    /// The origin point - `(0,0,0)`
     pub const ZERO: Self = Vec3D::new(0.0, 0.0, 0.0);
+    /// `Vec3D { 1,1,1 }`
     pub const ONE: Self = Vec3D::new(1.0, 1.0, 1.0);
 
     pub const fn new(x: f64, y: f64, z: f64) -> Self {
@@ -23,10 +26,17 @@ impl Vec3D {
         (self.x, self.y, self.z)
     }
 
+    /// Return the dot product in combination with another `Vec3D`
     pub fn dot(&self, other: Vec3D) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
+    /// Returns the dot product in combination with itself
+    pub fn dot_self(&self) -> f64 {
+        self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
+    }
+
+    /// The magnitude/length of the Vec3D
     pub fn magnitude(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }

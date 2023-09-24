@@ -118,6 +118,7 @@ use crate::elements::view::{ColChar, Modifier};
 pub mod view3d;
 pub use view3d::{DisplayMode, Face, Transform3D, Vec3D, ViewElement3D, Viewport};
 
+// TODO: move mesh3d to its own module
 /// The struct for a Mesh3D object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
 #[derive(Debug, Clone)]
 pub struct Mesh3D {

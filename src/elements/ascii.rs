@@ -1,3 +1,5 @@
+//! This module holds the structs related to display of ASCII characters, both text and ASCII art
+
 use super::view::{ColChar, Modifier, Point, Vec2D, ViewElement};
 
 /// Displays text at the given position

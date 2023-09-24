@@ -1,3 +1,5 @@
+//! This module is home to the [`Viewport`], which handles the projecting of [`ViewElement3D`]s to a format then displayable by a [`View`](crate::elements::View)
+
 use crate::elements::{
     view::{utils, ColChar, Modifier},
     Line, PixelContainer, Point, Polygon, Text, Vec2D,
@@ -8,16 +10,17 @@ pub mod vec3d;
 pub use face::Face;
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
+// TODO: private all child modules
 
 /// `DisplayMode` determines how the [`Viewport`] renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
-/// - [`DisplayMode::Debug`] does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
-/// - [`DisplayMode::Points`] only renders the object's vertices as single pixels with the [`ColChar`] chosen with the `fill_char` enum parameter
-/// - [`DisplayMode::Wireframe`] renders the edges of the meshes, without filling in the shapes. You can choose whether you want to render with backface culling using the `backface_culling` enum parameter
-/// - [`DisplayMode::Solid`] renders the full faces of all the meshes. This is normally the final render
 pub enum DisplayMode {
+    /// `DisplayMode::Debug` does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
     Debug,
+    /// `DisplayMode::Points` only renders the object's vertices as single pixels with the [`ColChar`] chosen with the [`fill_char`](DisplayMode::Points::fill_char) enum parameter
     Points { fill_char: ColChar },
+    /// `DisplayMode::Wireframe` renders the edges of the meshes, without filling in the shapes. You can choose whether you want to render with backface culling using the [`backface_culling`](DisplayMode::Wireframe::backface_culling) enum parameter
     Wireframe { backface_culling: bool },
+    /// `DisplayMode::Solid` renders the full faces of all the meshes. This is normally the final render
     Solid,
 }
 
@@ -43,6 +46,7 @@ impl Viewport {
         }
     }
 
+    /// Project the [`Vec3D`] on a flat plane using the `Viewport`'s [fov](Viewport::fov) and [character_width_multiplier](Viewport::character_width_multiplier)
     pub fn perspective(&self, pos: Vec3D) -> Vec2D {
         let f = self.fov / -pos.z;
         let (sx, sy) = (-pos.x * f, pos.y * f);
@@ -71,6 +75,7 @@ impl Viewport {
             .unzip()
     }
 
+    /// Project the faces onto a 2D plane. Returns a collection of faces, each stored as a list of the points it appears at and the [`ColChar`] assigned to it
     pub fn project_faces(
         &self,
         objects: Vec<&impl ViewElement3D>,
@@ -109,6 +114,7 @@ impl Viewport {
         screen_faces.into_iter().map(|(vs, c, _)| (vs, c)).collect()
     }
 
+    /// Render the objects (implementing [`ViewElement3D`]) given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
     pub fn render(
         &self,
         objects: Vec<&impl ViewElement3D>,
@@ -160,6 +166,7 @@ impl Viewport {
     }
 }
 
+/// `ViewElement3D` is a trait that must be implemented by any 3D object to be rendered using a [`Viewport`]
 pub trait ViewElement3D {
     /// This should return the object's transform
     fn get_transform(&self) -> Transform3D;

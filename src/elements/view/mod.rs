@@ -1,3 +1,5 @@
+//! This module is home to the [`View`], which handles the printing of pixels to an ANSI standard text output
+
 use std::{
     fmt::{self, Display},
     io::{self, Write},

@@ -1,6 +1,7 @@
-use std::{fmt, io, sync::OnceLock};
+//! A module containing various helper functions and structs
 
 use super::{ColChar, Point, Vec2D};
+use std::{fmt, io, sync::OnceLock};
 
 /// Combine a vector of [`Vec2D`]s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your [`ViewElement`](super::ViewElement) only has one fill character across all of it
 pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Point> {

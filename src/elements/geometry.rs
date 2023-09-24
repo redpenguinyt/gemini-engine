@@ -1,3 +1,5 @@
+//! This module contains basic geometry structs that implement [`ViewElement`], such as [`Line`] or [`Triangle`]
+
 use super::view::{utils, ColChar, Point, Vec2D, ViewElement};
 
 /// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`](super::View)

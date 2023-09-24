@@ -1,8 +1,7 @@
 use super::Vec3D;
 use std::ops::Mul;
 
-/// Helper enum for when you need to choose an axis
-pub enum SpatialAxis {
+enum SpatialAxis {
     X,
     Y,
     Z,
@@ -20,6 +19,7 @@ pub struct Transform3D {
 }
 
 impl Transform3D {
+    /// The default transform - no translation, no rotation and 1x scaling
     pub const DEFAULT: Self = Self::new_trs(Vec3D::ZERO, Vec3D::ZERO, Vec3D::ONE);
 
     /// Create a Transform3D with chosen translation, rotation and scale
@@ -49,7 +49,8 @@ impl Transform3D {
         }
     }
 
-    pub fn rotate_one_axis(translation: Vec3D, axis: SpatialAxis, single_rotation: f64) -> Vec3D {
+    /// Rotate the [`Vec3D`] on one axis
+    fn rotate_one_axis(translation: Vec3D, axis: SpatialAxis, single_rotation: f64) -> Vec3D {
         let mut translation = translation;
         let (x, y) = match axis {
             SpatialAxis::X => (&mut translation.y, &mut translation.z),
@@ -64,6 +65,7 @@ impl Transform3D {
         translation
     }
 
+    /// Rotate the given [`Vec3D`] using the `Transform3D`'s rotation field
     #[allow(clippy::let_and_return)]
     pub fn rotate(&self, value: Vec3D) -> Vec3D {
         let ry = Self::rotate_one_axis(value, SpatialAxis::Y, self.rotation.y);
@@ -95,6 +97,7 @@ impl Mul<Transform3D> for Transform3D {
 impl Mul<Vec3D> for Transform3D {
     type Output = Vec3D;
 
+    /// Apply the transform to the `Vec3D`
     #[allow(clippy::let_and_return)]
     fn mul(self, rhs: Vec3D) -> Self::Output {
         let scaled = rhs * self.scale;
