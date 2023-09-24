@@ -2,8 +2,8 @@ use gemini_engine::elements::{
     view::{ColChar, Modifier, Vec2D, Wrapping},
     Line, Point, Rect, Sprite, View,
 };
-use gemini_engine::gameloop::Duration;
 use gemini_engine::fps_gameloop;
+use gemini_engine::gameloop::Duration;
 
 const FPS: f32 = 20.0;
 const FILL_CHAR: ColChar = ColChar::SOLID;
@@ -37,40 +37,45 @@ fn main() {
 
     let mut blit_elapsed = Duration::default();
     let mut render_elapsed = Duration::default();
-    fps_gameloop!({
-        point.pos.x += 2;
-        // loop the position back to the other side. This can be done with `Wrapping::Wrap` but it won't change the element's actual position, so the point position being printed would continue to increase without looping
-        point.pos %= view.size();
+    fps_gameloop!(
+        {
+            point.pos.x += 2;
+            // loop the position back to the other side. This can be done with `Wrapping::Wrap` but it won't change the element's actual position, so the point position being printed would continue to increase without looping
+            point.pos %= view.size();
 
-        line.pos1.y += line1_direction;
-        line.pos0.y = 10 - line.pos1.y;
-        if line.pos1.y > 7 {
-            line1_direction = -1;
-        } else if line.pos1.y < 3 {
-            line1_direction = 1;
+            line.pos1.y += line1_direction;
+            line.pos0.y = 10 - line.pos1.y;
+            if line.pos1.y > 7 {
+                line1_direction = -1;
+            } else if line.pos1.y < 3 {
+                line1_direction = 1;
+            }
+
+            sprite.pos.x += 1;
+        },
+        {
+            view.clear();
+
+            let now = Instant::now();
+            view.blit(&point, Wrapping::Panic);
+            view.blit(&line, Wrapping::Panic);
+            view.blit(&rect, Wrapping::Panic);
+            view.blit(&sprite, Wrapping::Wrap);
+            blit_elapsed = now.elapsed();
+
+            let now = Instant::now();
+            view.display_render().unwrap();
+            render_elapsed = now.elapsed();
+        },
+        FPS,
+        |total_elapsed: Duration, _frame_skip| {
+            println!(
+                "Blitting: {:.2?} microseconds | Rendering: {:.2?} microseconds| Total: {:.2?}",
+                blit_elapsed.as_micros(),
+                render_elapsed.as_micros(),
+                total_elapsed.as_micros()
+            );
+            println!("Point position: {}", point.pos);
         }
-
-        sprite.pos.x += 1;
-    },{
-        view.clear();
-
-        let now = Instant::now();
-        view.blit(&point, Wrapping::Panic);
-        view.blit(&line, Wrapping::Panic);
-        view.blit(&rect, Wrapping::Panic);
-        view.blit(&sprite, Wrapping::Wrap);
-        blit_elapsed = now.elapsed();
-
-        let now = Instant::now();
-        view.display_render().unwrap();
-        render_elapsed = now.elapsed();
-    },FPS, |total_elapsed: Duration, _frame_skip| {
-        println!(
-            "Blitting: {:.2?} microseconds | Rendering: {:.2?} microseconds| Total: {:.2?}",
-            blit_elapsed.as_micros(),
-            render_elapsed.as_micros(),
-            total_elapsed.as_micros()
-        );
-        println!("Point position: {}", point.pos);
-    });
+    );
 }
