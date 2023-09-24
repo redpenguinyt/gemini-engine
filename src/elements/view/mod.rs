@@ -2,7 +2,7 @@ use std::{
     fmt::{self, Display},
     io::{self, Write},
 };
-pub mod colchar;
+mod colchar;
 mod point;
 pub mod utils;
 mod vec2d;
