@@ -31,9 +31,9 @@ fn main() {
     fps_gameloop!(
         {
             i += 1;
-            for j in 0..blocks.len() {
+            for (j, block) in blocks.iter_mut().enumerate() {
                 if i % 2_u32.pow(j as u32) == 0 {
-                    blocks[j].pos.x += 1;
+                    block.pos.x += 1;
                 }
             }
         },
