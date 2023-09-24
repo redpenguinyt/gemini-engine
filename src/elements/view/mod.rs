@@ -1,7 +1,6 @@
 use std::{
     fmt::{self, Display},
-    io::{self, Write as ioWrite},
-    usize,
+    io::{self, Write},
 };
 pub mod colchar;
 pub mod utils;
