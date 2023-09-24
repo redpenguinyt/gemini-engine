@@ -3,9 +3,11 @@ use std::{
     io::{self, Write},
 };
 pub mod colchar;
+mod point;
 pub mod utils;
-pub mod vec2d;
+mod vec2d;
 pub use colchar::{ColChar, Colour, Modifier};
+pub use point::Point;
 pub use utils::Wrapping;
 pub use vec2d::Vec2D;
 
@@ -102,7 +104,7 @@ impl View {
 }
 
 impl Display for View {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let _ = utils::prepare_terminal(f);
         f.write_str("\x1b[H\x1b[J")?;
         if self.coord_numbers_in_render {
@@ -135,34 +137,6 @@ impl Display for View {
         f.write_str("\x1b[J")?;
 
         Ok(())
-    }
-}
-
-/// The `Point` holds a single [`Vec2D`] (the coordinates at which it is printed when blit to a [`View`]) and a [ColChar]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Point {
-    pub pos: Vec2D,
-    pub fill_char: ColChar,
-}
-
-impl Point {
-    pub fn new(pos: Vec2D, fill_char: ColChar) -> Self {
-        Self { pos, fill_char }
-    }
-}
-
-impl From<(Vec2D, ColChar)> for Point {
-    fn from(value: (Vec2D, ColChar)) -> Self {
-        Self {
-            pos: value.0,
-            fill_char: value.1,
-        }
-    }
-}
-
-impl ViewElement for Point {
-    fn active_pixels(&self) -> Vec<Point> {
-        vec![*self]
     }
 }
 

@@ -16,11 +16,11 @@ impl Vec2D {
     pub const ZERO: Vec2D = Vec2D::new(0, 0);
 
     pub const fn new(x: isize, y: isize) -> Self {
-        Vec2D { x: x, y: y }
+        Vec2D { x, y }
     }
 
     pub fn as_tuple(&self) -> (isize, isize) {
-        (self.x.clone(), self.y.clone())
+        (self.x, self.y)
     }
 }
 
@@ -63,7 +63,7 @@ impl Div<isize> for Vec2D {
     type Output = Self;
     fn div(self, rhs: isize) -> Self::Output {
         Self {
-            x: self.x / rhs.clone(),
+            x: self.x / rhs,
             y: self.y / rhs,
         }
     }
@@ -71,7 +71,7 @@ impl Div<isize> for Vec2D {
 
 impl DivAssign<isize> for Vec2D {
     fn div_assign(&mut self, rhs: isize) {
-        self.x /= rhs.clone();
+        self.x /= rhs;
         self.y /= rhs;
     }
 }
@@ -108,41 +108,28 @@ impl Display for Vec2D {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn add_vec2() {
-        assert_eq!(
-            Vec2D::new(15, -3),
-            Vec2D::new(13, 4) + Vec2D::new(2, -7)
-        );
+        assert_eq!(Vec2D::new(15, -3), Vec2D::new(13, 4) + Vec2D::new(2, -7));
     }
 
     #[test]
     fn subtract_vec2() {
-        assert_eq!(
-            Vec2D::new(2, -10),
-            Vec2D::new(17, 4) - Vec2D::new(15, 14)
-        );
+        assert_eq!(Vec2D::new(2, -10), Vec2D::new(17, 4) - Vec2D::new(15, 14));
     }
 
     #[test]
     fn rem_vec2_over() {
-        assert_eq!(
-            Vec2D::new(4, 1),
-            Vec2D::new(9, 11) % Vec2D::new(5, 10)
-        )
+        assert_eq!(Vec2D::new(4, 1), Vec2D::new(9, 11) % Vec2D::new(5, 10))
     }
 
     #[test]
     fn rem_vec2_under() {
-        assert_eq!(
-            Vec2D::new(4, 1),
-            Vec2D::new(-1, -109) % Vec2D::new(5, 10)
-        )
+        assert_eq!(Vec2D::new(4, 1), Vec2D::new(-1, -109) % Vec2D::new(5, 10))
     }
 
     #[test]
