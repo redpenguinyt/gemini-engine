@@ -4,25 +4,28 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
-/// Raw Vector2 type
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Vector2<T: Clone> {
-    pub x: T,
-    pub y: T,
+/// A pair of `isize` used for coordinates, size or direction on a 2D plane
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Vec2D {
+    pub x: isize,
+    pub y: isize,
 }
 
-impl<T: Clone> Vector2<T> {
-    pub const fn new(x: T, y: T) -> Self {
-        Vector2 { x, y }
+impl Vec2D {
+    /// A Vec2D of (0,0)
+    pub const ZERO: Vec2D = Vec2D::new(0, 0);
+
+    pub const fn new(x: isize, y: isize) -> Self {
+        Vec2D { x: x, y: y }
     }
 
-    pub fn as_tuple(&self) -> (T, T) {
+    pub fn as_tuple(&self) -> (isize, isize) {
         (self.x.clone(), self.y.clone())
     }
 }
 
-impl<T: Clone + Add<Output = T>> Add<Vector2<T>> for Vector2<T> {
-    type Output = Vector2<T>;
+impl Add<Vec2D> for Vec2D {
+    type Output = Vec2D;
 
     fn add(self, rhs: Self) -> Self::Output {
         Self {
@@ -32,14 +35,14 @@ impl<T: Clone + Add<Output = T>> Add<Vector2<T>> for Vector2<T> {
     }
 }
 
-impl<T: Clone + AddAssign> AddAssign<Vector2<T>> for Vector2<T> {
+impl AddAssign<Vec2D> for Vec2D {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
     }
 }
 
-impl<T: Clone + Sub<Output = T>> Sub<Vector2<T>> for Vector2<T> {
+impl Sub<Vec2D> for Vec2D {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         Self {
@@ -49,16 +52,16 @@ impl<T: Clone + Sub<Output = T>> Sub<Vector2<T>> for Vector2<T> {
     }
 }
 
-impl<T: Clone + SubAssign> SubAssign<Vector2<T>> for Vector2<T> {
+impl SubAssign<Vec2D> for Vec2D {
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
         self.y -= rhs.y;
     }
 }
 
-impl<T: Clone + Div<Output = T>> Div<T> for Vector2<T> {
+impl Div<isize> for Vec2D {
     type Output = Self;
-    fn div(self, rhs: T) -> Self::Output {
+    fn div(self, rhs: isize) -> Self::Output {
         Self {
             x: self.x / rhs.clone(),
             y: self.y / rhs,
@@ -66,31 +69,21 @@ impl<T: Clone + Div<Output = T>> Div<T> for Vector2<T> {
     }
 }
 
-impl<T: Clone + DivAssign> DivAssign<T> for Vector2<T> {
-    fn div_assign(&mut self, rhs: T) {
+impl DivAssign<isize> for Vec2D {
+    fn div_assign(&mut self, rhs: isize) {
         self.x /= rhs.clone();
         self.y /= rhs;
     }
 }
 
-impl<T: Clone> From<(T, T)> for Vector2<T> {
+impl<T: Into<isize>> From<(T, T)> for Vec2D {
     fn from(value: (T, T)) -> Self {
         Self {
-            x: value.0,
-            y: value.1,
+            x: value.0.into(),
+            y: value.1.into(),
         }
     }
 }
-
-/// A pair of `isize` used for coordinates, size or direction on a 2D plane
-pub type Vec2D = Vector2<isize>;
-
-impl Vec2D {
-    /// A Vec2D of (0,0)
-    pub const ZERO: Vec2D = Vec2D::new(0, 0);
-}
-
-impl Eq for Vec2D {}
 
 impl Rem for Vec2D {
     type Output = Self;
@@ -102,18 +95,19 @@ impl Rem for Vec2D {
     }
 }
 
-impl Display for Vec2D {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result {
-        write!(f, "Vec2D({}, {})", self.x, self.y)
-    }
-}
-
 impl RemAssign for Vec2D {
     fn rem_assign(&mut self, rhs: Self) {
         self.x = self.x.rem_euclid(rhs.x);
         self.y = self.y.rem_euclid(rhs.y);
     }
 }
+
+impl Display for Vec2D {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result {
+        write!(f, "Vec2D({}, {})", self.x, self.y)
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -122,47 +116,47 @@ mod tests {
     #[test]
     fn add_vec2() {
         assert_eq!(
-            Vector2::new(15, -3),
-            Vector2::new(13, 4) + Vector2::new(2, -7)
+            Vec2D::new(15, -3),
+            Vec2D::new(13, 4) + Vec2D::new(2, -7)
         );
     }
 
     #[test]
     fn subtract_vec2() {
         assert_eq!(
-            Vector2::new(2, -10),
-            Vector2::new(17, 4) - Vector2::new(15, 14)
+            Vec2D::new(2, -10),
+            Vec2D::new(17, 4) - Vec2D::new(15, 14)
         );
     }
 
     #[test]
     fn rem_vec2_over() {
         assert_eq!(
-            Vector2::new(4, 1),
-            Vector2::new(9, 11) % Vector2::new(5, 10)
+            Vec2D::new(4, 1),
+            Vec2D::new(9, 11) % Vec2D::new(5, 10)
         )
     }
 
     #[test]
     fn rem_vec2_under() {
         assert_eq!(
-            Vector2::new(4, 1),
-            Vector2::new(-1, -109) % Vector2::new(5, 10)
+            Vec2D::new(4, 1),
+            Vec2D::new(-1, -109) % Vec2D::new(5, 10)
         )
     }
 
     #[test]
     fn eq_vec2_both() {
-        assert_eq!(Vector2::new(5, 4), Vector2::new(5, 4))
+        assert_eq!(Vec2D::new(5, 4), Vec2D::new(5, 4))
     }
 
     #[test]
     fn eq_vec2_only_one() {
-        assert_ne!(Vector2::new(5, 2), Vector2::new(5, 4))
+        assert_ne!(Vec2D::new(5, 2), Vec2D::new(5, 4))
     }
 
     #[test]
     fn eq_vec2_neither() {
-        assert_ne!(Vector2::new(17, 2), Vector2::new(5, 4))
+        assert_ne!(Vec2D::new(17, 2), Vec2D::new(5, 4))
     }
 }
