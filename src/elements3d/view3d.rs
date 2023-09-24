@@ -10,7 +10,6 @@ mod vec3d;
 pub use face::Face;
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
-// TODO: private all child modules
 
 /// `DisplayMode` determines how the [`Viewport`] renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
 pub enum DisplayMode {
