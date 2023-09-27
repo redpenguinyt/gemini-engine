@@ -99,7 +99,7 @@ impl View {
     /// Blit a struct implementing [`ViewElement`] to the `View` with a doubled width. Blitting a `Point` at `Vec2D(5,3)`, for example, will result in a blit at `Vec2D(10,3)` and `Vec2D(11,3)` being plotted to. Useful when you want to work with more square pixels, as single text characters are much taller than they are wide
     pub fn blit_double_width(&mut self, element: &impl ViewElement, wrapping: Wrapping) {
         for point in element.active_pixels() {
-            let pos = point.pos * Vec2D::new(2, 0);
+            let pos = point.pos * Vec2D::new(2, 1);
             self.plot(pos, point.fill_char, wrapping);
             self.plot(pos + Vec2D::new(1, 0), point.fill_char, wrapping);
         }
