@@ -1,7 +1,7 @@
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
-    ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, Rem, RemAssign},
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
 /// A pair of `isize` used for coordinates, size or direction on a 2D plane
