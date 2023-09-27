@@ -1,7 +1,7 @@
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
-    ops::{Add, AddAssign, Div, DivAssign, Rem, RemAssign, Sub, SubAssign},
+    ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, Rem, RemAssign},
 };
 
 /// A pair of `isize` used for coordinates, size or direction on a 2D plane
@@ -58,6 +58,20 @@ impl SubAssign<Vec2D> for Vec2D {
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
         self.y -= rhs.y;
+    }
+}
+
+impl Mul<Vec2D> for Vec2D {
+    type Output = Self;
+    fn mul(self, rhs: Vec2D) -> Self::Output {
+        Self::new(self.x * rhs.x, self.y * rhs.y)
+    }
+}
+
+impl MulAssign<Vec2D> for Vec2D {
+    fn mul_assign(&mut self, rhs: Vec2D) {
+        self.x *= rhs.x;
+        self.y *= rhs.y;
     }
 }
 
