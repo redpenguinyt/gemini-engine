@@ -5,6 +5,7 @@ use std::fmt::Debug;
 use super::{utils, ColChar, Point, Vec2D, ViewElement};
 
 /// `VisibilityToggle` is a container for a `ViewElement` with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
+#[derive(Debug, Clone)]
 pub struct VisibilityToggle<T: ViewElement> {
     pub element: T,
     pub visible: bool,
@@ -87,6 +88,7 @@ impl ViewElement for PixelContainer {
 }
 
 /// Contains references to all added objects. Meant to be used specifically for collision calculations
+#[derive(Clone)]
 pub struct CollisionContainer<'a> {
     pub elements: Vec<&'a dyn ViewElement>,
 }
