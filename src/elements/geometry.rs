@@ -186,18 +186,16 @@ impl Rect {
             fill_char,
         }
     }
+
+    pub fn draw(pos: Vec2D, size: Vec2D) -> Vec<Vec2D> {
+        (0..size.x)
+            .flat_map(|x| (0..size.y).map(move |y| pos + Vec2D { x, y }))
+            .collect()
+    }
 }
 
 impl ViewElement for Rect {
     fn active_pixels(&self) -> Vec<Point> {
-        let mut points = vec![];
-
-        for x in 0..self.size.x {
-            for y in 0..self.size.y {
-                points.push(self.pos + Vec2D { x, y })
-            }
-        }
-
-        utils::points_to_pixels(points, self.fill_char)
+        utils::points_to_pixels(Rect::draw(self.pos, self.size), self.fill_char)
     }
 }
