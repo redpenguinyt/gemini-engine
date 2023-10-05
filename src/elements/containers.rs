@@ -69,7 +69,9 @@ impl PixelContainer {
 
 impl From<&[Point]> for PixelContainer {
     fn from(pixels: &[Point]) -> Self {
-        Self { pixels: pixels.to_vec() }
+        Self {
+            pixels: pixels.to_vec(),
+        }
     }
 }
 
