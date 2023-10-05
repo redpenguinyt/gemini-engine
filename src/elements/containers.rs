@@ -67,14 +67,14 @@ impl PixelContainer {
     }
 }
 
-impl From<Vec<Point>> for PixelContainer {
-    fn from(pixels: Vec<Point>) -> Self {
-        Self { pixels }
+impl From<&[Point]> for PixelContainer {
+    fn from(pixels: &[Point]) -> Self {
+        Self { pixels: pixels.to_vec() }
     }
 }
 
-impl From<Vec<(Vec2D, ColChar)>> for PixelContainer {
-    fn from(pixels: Vec<(Vec2D, ColChar)>) -> Self {
+impl From<&[(Vec2D, ColChar)]> for PixelContainer {
+    fn from(pixels: &[(Vec2D, ColChar)]) -> Self {
         Self {
             pixels: pixels.iter().map(|x| Point::from(*x)).collect(),
         }
