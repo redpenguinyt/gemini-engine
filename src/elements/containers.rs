@@ -111,12 +111,6 @@ impl<'a> CollisionContainer<'a> {
         collision_pixels.contains(&pos)
     }
 
-    pub fn overlaps_position(&self, pos: Vec2D) -> bool {
-        let collision_pixels = utils::pixels_to_points(self.active_pixels());
-
-        collision_pixels.contains(&pos)
-    }
-
     /// Returns true if the given [`ViewElement`] is overlapping with the `CollisionContainer`
     pub fn overlaps_element(&self, element: &impl ViewElement) -> bool {
         self.will_overlap_element(element, Vec2D::ZERO)
