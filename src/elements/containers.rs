@@ -86,7 +86,11 @@ impl From<&[(Vec2D, ColChar)]> for PixelContainer {
 impl From<(&[Vec2D], ColChar)> for PixelContainer {
     fn from(value: (&[Vec2D], ColChar)) -> Self {
         Self {
-            pixels: value.0.iter().map(|pos| Point::new(*pos, value.1)).collect(),
+            pixels: value
+                .0
+                .iter()
+                .map(|pos| Point::new(*pos, value.1))
+                .collect(),
         }
     }
 }
