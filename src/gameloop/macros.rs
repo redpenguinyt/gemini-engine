@@ -45,7 +45,7 @@
 ///     FPS
 /// );
 /// ```
-/// The code is now a lot less cluttered. This macro accepts three fragments (and an optional fourth fragment). A logic block fragment (contained inside `{}` brackets) for code that should run every single frame, a render block fragment for code related to displaying to the terminal (all plots, blits and renders) and a `f32` fragment representing the desired frames per second. The fourth optional fragment is to be a function that accepts a [`Duration`] parameter representing the time taken to render everything and a `bool` parameter representing whether the last frame was skipped or not. It can be used to, say, print debug info. Here's an example:
+/// The code is now a lot less cluttered. This macro accepts three fragments (and an optional fourth fragment). A logic block fragment (contained inside `{}` brackets) for code that should run every single frame, a render block fragment for code related to displaying to the terminal (all plots, blits and renders) and a `f32` fragment representing the desired frames per second. The fourth optional fragment is to be a function that accepts a [`Duration`](std::time::Duration) parameter representing the time taken to render everything and a `bool` parameter representing whether the last frame was skipped or not. It can be used to, say, print debug info. Here's an example:
 /// ```rust,no_run
 /// # use gemini_engine::{fps_gameloop, gameloop};
 /// fps_gameloop!(
