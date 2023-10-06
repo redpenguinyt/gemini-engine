@@ -25,10 +25,11 @@
 //! ```
 //! Writing your code like this ensures that it wont affect the game's intentional speed too much, and also makes it easy for you to benchmark your game's speed with something like `println!("Elapsed: {:.2?}µs", elapsed.as_micros());` after `let elapsed`.
 //!
-//! You can also use the `fps_gameloop!` macro to achieve the same result. Read about how to use it in the [`fps_gameloop!`]() documentation
+//! You can use the `fps_gameloop!` macro to achieve the same result. Read about how to use it in the [`fps_gameloop!`](crate::fps_gameloop) documentation
 
 pub use std::time::{Duration, Instant};
 mod sleep_fps;
 pub mod with_root;
 pub use sleep_fps::sleep_fps;
+pub use with_root::MainLoopRoot;
 mod macros;
