@@ -7,8 +7,11 @@ use std::{
 /// A point in 3D space, using `f64`s
 #[derive(Debug, Clone, Copy)]
 pub struct Vec3D {
+    /// X-coordinate
     pub x: f64,
+    /// Y-coordinate
     pub y: f64,
+    /// Z-coordinate
     pub z: f64,
 }
 
@@ -18,10 +21,12 @@ impl Vec3D {
     /// `Vec3D { 1,1,1 }`
     pub const ONE: Self = Vec3D::new(1.0, 1.0, 1.0);
 
+    /// Create a new `Vec3D` value from three isize values
     pub const fn new(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z }
     }
 
+    /// Return the `Vec3D` as a tuple
     pub fn as_tuple(&self) -> (f64, f64, f64) {
         (self.x, self.y, self.z)
     }
