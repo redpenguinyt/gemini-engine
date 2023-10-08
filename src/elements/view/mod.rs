@@ -106,6 +106,8 @@ impl View {
     }
 
     /// Display the `View`. `View` implements the `Display` trait and so can be rendered in many ways (such as `println!("{view}");`), but this is intended to be the fastest way possible.
+    ///
+    /// Returns the `Result` from writing to `io::stdout()`
     pub fn display_render(&self) -> io::Result<()> {
         let mut stdout = io::stdout().lock();
         write!(stdout, "{self}")
