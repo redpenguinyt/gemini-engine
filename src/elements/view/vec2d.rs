@@ -7,7 +7,9 @@ use std::{
 /// A pair of `isize` used for coordinates, size or direction on a 2D plane
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Vec2D {
+    /// X-coordinate
     pub x: isize,
+    /// Y-coordinate
     pub y: isize,
 }
 
@@ -23,6 +25,11 @@ impl Vec2D {
     /// Return the `Vec2D` as a tuple
     pub fn as_tuple(&self) -> (isize, isize) {
         (self.x, self.y)
+    }
+
+    /// Return the length/magnitude of the vector. A basic implementation of the Pythagoras Theorem
+    pub fn magnitude(&self) -> f64 {
+        ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt()
     }
 }
 
