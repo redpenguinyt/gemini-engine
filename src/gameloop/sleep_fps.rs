@@ -1,7 +1,7 @@
 use std::{thread::sleep, time::Duration};
 
-/// Sleep for a single frame at the declared FPS, while also subtracting the `Duration` taken to process the frame. Returns a bool value depending on whether or not the frame took longer to render than the intended fps
-/// ## Example
+/// Sleep for a single frame at the declared FPS, subtracting the input `Duration` to account for any time spent processing the frame. Returns a bool value depending on whether or not the frame took longer to render than the intended fps
+/// # Example
 /// ```rust,no_run
 /// use gemini_engine::gameloop;
 ///
