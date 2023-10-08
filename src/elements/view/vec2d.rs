@@ -1,7 +1,6 @@
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
-    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
 /// A pair of `isize` used for coordinates, size or direction on a 2D plane
@@ -14,88 +13,19 @@ pub struct Vec2D {
 }
 
 impl Vec2D {
-    /// A Vec2D of (0,0)
-    pub const ZERO: Vec2D = Vec2D::new(0, 0);
+    impl_vec_single_value_const!(Vec2D, ZERO, 0, x, y);
 
-    /// Create a new `Vec2D` value from two isize values
-    pub const fn new(x: isize, y: isize) -> Self {
-        Vec2D { x, y }
-    }
-
-    /// Return the `Vec2D` as a tuple
-    pub fn as_tuple(&self) -> (isize, isize) {
-        (self.x, self.y)
-    }
-
-    /// Return the length/magnitude of the vector. A basic implementation of the Pythagoras Theorem
+    impl_vec_core!(Vec2D, isize, x, y);
+    
+    /// The length/magnitude of the `Vec2D`
     pub fn magnitude(&self) -> f64 {
         ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt()
     }
 }
 
-impl Add<Vec2D> for Vec2D {
-    type Output = Vec2D;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        Self {
-            x: self.x + rhs.x,
-            y: self.y + rhs.y,
-        }
-    }
-}
-
-impl AddAssign<Vec2D> for Vec2D {
-    fn add_assign(&mut self, rhs: Self) {
-        self.x += rhs.x;
-        self.y += rhs.y;
-    }
-}
-
-impl Sub<Vec2D> for Vec2D {
-    type Output = Self;
-    fn sub(self, rhs: Self) -> Self::Output {
-        Self {
-            x: self.x - rhs.x,
-            y: self.y - rhs.y,
-        }
-    }
-}
-
-impl SubAssign<Vec2D> for Vec2D {
-    fn sub_assign(&mut self, rhs: Self) {
-        self.x -= rhs.x;
-        self.y -= rhs.y;
-    }
-}
-
-impl Mul<Vec2D> for Vec2D {
-    type Output = Self;
-    fn mul(self, rhs: Vec2D) -> Self::Output {
-        Self::new(self.x * rhs.x, self.y * rhs.y)
-    }
-}
-
-impl MulAssign<Vec2D> for Vec2D {
-    fn mul_assign(&mut self, rhs: Vec2D) {
-        self.x *= rhs.x;
-        self.y *= rhs.y;
-    }
-}
-
-impl Div<isize> for Vec2D {
-    type Output = Self;
-    fn div(self, rhs: isize) -> Self::Output {
-        Self {
-            x: self.x / rhs,
-            y: self.y / rhs,
-        }
-    }
-}
-
-impl DivAssign<isize> for Vec2D {
-    fn div_assign(&mut self, rhs: isize) {
-        self.x /= rhs;
-        self.y /= rhs;
+impl Display for Vec2D {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result {
+        write!(f, "Vec2D({}, {})", self.x, self.y)
     }
 }
 
@@ -107,53 +37,18 @@ impl<T: Into<isize>> From<(T, T)> for Vec2D {
         }
     }
 }
-
-impl Rem for Vec2D {
-    type Output = Self;
-    fn rem(self, rhs: Self) -> Self::Output {
-        Self {
-            x: self.x.rem_euclid(rhs.x),
-            y: self.y.rem_euclid(rhs.y),
-        }
-    }
-}
-
-impl RemAssign for Vec2D {
-    fn rem_assign(&mut self, rhs: Self) {
-        self.x = self.x.rem_euclid(rhs.x);
-        self.y = self.y.rem_euclid(rhs.y);
-    }
-}
-
-impl Display for Vec2D {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result {
-        write!(f, "Vec2D({}, {})", self.x, self.y)
-    }
-}
+impl_vec_add!(Vec2D, x, y);
+impl_vec_sub!(Vec2D, x, y);
+impl_vec_neg!(Vec2D, 0, x, y);
+impl_vec_mul!(Vec2D, x, y);
+impl_vec_mul_single!(Vec2D, isize, x, y);
+impl_vec_div!(Vec2D, x, y);
+impl_vec_div_single!(Vec2D, isize, x, y);
+impl_vec_rem!(Vec2D, x, y);
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn add_vec2() {
-        assert_eq!(Vec2D::new(15, -3), Vec2D::new(13, 4) + Vec2D::new(2, -7));
-    }
-
-    #[test]
-    fn subtract_vec2() {
-        assert_eq!(Vec2D::new(2, -10), Vec2D::new(17, 4) - Vec2D::new(15, 14));
-    }
-
-    #[test]
-    fn rem_vec2_over() {
-        assert_eq!(Vec2D::new(4, 1), Vec2D::new(9, 11) % Vec2D::new(5, 10))
-    }
-
-    #[test]
-    fn rem_vec2_under() {
-        assert_eq!(Vec2D::new(4, 1), Vec2D::new(-1, -109) % Vec2D::new(5, 10))
-    }
 
     #[test]
     fn eq_vec2_both() {

@@ -13,7 +13,9 @@
 
 // #![warn(missing_docs)] // For making sure everything's documented
 
+#[macro_use]
 mod utils;
+
 pub mod elements;
 pub mod elements3d;
 pub mod gameloop;

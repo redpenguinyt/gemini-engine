@@ -1,5 +1,8 @@
 use std::{sync::OnceLock, io, fmt};
 
+#[macro_use]
+pub mod macros;
+
 static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
 
 /// Prepare the console by printing lines to move previous console lines out of the way. Can only be called once in a program run
