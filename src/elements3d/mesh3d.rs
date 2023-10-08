@@ -6,15 +6,16 @@ use super::{Face, Transform3D, Vec3D, ViewElement3D};
 #[derive(Debug, Clone)]
 pub struct Mesh3D {
     pub transform: Transform3D,
+    /// A vector of the [`Mesh3D`]'s
     pub vertices: Vec<Vec3D>,
+    /// A vector of [`Face`]s of indexes into [`Mesh3D::vertices`]
     pub faces: Vec<Face>,
 }
 
 impl Mesh3D {
     /// The gemini_engine equivalent of Blender's default cube. Has side lengths of 2
     pub fn default_cube() -> Self {
-        Self::new(
-            Transform3D::DEFAULT,
+        Self::new_at_origin(
             vec![
                 Vec3D::new(1.0, 1.0, -1.0),
                 Vec3D::new(1.0, 1.0, 1.0),
@@ -44,8 +45,7 @@ impl Mesh3D {
     /// Think of it like Blender's axes but with Y and Z swapped.
     /// This Mesh does not render in `DisplayMode::SOLID` (see [`DisplayMode`](super::DisplayMode) documentation)
     pub fn gimbal() -> Self {
-        Self::new(
-            Transform3D::DEFAULT,
+        Self::new_at_origin(
             vec![
                 Vec3D::ZERO,
                 Vec3D::new(1.0, 0.0, 0.0),
@@ -60,9 +60,19 @@ impl Mesh3D {
         )
     }
 
+    /// Create a `Mesh3D` with a default `Transform3D`
     pub fn new(transform: Transform3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
         Self {
             transform,
+            vertices,
+            faces,
+        }
+    }
+
+    /// Create a `Mesh3D` with a default `Transform3D`
+    pub fn new_at_origin(vertices: Vec<Vec3D>, faces: Vec<Face>) -> Mesh3D {
+        Mesh3D {
+            transform: Transform3D::DEFAULT,
             vertices,
             faces,
         }
