@@ -10,6 +10,7 @@ pub struct Face {
 }
 
 impl Face {
+    /// Create a new face with the given indexes and [`ColChar`]
     pub const fn new(v_indices: Vec<usize>, fill_char: ColChar) -> Self {
         Self {
             v_indices,
