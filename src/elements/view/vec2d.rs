@@ -13,9 +13,9 @@ pub struct Vec2D {
 }
 
 impl Vec2D {
-    impl_vec_single_value_const!(Vec2D, ZERO, 0, x, y);
+    impl_vec_single_value_const!(Vec2D, ZERO, 0, (x, y));
 
-    impl_vec_core!(Vec2D, isize, x, y);
+    impl_vec_core!(Vec2D, isize, (x, y));
 
     /// The length/magnitude of the `Vec2D`
     pub fn magnitude(&self) -> f64 {
@@ -37,14 +37,14 @@ impl<T: Into<isize>> From<(T, T)> for Vec2D {
         }
     }
 }
-impl_vec_add!(Vec2D, x, y);
-impl_vec_sub!(Vec2D, x, y);
-impl_vec_neg!(Vec2D, 0, x, y);
-impl_vec_mul!(Vec2D, x, y);
-impl_vec_mul_single!(Vec2D, isize, x, y);
-impl_vec_div!(Vec2D, x, y);
-impl_vec_div_single!(Vec2D, isize, x, y);
-impl_vec_rem!(Vec2D, x, y);
+impl_vec_add!(Vec2D, (x, y));
+impl_vec_sub!(Vec2D, (x, y));
+impl_vec_neg!(Vec2D, 0, (x, y));
+impl_vec_mul!(Vec2D, (x, y));
+impl_vec_mul_single!(Vec2D, isize, (x, y));
+impl_vec_div!(Vec2D, (x, y));
+impl_vec_div_single!(Vec2D, isize, (x, y));
+impl_vec_rem!(Vec2D, (x, y));
 
 #[cfg(test)]
 mod tests {

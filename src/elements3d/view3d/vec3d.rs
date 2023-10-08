@@ -15,10 +15,10 @@ pub struct Vec3D {
 }
 
 impl Vec3D {
-    impl_vec_single_value_const!(Vec3D, ZERO, 0.0, x, y, z);
-    impl_vec_single_value_const!(Vec3D, ONE, 1.0, x, y, z);
+    impl_vec_single_value_const!(Vec3D, ZERO, 0.0, (x, y, z));
+    impl_vec_single_value_const!(Vec3D, ONE, 1.0, (x, y, z));
 
-    impl_vec_core!(Vec3D, f64, x, y, z);
+    impl_vec_core!(Vec3D, f64, (x, y, z));
 
     /// Return the dot product in combination with another `Vec3D`
     pub fn dot(&self, other: Vec3D) -> f64 {
@@ -52,11 +52,11 @@ impl<T: Into<f64>> From<(T, T, T)> for Vec3D {
     }
 }
 
-impl_vec_add!(Vec3D, x, y, z);
-impl_vec_sub!(Vec3D, x, y, z);
-impl_vec_neg!(Vec3D, 0.0, x, y, z);
-impl_vec_mul!(Vec3D, x, y, z);
-impl_vec_mul_single!(Vec3D, f64, x, y, z);
-impl_vec_div!(Vec3D, x, y, z);
-impl_vec_div_single!(Vec3D, f64, x, y, z);
-impl_vec_rem!(Vec3D, x, y, z);
+impl_vec_add!(Vec3D, (x, y, z));
+impl_vec_sub!(Vec3D, (x, y, z));
+impl_vec_neg!(Vec3D, 0.0, (x, y, z));
+impl_vec_mul!(Vec3D, (x, y, z));
+impl_vec_mul_single!(Vec3D, f64, (x, y, z));
+impl_vec_div!(Vec3D, (x, y, z));
+impl_vec_div_single!(Vec3D, f64, (x, y, z));
+impl_vec_rem!(Vec3D, (x, y, z));

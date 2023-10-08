@@ -8,7 +8,7 @@ macro_rules! ignore_rest {
 }
 
 macro_rules! impl_vec_core {
-    ($struct:ty, $field_type:ty, $( $field:ident ),+) => {
+    ($struct:ty, $field_type:ty, ($( $field:ident ),+)) => {
         #[doc = concat!("Create a `", stringify!($struct), "` from the provided `", stringify!($field_type), "` values")]
         pub const fn new($( $field: $field_type, )*) -> Self {
             Self { $( $field, )* }
@@ -26,7 +26,7 @@ macro_rules! impl_vec_core {
 }
 
 macro_rules! impl_vec_single_value_const {
-    ($struct:ty, $name:ident, $value:expr, $( $field:ident ),+) => {
+    ($struct:ty, $name:ident, $value:expr, ($( $field:ident ),+)) => {
         #[doc = concat!("The `", stringify!($struct), "`'s ", stringify!($name), " value")]
         pub const $name: Self = Self {
             $(
@@ -37,7 +37,7 @@ macro_rules! impl_vec_single_value_const {
 }
 
 macro_rules! impl_vec_add {
-    ($struct:ty, $( $field:ident ),+) => {
+    ($struct:ty, ($( $field:ident ),+)) => {
         use std::ops::{Add, AddAssign};
 
         impl Add<Self> for $struct {
@@ -63,7 +63,7 @@ macro_rules! impl_vec_add {
 }
 
 macro_rules! impl_vec_sub {
-    ($struct:ty, $( $field:ident ),+) => {
+    ($struct:ty, ($( $field:ident ),+)) => {
         use std::ops::{Sub, SubAssign};
 
         impl Sub<Self> for $struct {
@@ -89,7 +89,7 @@ macro_rules! impl_vec_sub {
 }
 
 macro_rules! impl_vec_neg {
-    ($struct:ty, $zero:expr, $( $field:ident ),+) => {
+    ($struct:ty, $zero:expr, ($( $field:ident ),+)) => {
         use std::ops::{Neg};
 
         impl Neg for $struct {
@@ -106,7 +106,7 @@ macro_rules! impl_vec_neg {
 }
 
 macro_rules! impl_vec_mul {
-    ($struct:ty, $( $field:ident ),+) => {
+    ($struct:ty, ($( $field:ident ),+)) => {
         use std::ops::{Mul, MulAssign};
 
         impl Mul<Self> for $struct {
@@ -132,7 +132,7 @@ macro_rules! impl_vec_mul {
 }
 
 macro_rules! impl_vec_mul_single {
-    ($struct:ty, $multiplier:ty, $( $field:ident ),+) => {
+    ($struct:ty, $multiplier:ty, ($( $field:ident ),+)) => {
         impl Mul<$multiplier> for $struct {
             type Output = Self;
 
@@ -156,7 +156,7 @@ macro_rules! impl_vec_mul_single {
 }
 
 macro_rules! impl_vec_div {
-    ($struct:ty, $( $field:ident ),+) => {
+    ($struct:ty, ($( $field:ident ),+)) => {
         use std::ops::{Div, DivAssign};
 
         impl Div<Self> for $struct {
@@ -182,7 +182,7 @@ macro_rules! impl_vec_div {
 }
 
 macro_rules! impl_vec_div_single {
-    ($struct:ty, $multiplier:ty, $( $field:ident ),+) => {
+    ($struct:ty, $multiplier:ty, ($( $field:ident ),+)) => {
         impl Div<$multiplier> for $struct {
             type Output = Self;
 
@@ -206,7 +206,7 @@ macro_rules! impl_vec_div_single {
 }
 
 macro_rules! impl_vec_rem {
-    ($struct:ty, $( $field:ident ),+) => {
+    ($struct:ty, ($( $field:ident ),+)) => {
         use std::ops::{Rem, RemAssign};
 
         impl Rem<Self> for $struct {
