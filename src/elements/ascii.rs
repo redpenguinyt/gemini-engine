@@ -2,10 +2,14 @@
 
 use super::view::{ColChar, Modifier, Point, Vec2D, ViewElement};
 
+/// An enum to set the alignment of a Text element's content
 #[derive(Debug, Clone, Copy)]
 pub enum TextAlign {
+    /// Align to the beginning of the text
     Left,
+    /// Align to the center of the text
     Centered,
+    /// Align to the end of the text
     Right,
 }
 
@@ -14,13 +18,19 @@ pub enum TextAlign {
 #[derive(Debug, Clone)]
 pub struct Text<'a> {
     pub pos: Vec2D,
+    /// The actual text content of the element
     pub content: &'a str,
-    /// A raw [`Modifier`], determining the appearance of the `Sprite`
+    /// How the content should align to the position
     pub align: TextAlign,
+    /// A raw [`Modifier`], determining the appearance of the `Sprite`
     pub modifier: Modifier,
 }
 
 impl<'a> Text<'a> {
+    /// Create a new Text element with a position, content and modifier
+    ///
+    /// # Panics
+    /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite]
     pub fn new(pos: Vec2D, content: &str, modifier: Modifier) -> Text {
         if content.contains('\n') {
             panic!("Text was created with a content string containing a \n character")
@@ -34,6 +44,10 @@ impl<'a> Text<'a> {
         }
     }
 
+    /// Create a `Text` element with an [`align`](Text::align) parameter to set the `Text`'s align (see the [TextAlign] documentation)
+    ///
+    /// # Panics
+    /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite]
     pub fn new_with_align(pos: Vec2D, content: &str, align: TextAlign, modifier: Modifier) -> Text {
         let mut tmp = Text::new(pos, content, modifier);
         tmp.align = align;
@@ -59,6 +73,7 @@ impl<'a> Text<'a> {
         pixels
     }
 
+    /// Return a vector of Points to display the given content, aligning the content to the position as directed by the `align` attribute
     pub fn draw_with_align(
         pos: Vec2D,
         content: &str,
@@ -90,16 +105,20 @@ pub struct Sprite {
     pub texture: String,
     /// A raw [`Modifier`], determining the appearance of the `Sprite`
     pub modifier: Modifier,
+    // TODO: add x and y align
 }
 impl Sprite {
+    /// Create a new `Sprite` struct. All newlines at the beginning of the texture will be removed
     pub fn new(pos: Vec2D, texture: &str, modifier: Modifier) -> Self {
-        let mut texture = String::from(texture);
-        if texture.starts_with('\n') {
+        let mut texture: Vec<char> = texture.chars().rev().collect();
+
+        while *texture.last().expect("Texture consists of only newlines") == '\n' {
             texture.pop();
         }
+
         Self {
             pos,
-            texture,
+            texture: texture.iter().rev().collect(),
             modifier,
         }
     }
