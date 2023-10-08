@@ -16,6 +16,7 @@ pub trait MainLoopRoot {
     /// # Example
     /// ```
     /// # use gemini_engine::elements::view::{Wrapping, ViewElement, View, Point, Vec2D };
+    /// # use gemini_engine::gameloop::MainLoopRoot;
     /// # struct Dummy { pos: Vec2D }
     /// # impl ViewElement for Dummy {
     /// #   fn active_pixels(&self) -> Vec<Point> { vec![] }
@@ -26,11 +27,13 @@ pub trait MainLoopRoot {
     /// #   enemies: Vec<Dummy>,
     /// #
     /// # }
-    /// # impl Game {
+    /// # impl MainLoopRoot for Game {
+    /// # type InputDataType = u32;
     /// // --inside impl MainLoopRoot for Game--
     /// fn frame(&mut self, input_data: Option<Self::InputDataType>) {
     ///     self.player.pos.x += 1; // player has a pos: Vec2D field
     /// }
+    /// # fn render_frame(&mut self) {}
     /// # }
     /// ```
     fn frame(&mut self, input_data: Option<Self::InputDataType>);
