@@ -95,6 +95,22 @@ impl Triangle {
         [self.pos0, self.pos1, self.pos2]
     }
 
+    /// Draw a pseudo-line between the independent and dependent positions
+    pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
+        if i0 == i1 {
+            return vec![d0.round() as isize];
+        }
+        let mut values = vec![];
+
+        let a = (d1 - d0) / (i1 - i0) as f64;
+        let mut d = d0;
+        for _i in i0..(i1 + 1) {
+            values.push(d.round() as isize);
+            d += a;
+        }
+        values
+    }
+
     /// Takes three corner [`Vec2D`]s and returns the points you should plot to the screen to make a triangle
     pub fn draw(corners: [Vec2D; 3]) -> Vec<Vec2D> {
         let mut points = vec![];
@@ -104,9 +120,9 @@ impl Triangle {
         let (x1, y1) = corners[1].as_tuple();
         let (x2, y2) = corners[2].as_tuple();
 
-        let mut x01 = utils::interpolate(y0, x0 as f64, y1, x1 as f64);
-        let x12 = utils::interpolate(y1, x1 as f64, y2, x2 as f64);
-        let x02 = utils::interpolate(y0, x0 as f64, y2, x2 as f64);
+        let mut x01 = Triangle::interpolate(y0, x0 as f64, y1, x1 as f64);
+        let x12 = Triangle::interpolate(y1, x1 as f64, y2, x2 as f64);
+        let x02 = Triangle::interpolate(y0, x0 as f64, y2, x2 as f64);
 
         x01.pop();
         let mut x012 = x01;

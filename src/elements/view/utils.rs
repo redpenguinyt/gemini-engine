@@ -45,19 +45,9 @@ pub(crate) fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> io::Result<()> {
 }
 
 /// Draw a pseudo-line between the independent and dependent positions. Used by [`Triangle`](super::super::Triangle)
+#[deprecated = "Please use `Triangle::interpolate` instead"]
 pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
-    if i0 == i1 {
-        return vec![d0.round() as isize];
-    }
-    let mut values = vec![];
-
-    let a = (d1 - d0) / (i1 - i0) as f64;
-    let mut d = d0;
-    for _i in i0..(i1 + 1) {
-        values.push(d.round() as isize);
-        d += a;
-    }
-    values
+    super::super::Triangle::interpolate(i0, d0, i1, d1)
 }
 
 /// Returns true if the [`Vec2D`]s in the vector are arranged clockwise
