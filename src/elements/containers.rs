@@ -4,16 +4,22 @@ use std::fmt::Debug;
 
 use super::{utils, ColChar, Point, Vec2D, ViewElement};
 
-/// `VisibilityToggle` is a container for a `ViewElement` with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
+/// `VisibilityToggle` is a container for a [`ViewElement`] with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
 #[derive(Debug, Clone)]
-pub struct VisibilityToggle<T: ViewElement> {
-    pub element: T,
+pub struct VisibilityToggle<E: ViewElement> {
+    /// The element held by the `VisibilityToggle`. Must implement [`ViewElement`]
+    pub element: E,
+    /// Whether the element is visible
     pub visible: bool,
 }
 
-impl<T: ViewElement> VisibilityToggle<T> {
-    pub fn new(element: T, visible: bool) -> Self {
-        Self { element, visible }
+impl<E: ViewElement> VisibilityToggle<E> {
+    /// Creates a new `VisibilityToggle` with the visibility set to true
+    pub const fn new(element: E) -> Self {
+        Self {
+            element,
+            visible: true,
+        }
     }
 }
 
@@ -104,6 +110,7 @@ impl ViewElement for PixelContainer {
 /// Contains references to all added objects. Meant to be used specifically for collision calculations
 #[derive(Clone)]
 pub struct CollisionContainer<'a> {
+    /// The elements used to define the collision hitbox. This can be anything that implements [`ViewElement`]
     pub elements: Vec<&'a dyn ViewElement>,
 }
 
@@ -118,7 +125,9 @@ impl<'a> CollisionContainer<'a> {
         self.elements.push(element)
     }
 
+    /// Return a list of all the positions at which the
     pub fn generate_collision_points(&self) -> Vec<Vec2D> {
+        // TODO: make this part of `ViewElement` as `active_points`
         utils::pixels_to_points(self.active_pixels())
     }
 
