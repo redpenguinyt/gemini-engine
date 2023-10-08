@@ -116,7 +116,7 @@ impl View {
 
 impl Display for View {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let _ = utils::prepare_terminal(f);
+        let _ = crate::utils::prepare_terminal(f);
         f.write_str("\x1b[H\x1b[J")?;
         if self.coord_numbers_in_render {
             let nums: String = (0..self.width)

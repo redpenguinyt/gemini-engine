@@ -12,6 +12,8 @@
 //! - [`elements3d`], which handles everything 3D-related. Objects that [`elements3d`] converts to a 2d object will then be printed to the screen by a [`View`](elements::View)
 
 // #![warn(missing_docs)] // For making sure everything's documented
+
+mod utils;
 pub mod elements;
 pub mod elements3d;
 pub mod gameloop;

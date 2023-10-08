@@ -1,7 +1,6 @@
 //! A module containing various helper functions and structs
 
 use super::{ColChar, Point, Vec2D};
-use std::{fmt, io, sync::OnceLock};
 
 /// Combine a vector of [`Vec2D`]s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your [`ViewElement`](super::ViewElement) only has one fill character across all of it
 pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Point> {
@@ -14,34 +13,6 @@ pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Point> {
 /// Extract the positions from a vector of [`Point`]s
 pub fn pixels_to_points(pixels: Vec<Point>) -> Vec<Vec2D> {
     pixels.iter().map(|p| p.pos).collect()
-}
-
-static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
-
-/// Prepare the terminal by printing lines to move all terminal history out of the way. Can only ever be called once
-///
-/// Returns an error if [`termsize::get`] returns `None`
-pub(crate) fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> io::Result<()> {
-    let cell = TERMINAL_PREPARED.get();
-    if cell.is_none() {
-        let rows = termsize::get()
-            .ok_or(io::Error::new(
-                std::io::ErrorKind::NotFound,
-                "Couldnt get termsize",
-            ))?
-            .rows;
-        let rows_us = usize::try_from(rows).expect("u16 couldnt convert to usize");
-        writeln!(
-            f,
-            "{}",
-            vec!['\n'; rows_us].iter().cloned().collect::<String>()
-        )
-        .unwrap();
-        println!("terminal prepared");
-        TERMINAL_PREPARED.get_or_init(|| true);
-    }
-
-    Ok(())
 }
 
 /// Draw a pseudo-line between the independent and dependent positions. Used by [`Triangle`](super::super::Triangle)
