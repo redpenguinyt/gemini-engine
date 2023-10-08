@@ -1,4 +1,4 @@
-use std::{sync::OnceLock, io, fmt};
+use std::{fmt, io, sync::OnceLock};
 
 #[macro_use]
 pub mod macros;

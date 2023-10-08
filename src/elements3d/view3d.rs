@@ -18,7 +18,7 @@ pub enum DisplayMode {
     /// `DisplayMode::Points` only renders the object's vertices as single pixels with the [`ColChar`] chosen with the [`fill_char`](DisplayMode::Points::fill_char) enum parameter
     Points {
         /// The desired appearance of the points
-        fill_char: ColChar
+        fill_char: ColChar,
     },
     /// `DisplayMode::Wireframe` renders the edges of the meshes, without filling in the shapes. You can choose whether you want to render with backface culling using the [`backface_culling`](DisplayMode::Wireframe::backface_culling) enum parameter
     Wireframe { backface_culling: bool },

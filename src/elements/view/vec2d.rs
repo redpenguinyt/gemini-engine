@@ -16,7 +16,7 @@ impl Vec2D {
     impl_vec_single_value_const!(Vec2D, ZERO, 0, x, y);
 
     impl_vec_core!(Vec2D, isize, x, y);
-    
+
     /// The length/magnitude of the `Vec2D`
     pub fn magnitude(&self) -> f64 {
         ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt()
