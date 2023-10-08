@@ -52,7 +52,7 @@ impl View {
         view
     }
 
-    /// Return the size of the [`View`] as a [`Vec2D`]
+    /// Return the size of the `View` as a [`Vec2D`]
     pub fn size(&self) -> Vec2D {
         Vec2D::new(self.width as isize, self.height as isize)
     }
