@@ -3,26 +3,7 @@
 //! ## Quick Start
 //! Let's get started with a simple program to demonstrate how Gemini works:
 //! ```rust,no_run
-//! use gemini_engine::elements::{Point, Vec2D, view::{View, ColChar, Wrapping}};
-//! use gemini_engine::gameloop;
-//!
-//! const FPS: f32 = 30.0;
-//!
-//! fn main() {
-//!     let mut view = View::new(40, 8, ColChar::BACKGROUND);
-//!     let mut point = Point::new(Vec2D::new(10,5), ColChar::SOLID);
-//!
-//!     loop {
-//!         view.clear();
-//!
-//!         point.pos.x += 1;
-//!
-//!         view.blit(&point, Wrapping::Wrap);
-//!         view.display_render().unwrap();
-//!
-//!         gameloop::sleep_fps(FPS, None);
-//!     }
-//! }
+#![doc = include_str!("../examples/quick-start.rs")]
 //! ```
 //! Ok, let's go over this and see what's going on. We start by creating a [`View`] and [`Point`]. the [`View`] takes two numbers for the width and height, as well as a [`ColChar`]. The [`Point`] takes a [`Vec2D`] and a [`ColChar`].
 //!
