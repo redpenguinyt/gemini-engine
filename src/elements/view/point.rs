@@ -11,7 +11,7 @@ pub struct Point {
 
 impl Point {
     /// Create a new Point from a [`Vec2D`] and [`ColChar`]
-    pub fn new(pos: Vec2D, fill_char: ColChar) -> Self {
+    pub const fn new(pos: Vec2D, fill_char: ColChar) -> Self {
         Self { pos, fill_char }
     }
 }

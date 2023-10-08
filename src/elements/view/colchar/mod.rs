@@ -41,7 +41,7 @@ impl ColChar {
     };
 
     /// Create a new `ColChar` with a text character and a [`Modifier`]
-    pub fn new(text_char: char, modifier: Modifier) -> Self {
+    pub const fn new(text_char: char, modifier: Modifier) -> Self {
         Self {
             text_char,
             modifier,

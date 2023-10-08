@@ -10,7 +10,7 @@ pub struct Line {
 }
 
 impl Line {
-    pub fn new(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Self {
+    pub const fn new(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Self {
         Line {
             pos0,
             pos1,
@@ -141,7 +141,7 @@ pub struct Polygon {
 }
 
 impl Polygon {
-    pub fn new(points: Vec<Vec2D>, fill_char: ColChar) -> Self {
+    pub const fn new(points: Vec<Vec2D>, fill_char: ColChar) -> Self {
         Self { points, fill_char }
     }
 
@@ -179,7 +179,7 @@ pub struct Rect {
 }
 
 impl Rect {
-    pub fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Self {
+    pub const fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Self {
         Self {
             pos,
             size,
@@ -187,6 +187,7 @@ impl Rect {
         }
     }
 
+    /// Draw a Rectangle with a given position (representing the top-left corner) and size
     pub fn draw(pos: Vec2D, size: Vec2D) -> Vec<Vec2D> {
         (0..size.x)
             .flat_map(|x| (0..size.y).map(move |y| pos + Vec2D { x, y }))

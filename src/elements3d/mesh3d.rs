@@ -61,7 +61,7 @@ impl Mesh3D {
     }
 
     /// Create a `Mesh3D` with a default `Transform3D`
-    pub fn new(transform: Transform3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
+    pub const fn new(transform: Transform3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
         Self {
             transform,
             vertices,
@@ -70,7 +70,7 @@ impl Mesh3D {
     }
 
     /// Create a `Mesh3D` with a default `Transform3D`
-    pub fn new_at_origin(vertices: Vec<Vec3D>, faces: Vec<Face>) -> Mesh3D {
+    pub const fn new_at_origin(vertices: Vec<Vec3D>, faces: Vec<Face>) -> Mesh3D {
         Mesh3D {
             transform: Transform3D::DEFAULT,
             vertices,
