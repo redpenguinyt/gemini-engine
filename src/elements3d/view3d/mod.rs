@@ -61,7 +61,7 @@ impl Viewport {
     }
 
     /// Return the object's vertices, transformed
-    pub fn transform_vertices(&self, object: &impl ViewElement3D) -> Vec<Vec3D> {
+    pub fn transform_vertices(&self, object: &dyn ViewElement3D) -> Vec<Vec3D> {
         object
             .get_vertices()
             .iter()
@@ -70,7 +70,7 @@ impl Viewport {
     }
 
     /// Return the screen coordinates and distance from the view for each vertex, as parallel vectors
-    pub fn get_vertices_on_screen(&self, object: &impl ViewElement3D) -> (Vec<Vec2D>, Vec<f64>) {
+    pub fn get_vertices_on_screen(&self, object: &dyn ViewElement3D) -> (Vec<Vec2D>, Vec<f64>) {
         self.transform_vertices(object)
             .iter()
             .map(|vertex| (self.perspective(*vertex), vertex.z))
@@ -80,7 +80,7 @@ impl Viewport {
     /// Project the faces onto a 2D plane. Returns a collection of faces, each stored as a list of the points it appears at and the [`ColChar`] assigned to it
     pub fn project_faces(
         &self,
-        objects: Vec<&impl ViewElement3D>,
+        objects: Vec<&dyn ViewElement3D>,
         sort_faces: bool,
         backface_culling: bool,
     ) -> Vec<(Vec<Vec2D>, ColChar)> {
@@ -119,7 +119,7 @@ impl Viewport {
     /// Render the objects (implementing [`ViewElement3D`]) given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
     pub fn render(
         &self,
-        objects: Vec<&impl ViewElement3D>,
+        objects: Vec<&dyn ViewElement3D>,
         display_mode: DisplayMode,
     ) -> PixelContainer {
         let mut canvas = PixelContainer::new();
