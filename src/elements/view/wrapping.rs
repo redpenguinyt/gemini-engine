@@ -12,7 +12,7 @@ pub enum Wrapping {
 }
 
 impl Wrapping {
-	/// Handle the position based on the given bounds and the Wrapping variation (See the [Wrapping] documentation for more info)
+    /// Handle the position based on the given bounds and the Wrapping variation (See the [Wrapping] documentation for more info)
     pub fn handle_bounds(&self, pos: Vec2D, bounds: Vec2D) -> Option<Vec2D> {
         let in_bounds_pos = pos % bounds;
 

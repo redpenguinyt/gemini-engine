@@ -1,5 +1,4 @@
 use std::{fmt, io, sync::OnceLock};
-
 #[macro_use]
 pub mod macros;
 

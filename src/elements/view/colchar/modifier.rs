@@ -10,7 +10,7 @@ pub enum Modifier {
     Coded(u8),
     /// Represents a `Modifier` by a [`Colour`], which itself is an RGB value
     Colour(Colour),
-    /// Represents a lack of `Modifier`, if you don't want the pixel to be coloured in any way
+    /// Represents a lack of `Modifier`, if you don't want the pixel to be coloured or decorated in any way
     #[default]
     None,
 }
