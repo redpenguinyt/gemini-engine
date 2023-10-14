@@ -1,8 +1,8 @@
 use std::fmt::{self, Debug, Display};
-mod modifier;
-pub use modifier::Modifier;
 mod colour;
+mod modifier;
 pub use colour::Colour;
+pub use modifier::Modifier;
 
 /// We use `ColChar` to say exactly what each pixel should look like and what colour it should be. That is, the [`View`](super::View)'s canvas is just a vector of `ColChar`s under the hood. `ColChar` has the [`text_char`](ColChar::text_char) and [`modifier`](ColChar::modifier) properties. [`text_char`](ColChar::text_char) is the single ascii character used as the "pixel" when the [`View`](super::View) is rendered, whereas [`modifier`](ColChar::modifier) can give that pixel a colour or make it bold/italic
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

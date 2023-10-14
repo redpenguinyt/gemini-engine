@@ -26,7 +26,7 @@ pub mod ascii;
 pub use ascii::{Sprite, Text};
 
 pub mod containers;
-pub use containers::{PixelContainer, VisibilityToggle};
+pub use containers::PixelContainer;
 
 pub mod geometry;
 pub use geometry::{Line, Polygon, Rect, Triangle};
