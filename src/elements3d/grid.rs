@@ -1,10 +1,12 @@
 use super::{Face, Transform3D, Vec3D, ViewElement3D};
 use crate::elements::view::ColChar;
 
-/// A plane that shows
+/// A flat grid to display where the ground is
 pub struct Grid3D {
     pub transform: Transform3D,
+    /// The length of each cell's width and depth
     pub cell_size: f64,
+    /// The number of cells alon each side. The total number of cells will be `cell_count^2`
     pub cell_count: usize,
     generated_vertices: Vec<Vec3D>,
     generated_faces: Vec<Face>,
@@ -26,6 +28,7 @@ impl Grid3D {
         tmp
     }
 
+    /// Regenerate the grid. Call this if you at any point change the `cell_size` or `cell_count` fields
     pub fn reload(&mut self) {
         let cell_count = self.cell_count as isize;
         let cell_size = self.cell_size;
