@@ -5,16 +5,16 @@
 //! ```rust,no_run
 #![doc = include_str!("../examples/quick-start.rs")]
 //! ```
-//! Ok, let's go over this and see what's going on. We start by creating a [`View`] and [`Point`]. the [`View`] takes two numbers for the width and height, as well as a [`ColChar`]. The [`Point`] takes a [`Vec2D`] and a [`ColChar`].
+//! Ok, let's go over this and see what's going on. We start by creating a [`View`] and [`Point`]. the [`View`] takes two numbers for the width and height, as well as a [`ColChar`](view::ColChar). The [`Point`] takes a [`Vec2D`] and a [`ColChar`](view::ColChar).
 //!
-//! We use [`ColChar`] to say exactly what each pixel should look like and what colour it should be. Here we used the built in `ColChar::BACKGROUND` and `ColChar::SOLID` to keep the code simple. You can read more in the [`ColChar`] documentation.
+//! We use [`ColChar`](view::ColChar) to say exactly what each pixel should look like and what colour it should be. Here we used the built in `ColChar::BACKGROUND` and `ColChar::SOLID` to keep the code simple. You can read more in the [`ColChar`](view::ColChar) documentation.
 //!
 //! At its heart, [`Vec2D`] is just a pair of `isize` integers for defining things such as position, size and movement. We used it here to define the [`Point`]'s starting position, before the game loop.
 //!
 //! Now that we've got initialisation out of the way, let's get on to the juicy part: the main loop. In Gemini the main loop always goes as follows:
 //! 1. Clear the [`View`]
 //! 2. Work through any logic you might have (moving things around, taking inputs etc.)
-//! 3. Blit all the [`ViewElement`]s to the screen
+//! 3. Blit all the [`ViewElement`](view::ViewElement)s to the screen
 //! 4. print the result of `View.display_render`
 //! 5. Sleep
 //!

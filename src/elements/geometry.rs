@@ -1,4 +1,4 @@
-//! This module contains basic geometry structs that implement [`ViewElement`](super::ViewElement), such as [`Line`] or [`Triangle`]
+//! This module contains basic geometry structs that implement [`ViewElement`](super::view::ViewElement), such as [`Line`] or [`Triangle`]
 
 mod line;
 pub use line::Line;
