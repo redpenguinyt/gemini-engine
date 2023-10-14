@@ -33,6 +33,3 @@ pub use geometry::{Line, Polygon, Rect, Triangle};
 
 pub mod view;
 pub use view::{Point, Vec2D, View};
-
-use view::utils;
-use view::{ColChar, ViewElement};
