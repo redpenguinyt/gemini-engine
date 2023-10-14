@@ -1,6 +1,6 @@
 use gemini_engine::elements::{
     view::{ColChar, View, Wrapping},
-    Point, Vec2D,
+    Pixel, Vec2D,
 };
 use gemini_engine::gameloop;
 
@@ -8,7 +8,7 @@ const FPS: f32 = 30.0;
 
 fn main() {
     let mut view = View::new(40, 8, ColChar::BACKGROUND);
-    let mut point = Point::new(Vec2D { x: 10, y: 5 }, ColChar::SOLID);
+    let mut point = Pixel::new(Vec2D { x: 10, y: 5 }, ColChar::SOLID);
 
     loop {
         view.clear();

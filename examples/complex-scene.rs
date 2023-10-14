@@ -1,6 +1,6 @@
 use gemini_engine::elements::{
     view::{ColChar, Modifier, Vec2D, Wrapping},
-    Line, Point, Rect, Sprite, View,
+    Line, Pixel, Rect, Sprite, View,
 };
 use gemini_engine::fps_gameloop;
 use gemini_engine::gameloop::Duration;
@@ -13,7 +13,7 @@ fn main() {
     let mut view = View::new(60, 10, BACKGROUND_CHAR);
     view.coord_numbers_in_render = true;
 
-    let mut point = Point::new(Vec2D::from((5u8, 9u8)), FILL_CHAR);
+    let mut point = Pixel::new(Vec2D::from((5u8, 9u8)), FILL_CHAR);
 
     let mut line = Line::new(Vec2D::new(2, 8), Vec2D::new(28, 7), FILL_CHAR);
     let mut line1_direction = -1;
@@ -75,7 +75,7 @@ fn main() {
                 render_elapsed.as_micros(),
                 total_elapsed.as_micros()
             );
-            println!("Point position: {}", point.pos);
+            println!("Pixel position: {}", point.pos);
         }
     );
 }

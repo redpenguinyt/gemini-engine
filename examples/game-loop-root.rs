@@ -2,7 +2,7 @@
 
 use gemini_engine::elements::{
     view::{ColChar, View, Wrapping},
-    Point, Vec2D,
+    Pixel, Vec2D,
 };
 use gemini_engine::gameloop::MainLoopRoot;
 
@@ -10,14 +10,14 @@ const FPS: f32 = 30.0;
 
 struct Game {
     view: View,
-    point: Point,
+    point: Pixel,
 }
 
 impl Game {
     fn new() -> Game {
         Game {
             view: View::new(40, 8, ColChar::BACKGROUND),
-            point: Point::new(Vec2D { x: 10, y: 5 }, ColChar::SOLID),
+            point: Pixel::new(Vec2D { x: 10, y: 5 }, ColChar::SOLID),
         }
     }
 }
