@@ -5,21 +5,21 @@ use std::{
     io::{self, Write},
 };
 mod colchar;
-mod point;
+mod pixel;
 pub mod utils;
 mod vec2d;
 mod wrapping;
 pub use colchar::{ColChar, Colour, Modifier};
-pub use point::Point;
+pub use pixel::{Pixel, Point};
 pub use vec2d::Vec2D;
 pub use wrapping::Wrapping;
 
-/// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Point in the middle
+/// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Pixel in the middle
 /// ```
-/// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Point, Vec2D};
+/// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Pixel, Vec2D};
 ///
 /// let mut view = View::new(9, 3, ColChar::BACKGROUND);
-/// let point = Point::new(Vec2D::new(4,1), ColChar::SOLID);
+/// let point = Pixel::new(Vec2D::new(4,1), ColChar::SOLID);
 ///
 /// view.blit(&point, Wrapping::Panic);
 ///
@@ -82,7 +82,7 @@ impl View {
         }
     }
 
-    /// Blit a struct implementing [`ViewElement`] to the `View` with a doubled width. Blitting a `Point` at `Vec2D(5,3)`, for example, will result in a blit at `Vec2D(10,3)` and `Vec2D(11,3)` being plotted to. Useful when you want to work with more square pixels, as single text characters are much taller than they are wide
+    /// Blit a struct implementing [`ViewElement`] to the `View` with a doubled width. Blitting a `Pixel` at `Vec2D(5,3)`, for example, will result in a blit at `Vec2D(10,3)` and `Vec2D(11,3)` being plotted to. Useful when you want to work with more square pixels, as single text characters are much taller than they are wide
     pub fn blit_double_width(&mut self, element: &impl ViewElement, wrapping: Wrapping) {
         for point in element.active_pixels() {
             let pos = point.pos * Vec2D::new(2, 1);
@@ -140,5 +140,5 @@ impl Display for View {
 /// `ViewElement` is a trait that must be implemented by any element that can be blitted to a [`View`]
 pub trait ViewElement {
     /// Return a vector of every coordinate where a pixel should be placed and its respective [`ColChar`]. If your whole object is a solid colour, consider using [`utils::points_to_pixels()`] which will add the same [`ColChar`] to every point and can then be used as this function's output
-    fn active_pixels(&self) -> Vec<Point>;
+    fn active_pixels(&self) -> Vec<Pixel>;
 }

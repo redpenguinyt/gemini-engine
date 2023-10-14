@@ -1,4 +1,4 @@
-use crate::elements::view::{utils, ColChar, Point, Vec2D, ViewElement};
+use crate::elements::view::{utils, ColChar, Pixel, Vec2D, ViewElement};
 
 /// The `Rect` takes a position and size, and returns a rectangle at that position with the given width and size when blit to a [`View`](super::super::View)
 pub struct Rect {
@@ -27,7 +27,7 @@ impl Rect {
 }
 
 impl ViewElement for Rect {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         utils::points_to_pixels(Rect::draw(self.pos, self.size), self.fill_char)
     }
 }

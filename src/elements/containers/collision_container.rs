@@ -1,6 +1,6 @@
 use crate::elements::{
     view::{utils, ViewElement},
-    Point, Vec2D,
+    Pixel, Vec2D,
 };
 
 /// Contains references to all added objects. Meant to be used specifically for collision calculations
@@ -60,7 +60,7 @@ impl<'a> From<Vec<&'a dyn ViewElement>> for CollisionContainer<'a> {
 }
 
 impl<'a> ViewElement for CollisionContainer<'a> {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         self.elements
             .iter()
             .flat_map(|e| e.active_pixels())

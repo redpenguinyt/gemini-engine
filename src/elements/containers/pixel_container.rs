@@ -1,13 +1,13 @@
 use crate::elements::{
     view::{utils, ColChar, ViewElement},
-    Point, Vec2D,
+    Pixel, Vec2D,
 };
 
 /// A `PixelContainer` only has a [`pixels`](PixelContainer::pixels) property, which gets returned directly to the View during blit
 #[derive(Debug, Clone)]
 pub struct PixelContainer {
     /// This is the value that gets returned by [`active_pixels()`](ViewElement::active_pixels)
-    pub pixels: Vec<Point>,
+    pub pixels: Vec<Pixel>,
 }
 
 impl PixelContainer {
@@ -17,12 +17,12 @@ impl PixelContainer {
     }
 
     /// Add a single pixel to the `PixelContainer`
-    pub fn push(&mut self, pixel: Point) {
+    pub fn push(&mut self, pixel: Pixel) {
         self.pixels.push(pixel);
     }
 
     /// Moves all the pixels into the `PixelContainer`, leaving the input empty.
-    pub fn append(&mut self, pixels: &mut Vec<Point>) {
+    pub fn append(&mut self, pixels: &mut Vec<Pixel>) {
         self.pixels.append(pixels);
     }
 
@@ -33,7 +33,7 @@ impl PixelContainer {
 
     /// Plot a pixel to the PixelContainer
     pub fn plot(&mut self, pos: Vec2D, c: ColChar) {
-        self.push(Point::new(pos, c))
+        self.push(Pixel::new(pos, c))
     }
 
     /// Blit a [`ViewElement`] to the PixelContainer.
@@ -44,8 +44,8 @@ impl PixelContainer {
     }
 }
 
-impl From<&[Point]> for PixelContainer {
-    fn from(pixels: &[Point]) -> Self {
+impl From<&[Pixel]> for PixelContainer {
+    fn from(pixels: &[Pixel]) -> Self {
         Self {
             pixels: pixels.to_vec(),
         }
@@ -55,7 +55,7 @@ impl From<&[Point]> for PixelContainer {
 impl From<&[(Vec2D, ColChar)]> for PixelContainer {
     fn from(pixels: &[(Vec2D, ColChar)]) -> Self {
         Self {
-            pixels: pixels.iter().map(|x| Point::from(*x)).collect(),
+            pixels: pixels.iter().map(|x| Pixel::from(*x)).collect(),
         }
     }
 }
@@ -66,14 +66,14 @@ impl From<(&[Vec2D], ColChar)> for PixelContainer {
             pixels: value
                 .0
                 .iter()
-                .map(|pos| Point::new(*pos, value.1))
+                .map(|pos| Pixel::new(*pos, value.1))
                 .collect(),
         }
     }
 }
 
 impl ViewElement for PixelContainer {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         self.pixels.clone()
     }
 }

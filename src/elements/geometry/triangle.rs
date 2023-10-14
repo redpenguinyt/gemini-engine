@@ -1,4 +1,4 @@
-use crate::elements::view::{utils, ColChar, Point, Vec2D, ViewElement};
+use crate::elements::view::{utils, ColChar, Pixel, Vec2D, ViewElement};
 
 /// The `Triangle` takes three [`Vec2D`]s and returns a triangle with those vertices when blit to a [`View`](super::super::View)
 pub struct Triangle {
@@ -83,7 +83,7 @@ impl Triangle {
 }
 
 impl ViewElement for Triangle {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         utils::points_to_pixels(Self::draw(self.corners()), self.fill_char)
     }
 }

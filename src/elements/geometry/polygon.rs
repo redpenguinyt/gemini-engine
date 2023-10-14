@@ -1,5 +1,5 @@
 use super::Triangle;
-use crate::elements::view::{utils, ColChar, Point, Vec2D, ViewElement};
+use crate::elements::view::{utils, ColChar, Pixel, Vec2D, ViewElement};
 
 /// The `Polygon` takes a vec of [`Vec2D`]s and returns a polygon with those vertices when blit to a [`View`](super::super::View)
 pub struct Polygon {
@@ -31,7 +31,7 @@ impl Polygon {
 }
 
 impl ViewElement for Polygon {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         utils::points_to_pixels(Self::draw(&self.points), self.fill_char)
     }
 }

@@ -1,6 +1,6 @@
 //! This module holds the structs related to display of ASCII characters, both text and ASCII art
 
-use super::view::{ColChar, Modifier, Point, Vec2D, ViewElement};
+use super::view::{ColChar, Modifier, Pixel, Vec2D, ViewElement};
 
 /// An enum to set the alignment of a Text element's content
 #[derive(Debug, Clone, Copy)]
@@ -55,12 +55,12 @@ impl<'a> Text<'a> {
         tmp
     }
 
-    /// Return a vector of Points to display the given content
-    pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Point> {
+    /// Return a vector of Pixels to display the given content
+    pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Pixel> {
         let mut pixels = vec![];
         for (x, text_char) in content.chars().enumerate() {
             if text_char != ' ' {
-                pixels.push(Point::new(
+                pixels.push(Pixel::new(
                     pos + Vec2D::new(x as isize, 0),
                     ColChar {
                         text_char,
@@ -73,13 +73,13 @@ impl<'a> Text<'a> {
         pixels
     }
 
-    /// Return a vector of Points to display the given content, aligning the content to the position as directed by the `align` attribute
+    /// Return a vector of Pixels to display the given content, aligning the content to the position as directed by the `align` attribute
     pub fn draw_with_align(
         pos: Vec2D,
         content: &str,
         align: TextAlign,
         modifier: Modifier,
-    ) -> Vec<Point> {
+    ) -> Vec<Pixel> {
         let pos = match align {
             TextAlign::Left => pos,
             TextAlign::Centered => pos - Vec2D::new(content.len() as isize / 2, 0),
@@ -91,7 +91,7 @@ impl<'a> Text<'a> {
 }
 
 impl ViewElement for Text<'_> {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         Text::draw(self.pos, self.content, self.modifier)
     }
 }
@@ -125,7 +125,7 @@ impl Sprite {
 }
 
 impl ViewElement for Sprite {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         let mut pixels = vec![];
 
         let lines = self.texture.split('\n');

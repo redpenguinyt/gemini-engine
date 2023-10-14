@@ -1,17 +1,17 @@
 //! A module containing various helper functions and structs
 
-use super::{ColChar, Point, Vec2D};
+use super::{ColChar, Pixel, Vec2D};
 
 /// Combine a vector of [`Vec2D`]s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your [`ViewElement`](super::ViewElement) only has one fill character across all of it
-pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Point> {
+pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Pixel> {
     points
         .iter()
-        .map(|point| Point::new(*point, fill_char))
+        .map(|point| Pixel::new(*point, fill_char))
         .collect()
 }
 
-/// Extract the positions from a vector of [`Point`]s
-pub fn pixels_to_points(pixels: Vec<Point>) -> Vec<Vec2D> {
+/// Extract the positions from a vector of [`Pixel`]s
+pub fn pixels_to_points(pixels: Vec<Pixel>) -> Vec<Vec2D> {
     pixels.iter().map(|p| p.pos).collect()
 }
 

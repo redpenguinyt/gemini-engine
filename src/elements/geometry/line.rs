@@ -1,4 +1,4 @@
-use crate::elements::view::{utils, ColChar, Point, Vec2D, ViewElement};
+use crate::elements::view::{utils, ColChar, Pixel, Vec2D, ViewElement};
 
 /// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`](super::super::View)
 pub struct Line {
@@ -55,7 +55,7 @@ impl Line {
 }
 
 impl ViewElement for Line {
-    fn active_pixels(&self) -> Vec<Point> {
+    fn active_pixels(&self) -> Vec<Pixel> {
         utils::points_to_pixels(Self::draw(self.pos0, self.pos1), self.fill_char)
     }
 }

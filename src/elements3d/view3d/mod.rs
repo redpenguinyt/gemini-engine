@@ -2,7 +2,7 @@
 
 use crate::elements::{
     view::{utils, ColChar, Modifier},
-    Line, PixelContainer, Point, Polygon, Text, Vec2D,
+    Line, PixelContainer, Pixel, Polygon, Text, Vec2D,
 };
 mod display_mode;
 mod face;
@@ -125,7 +125,7 @@ impl Viewport {
             DisplayMode::Points { fill_char } => {
                 for object in objects {
                     for screen_coordinates in self.get_vertices_on_screen(object).0 {
-                        canvas.push(Point::new(screen_coordinates, fill_char));
+                        canvas.push(Pixel::new(screen_coordinates, fill_char));
                     }
                 }
             }
