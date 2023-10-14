@@ -1,4 +1,4 @@
-//! This module is home to the [`View`], which handles the printing of pixels to an ANSI standard text output
+//! This module is home to the [`View`] struct, which handles the printing of pixels to an ANSI standard text output
 
 use std::{
     fmt::{self, Display},
@@ -8,10 +8,11 @@ mod colchar;
 mod point;
 pub mod utils;
 mod vec2d;
+mod wrapping;
 pub use colchar::{ColChar, Colour, Modifier};
 pub use point::Point;
-pub use utils::Wrapping;
 pub use vec2d::Vec2D;
+pub use wrapping::Wrapping;
 
 /// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Point in the middle
 /// ```
@@ -69,24 +70,9 @@ impl View {
 
     /// Plot a pixel to the `View`. Accepts a [`Vec2D`] (the position of the pixel), [`ColChar`] (what the pixel should look like/what colour it should be), and a [`Wrapping`] enum variant (Please see the [Wrapping] documentation for more info)
     pub fn plot(&mut self, pos: Vec2D, c: ColChar, wrapping: Wrapping) {
-        let mut pos = pos;
-        let in_bounds_pos = pos % self.size();
-
-        match wrapping {
-            Wrapping::Wrap => pos = in_bounds_pos,
-            Wrapping::Ignore => {
-                if pos != in_bounds_pos {
-                    return;
-                }
-            }
-            Wrapping::Panic => {
-                if pos != in_bounds_pos {
-                    panic!("{} is out of bounds", pos);
-                }
-            }
+        if let Some(wrapped_pos) = wrapping.handle_bounds(pos, self.size()) {
+            self.pixels[self.width * (wrapped_pos.y as usize) + (wrapped_pos.x as usize)] = c;
         }
-
-        self.pixels[self.width * (pos.y as usize) + (pos.x as usize)] = c;
     }
 
     /// Blit a struct implementing [`ViewElement`] to the `View`
