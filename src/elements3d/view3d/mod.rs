@@ -2,7 +2,7 @@
 
 use crate::elements::{
     view::{utils, ColChar, Modifier},
-    Line, PixelContainer, Pixel, Polygon, Text, Vec2D,
+    Line, Pixel, PixelContainer, Polygon, Text, Vec2D,
 };
 mod display_mode;
 mod face;
