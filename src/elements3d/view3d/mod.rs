@@ -4,27 +4,14 @@ use crate::elements::{
     view::{utils, ColChar, Modifier},
     Line, PixelContainer, Point, Polygon, Text, Vec2D,
 };
+mod display_mode;
 mod face;
 mod transform3d;
 mod vec3d;
+pub use display_mode::DisplayMode;
 pub use face::Face;
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
-
-/// `DisplayMode` determines how the [`Viewport`] renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
-pub enum DisplayMode {
-    /// `DisplayMode::Debug` does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
-    Debug,
-    /// `DisplayMode::Points` only renders the object's vertices as single pixels with the [`ColChar`] chosen with the [`fill_char`](DisplayMode::Points::fill_char) enum parameter
-    Points {
-        /// The desired appearance of the points
-        fill_char: ColChar,
-    },
-    /// `DisplayMode::Wireframe` renders the edges of the meshes, without filling in the shapes. You can choose whether you want to render with backface culling using the [`backface_culling`](DisplayMode::Wireframe::backface_culling) enum parameter
-    Wireframe { backface_culling: bool },
-    /// `DisplayMode::Solid` renders the full faces of all the meshes. This is normally the final render
-    Solid,
-}
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`](crate::elements::View), and also acts as the scene's camera.
 pub struct Viewport {
