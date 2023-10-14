@@ -161,7 +161,7 @@ impl Polygon {
         Self { points, fill_char }
     }
 
-    /// Split a polygon up into triangles. Returns a vec of coordinate sets for said triangles
+    /// Split a polygon up into triangles. Returns a vec of coordinate sets for each triangle
     pub fn triangulate(vertices: &[Vec2D]) -> Vec<[Vec2D; 3]> {
         let mut points = vec![];
         for fi in 1..(vertices.len() - 1) {
