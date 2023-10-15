@@ -5,6 +5,7 @@
 Gemini is a monospaced ASCII rendering engine, capable of rendering 2D and 3D graphics in a terminal or console and written in Rust. This is a loose port of [gemini-py](https://github.com/redpenguinyt/gemini-py) which was made in Python but was deprecated due to performance limitations.
 
 **IMPORTANT**: You MUST use a monospace font in the terminal for the engine to render the view properly
+Looking for input? The [console-input](https://crates.io/crates/console-input) crate (also made by me) makes it easy to implement cross-platform input
 
 - [Quick Start](https://docs.rs/gemini-engine/latest/gemini_engine/elements/index.html)
 - [Crates.io](https://crates.io/crates/gemini-engine)
