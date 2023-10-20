@@ -42,6 +42,10 @@ impl Vec3D {
             self.x * other.y - self.y * other.x,
         )
     }
+
+    pub fn normal(self) -> Vec3D {
+        self / self.magnitude()
+    }
 }
 
 impl Display for Vec3D {
