@@ -19,18 +19,18 @@ pub struct Viewport {
     pub transform: Transform3D,
     /// The Viewport's field of view
     pub fov: f64,
-    /// The center of the view you intend to print to. You can use `View.center()` as the input for this
+    /// The center of the view you intend to print to. `View.center()` returns exactly what you need for this
     pub origin: Vec2D,
     /// Most terminals don't have perfectly square characters. The value you set here is how much the final image will be stretched in the X axis to account for this. The default value is `2.2` but it will be different in most terminals
     pub character_width_multiplier: f64,
 }
 
 impl Viewport {
-    pub const fn new(transform: Transform3D, fov: f64, origin: Vec2D) -> Self {
+    pub const fn new(transform: Transform3D, fov: f64, screen_origin: Vec2D) -> Self {
         Self {
             transform,
             fov,
-            origin,
+            origin: screen_origin,
             character_width_multiplier: 2.2,
         }
     }
