@@ -31,7 +31,7 @@ impl IndexFace {
 pub struct ProjectedFace {
     pub screen_points: Vec<Vec2D>,
     pub original_vertices: Vec<Vec3D>,
-    pub z_index: f64,
+    pub z_index: Option<f64>,
     pub fill_char: ColChar,
 }
 
@@ -39,7 +39,7 @@ impl ProjectedFace {
     pub fn new(
         screen_points: Vec<Vec2D>,
         original_vertices: Vec<Vec3D>,
-        z_index: f64,
+        z_index: Option<f64>,
         fill_char: ColChar,
     ) -> Self {
         Self {

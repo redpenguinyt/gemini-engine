@@ -87,11 +87,11 @@ impl Viewport {
                 }
 
                 let mean_z = match sort_faces {
-                    true => {
+                    true => Some(
                         face.index_into(&vertex_depths).into_iter().sum::<f64>()
-                            / face_vertices.len() as f64
-                    }
-                    false => 0.0,
+                            / face_vertices.len() as f64,
+                    ),
+                    false => None,
                 };
 
                 let original_vertices = face.index_into(&self.transform_vertices(object));
@@ -106,7 +106,7 @@ impl Viewport {
         }
 
         if sort_faces {
-            screen_faces.sort_by_key(|f| (f.z_index * -100.0).round() as i64);
+            screen_faces.sort_by_key(|face| (face.z_index.unwrap_or(0.0) * -1000.0).round() as i64);
         }
 
         screen_faces
