@@ -49,6 +49,15 @@ impl Transform3D {
         }
     }
 
+    /// Create a Transform3D with chosen rotation
+    pub const fn new_r(rotation: Vec3D) -> Self {
+        Self {
+            translation: Vec3D::ZERO,
+            rotation,
+            scale: Vec3D::ONE,
+        }
+    }
+
     /// Rotate the [`Vec3D`] on one axis
     fn rotate_one_axis(translation: Vec3D, axis: SpatialAxis, single_rotation: f64) -> Vec3D {
         let mut translation = translation;
