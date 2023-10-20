@@ -10,7 +10,7 @@ mod light;
 mod transform3d;
 mod vec3d;
 pub use display_mode::DisplayMode;
-pub use face::Face;
+pub use face::{IndexFace as Face, ProjectedFace};
 pub use light::{Light, LightType};
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
@@ -72,13 +72,13 @@ impl Viewport {
         objects: Vec<&dyn ViewElement3D>,
         sort_faces: bool,
         backface_culling: bool,
-    ) -> Vec<(Vec<Vec2D>, ColChar, Vec3D)> {
+    ) -> Vec<ProjectedFace> {
         let mut screen_faces = vec![];
 
         for object in objects {
             let (screen_coordinates, vertex_depths) = self.get_vertices_on_screen(object);
 
-            for face in object.get_faces().iter() {
+            for face in object.get_faces() {
                 let face_vertices = face.index_into(&screen_coordinates);
 
                 // Backface culling
@@ -87,35 +87,29 @@ impl Viewport {
                 }
 
                 let mean_z = match sort_faces {
-                    true => Some(
+                    true => {
                         face.index_into(&vertex_depths).into_iter().sum::<f64>()
-                            / face_vertices.len() as f64,
-                    ),
-                    false => None,
+                            / face_vertices.len() as f64
+                    }
+                    false => 0.0,
                 };
 
-                let normal = if face_vertices.len() >= 3 {
-                    let actual_vertices =
-                    face.index_into(&self.transform_vertices(object));
-                    let v0 = actual_vertices[0] - actual_vertices[2];
-                    let v1 = actual_vertices[1] - actual_vertices[2];
-                    v0.cross(v1).normal()
-                } else {
-                    Vec3D::ZERO
-                };
+                let original_vertices = face.index_into(&self.transform_vertices(object));
 
-                screen_faces.push((face_vertices, normal, face.fill_char, mean_z));
+                screen_faces.push(ProjectedFace::new(
+                    face_vertices,
+                    original_vertices,
+                    mean_z,
+                    face.fill_char,
+                ));
             }
         }
 
         if sort_faces {
-            screen_faces.sort_by_key(|k| (k.3.unwrap() * -100.0).round() as i64);
+            screen_faces.sort_by_key(|f| (f.z_index * -100.0).round() as i64);
         }
 
         screen_faces
-            .into_iter()
-            .map(|(vs, normal, c, _)| (vs, c, normal))
-            .collect()
     }
 
     /// Render the objects (implementing [`ViewElement3D`]) given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
@@ -147,21 +141,21 @@ impl Viewport {
             DisplayMode::Wireframe { backface_culling } => {
                 let screen_faces = self.project_faces(objects, false, backface_culling);
 
-                for (face_vertices, fill_char, _) in screen_faces {
-                    for fi in 0..face_vertices.len() {
+                for face in screen_faces {
+                    for fi in 0..face.screen_points.len() {
                         let (i0, i1) = (
-                            face_vertices[fi],
-                            face_vertices[(fi + 1) % face_vertices.len()],
+                            face.screen_points[fi],
+                            face.screen_points[(fi + 1) % face.screen_points.len()],
                         );
-                        canvas.append_points(Line::draw(i0, i1), fill_char);
+                        canvas.append_points(Line::draw(i0, i1), face.fill_char);
                     }
                 }
             }
             DisplayMode::Solid => {
                 let screen_faces = self.project_faces(objects, true, true);
 
-                for (face_vertices, fill_char, _) in screen_faces {
-                    canvas.append_points(Polygon::draw(&face_vertices), fill_char)
+                for face in screen_faces {
+                    canvas.append_points(Polygon::draw(&face.screen_points), face.fill_char)
                 }
             }
             DisplayMode::Illuminated { lights } => {
@@ -169,21 +163,24 @@ impl Viewport {
 
                 let brightness_chars: Vec<char> = ".,-~:;=!*#$@".chars().collect();
 
-                for (face_vertices, fill_char, normal) in screen_faces {
-                    let intensity: f64 = lights
-                        .iter()
-                        .map(|light| light.calculate_intensity(normal))
-                        .sum();
+                for face in screen_faces {
+                    let fill_char = if let Some(normal) = face.get_normal() {
+                        let intensity: f64 = lights
+                            .iter()
+                            .map(|light| light.calculate_intensity(normal))
+                            .sum();
 
-                    let intensity_char = brightness_chars[
-                        ((intensity * brightness_chars.len() as f64)
-                            .round() as usize).clamp(0, brightness_chars.len() - 1)
-                    ];
+                        let intensity_char =
+                            brightness_chars[((intensity * brightness_chars.len() as f64).round()
+                                as usize)
+                                .clamp(0, brightness_chars.len() - 1)];
 
-                    canvas.append_points(
-                        Polygon::draw(&face_vertices),
-                        ColChar::new(intensity_char, fill_char.modifier),
-                    );
+                        ColChar::new(intensity_char, face.fill_char.modifier)
+                    } else {
+                        face.fill_char
+                    };
+
+                    canvas.append_points(Polygon::draw(&face.screen_points), fill_char);
                 }
             }
         }
