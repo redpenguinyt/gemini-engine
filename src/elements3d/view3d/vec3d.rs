@@ -34,6 +34,14 @@ impl Vec3D {
     pub fn magnitude(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
+
+    pub fn cross(&self, other: Vec3D) -> Vec3D {
+        Vec3D::new(
+            self.y * other.z - self.z * other.y,
+            self.z * other.x - self.x * other.z,
+            self.x * other.y - self.y * other.x,
+        )
+    }
 }
 
 impl Display for Vec3D {
