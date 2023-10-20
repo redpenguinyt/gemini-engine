@@ -1,5 +1,7 @@
 use crate::elements::view::ColChar;
 
+use super::Light;
+
 /// `DisplayMode` determines how the [`Viewport`](super::Viewport) renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
 pub enum DisplayMode {
     /// `DisplayMode::Debug` does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
@@ -13,4 +15,6 @@ pub enum DisplayMode {
     Wireframe { backface_culling: bool },
     /// `DisplayMode::Solid` renders the full faces of all the meshes. This is normally the final render
     Solid,
+    /// `DisplayMode::Illuminated` will replace your faces' `text_char`s with a character of different size to emulate light, based on a given list of [`Light`]s
+    Illuminated { lights: Vec<Light> }
 }

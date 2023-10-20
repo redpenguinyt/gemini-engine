@@ -115,7 +115,7 @@
 //! This part of the code renders all the 3d stuff to the [`View`](crate::elements::view::View) and blits it to the view before rendering as usual. [`Viewport.render()`](Viewport) takes a list of all the objects we want to render and a [`DisplayMode`] enum (more info in the [`DisplayMode`] documentation).
 
 pub mod view3d;
-pub use view3d::{DisplayMode, Face, Transform3D, Vec3D, ViewElement3D, Viewport};
+pub use view3d::{DisplayMode, Face, Transform3D, Vec3D, ViewElement3D, Viewport, Light};
 mod mesh3d;
 pub use mesh3d::Mesh3D;
 mod grid;

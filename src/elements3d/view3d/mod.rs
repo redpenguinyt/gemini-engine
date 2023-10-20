@@ -6,10 +6,12 @@ use crate::elements::{
 };
 mod display_mode;
 mod face;
+mod light;
 mod transform3d;
 mod vec3d;
 pub use display_mode::DisplayMode;
 pub use face::Face;
+pub use light::{Light, LightType};
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
 
@@ -64,13 +66,13 @@ impl Viewport {
             .unzip()
     }
 
-    /// Project the faces onto a 2D plane. Returns a collection of faces, each stored as a list of the points it appears at and the [`ColChar`] assigned to it
+    /// Project the faces onto a 2D plane. Returns a collection of faces, each stored as a list of the points it appears at, the normal of the face and the [`ColChar`] assigned to it
     pub fn project_faces(
         &self,
         objects: Vec<&dyn ViewElement3D>,
         sort_faces: bool,
         backface_culling: bool,
-    ) -> Vec<(Vec<Vec2D>, ColChar)> {
+    ) -> Vec<(Vec<Vec2D>, ColChar, Vec3D)> {
         let mut screen_faces = vec![];
 
         for object in objects {
@@ -92,15 +94,28 @@ impl Viewport {
                     false => None,
                 };
 
-                screen_faces.push((face_vertices, face.fill_char, mean_z));
+                let normal = if face_vertices.len() >= 3 {
+                    let actual_vertices =
+                    face.index_into(&self.transform_vertices(object));
+                    let v0 = actual_vertices[0] - actual_vertices[2];
+                    let v1 = actual_vertices[1] - actual_vertices[2];
+                    v0.cross(v1).normal()
+                } else {
+                    Vec3D::ZERO
+                };
+
+                screen_faces.push((face_vertices, normal, face.fill_char, mean_z));
             }
         }
 
         if sort_faces {
-            screen_faces.sort_by_key(|k| (k.2.unwrap() * -100.0).round() as i64);
+            screen_faces.sort_by_key(|k| (k.3.unwrap() * -100.0).round() as i64);
         }
 
-        screen_faces.into_iter().map(|(vs, c, _)| (vs, c)).collect()
+        screen_faces
+            .into_iter()
+            .map(|(vs, normal, c, _)| (vs, c, normal))
+            .collect()
     }
 
     /// Render the objects (implementing [`ViewElement3D`]) given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
@@ -132,7 +147,7 @@ impl Viewport {
             DisplayMode::Wireframe { backface_culling } => {
                 let screen_faces = self.project_faces(objects, false, backface_culling);
 
-                for (face_vertices, fill_char) in screen_faces {
+                for (face_vertices, fill_char, _) in screen_faces {
                     for fi in 0..face_vertices.len() {
                         let (i0, i1) = (
                             face_vertices[fi],
@@ -145,8 +160,30 @@ impl Viewport {
             DisplayMode::Solid => {
                 let screen_faces = self.project_faces(objects, true, true);
 
-                for (face_vertices, fill_char) in screen_faces {
+                for (face_vertices, fill_char, _) in screen_faces {
                     canvas.append_points(Polygon::draw(&face_vertices), fill_char)
+                }
+            }
+            DisplayMode::Illuminated { lights } => {
+                let screen_faces = self.project_faces(objects, true, true);
+
+                let brightness_chars: Vec<char> = ".,-~:;=!*#$@".chars().collect();
+
+                for (face_vertices, fill_char, normal) in screen_faces {
+                    let intensity: f64 = lights
+                        .iter()
+                        .map(|light| light.calculate_intensity(normal))
+                        .sum();
+
+                    let intensity_char = brightness_chars[
+                        ((intensity * brightness_chars.len() as f64)
+                            .round() as usize).clamp(0, brightness_chars.len() - 1)
+                    ];
+
+                    canvas.append_points(
+                        Polygon::draw(&face_vertices),
+                        ColChar::new(intensity_char, fill_char.modifier),
+                    );
                 }
             }
         }
