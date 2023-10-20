@@ -32,6 +32,50 @@ impl Mesh3D {
         )
     }
 
+    pub fn torus(
+        outer_radius: f64,
+        inner_radius: f64,
+        outer_segments: usize,
+        inner_segments: usize,
+    ) -> Self {
+        let mut vertices = vec![];
+        let mut faces = vec![];
+
+        for outer_i in 0..outer_segments {
+            let outer_angle = (outer_i as f64 / outer_segments as f64) * 2.0 * PI;
+            let outer_transform = Transform3D::new_r(Vec3D::new(0.0, outer_angle, 0.0));
+            let outer_point = Vec3D::new(
+                outer_angle.cos() * outer_radius,
+                0.0,
+                outer_angle.sin() * outer_radius,
+            );
+
+            for inner_i in 0..inner_segments {
+                let inner_angle = (inner_i as f64 / inner_segments as f64) * 2.0 * PI;
+                let inner_point = Vec3D::new(
+                    inner_angle.cos() * inner_radius,
+                    inner_angle.sin() * inner_radius,
+                    0.0,
+                );
+                vertices.push(outer_point + outer_transform.rotate(inner_point));
+
+                let inc_outer_i = (outer_i + 1) % outer_segments;
+                let inc_inner_i = (inner_i + 1) % inner_segments;
+                faces.push(Face::new(
+                    vec![
+                        inc_outer_i * inner_segments + inner_i,
+                        inc_outer_i * inner_segments + inc_inner_i,
+                        outer_i * inner_segments + inc_inner_i,
+                        outer_i * inner_segments + inner_i,
+                    ],
+                    ColChar::SOLID,
+                ));
+            }
+        }
+
+        Mesh3D::new_at_origin(vertices, faces)
+    }
+
     /// A gimbal to help you orient in gemini_engine's 3D space. The orientation is as follows (from the default [`Viewport`](super::Viewport))
     /// - X (red) increases as you move to the right
     /// - Y (green) increases as you move up
