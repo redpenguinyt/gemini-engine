@@ -1,4 +1,4 @@
-//! Gemini's implementation of 3D rendering. Experimental
+//! Gemini's implementation of 3D rendering. Capable of rendering full 3D meshes as wireframes, solid colours or with lighting
 //!
 //! ## A Simple 3D Scene
 //! Let's write a simple example program to print a spinning cube:
