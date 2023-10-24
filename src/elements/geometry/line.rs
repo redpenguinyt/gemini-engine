@@ -31,8 +31,8 @@ impl Line {
         let mut error = dx + dy;
 
         loop {
-            let pixel = Vec2D::new(x, y);
-            points.push(pixel);
+            let point = Vec2D::new(x, y);
+            points.push(point);
             let e2 = error * 2;
             if e2 >= dy {
                 if x == x1 {

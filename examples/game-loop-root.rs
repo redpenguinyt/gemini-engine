@@ -10,14 +10,14 @@ const FPS: f32 = 30.0;
 
 struct Game {
     view: View,
-    point: Pixel,
+    pixel: Pixel,
 }
 
 impl Game {
     fn new() -> Game {
         Game {
             view: View::new(40, 8, ColChar::BACKGROUND),
-            point: Pixel::new(Vec2D { x: 10, y: 5 }, ColChar::SOLID),
+            pixel: Pixel::new(Vec2D { x: 10, y: 5 }, ColChar::SOLID),
         }
     }
 }
@@ -25,11 +25,11 @@ impl Game {
 impl MainLoopRoot for Game {
     type InputDataType = bool; // dummy type, since it isn't used in this project
     fn frame(&mut self, _input_data: Option<Self::InputDataType>) {
-        self.point.pos.x += 1;
+        self.pixel.pos.x += 1;
     }
     fn render_frame(&mut self) {
         self.view.clear();
-        self.view.blit(&self.point, Wrapping::Wrap);
+        self.view.blit(&self.pixel, Wrapping::Wrap);
         self.view.display_render().unwrap();
     }
 }

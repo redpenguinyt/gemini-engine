@@ -78,7 +78,7 @@
 //! 2. [`Viewport`] to handle converting 3d objects to 2d images, as well as acting like the scene's camera
 //! 3. The actual objects you intend to use in the scene, all of which should implement the [`ViewElement3D`] trait
 //!
-//! In this scenario, we create a [`View`](crate::elements::view::View) of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a [`Viewport`] with a transform of rotation 0.5 radians and translation 5 units away from the centre, our desired FOV and origin point (the centre of t) in the middle of the [`View`](crate::elements::view::View) and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
+//! In this scenario, we create a [`View`](crate::elements::view::View) of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a [`Viewport`] with a transform of rotation 0.5 radians and translation 5 units away from the centre, our desired FOV and origin point (the centre of the view we're printing to) in the middle of the [`View`](crate::elements::view::View) and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
 //!
 //! ### Gameloop process logic
 //! ```rust,no_run

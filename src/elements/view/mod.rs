@@ -19,9 +19,9 @@ pub use wrapping::Wrapping;
 /// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Pixel, Vec2D};
 ///
 /// let mut view = View::new(9, 3, ColChar::BACKGROUND);
-/// let point = Pixel::new(Vec2D::new(4,1), ColChar::SOLID);
+/// let pixel = Pixel::new(Vec2D::new(4,1), ColChar::SOLID);
 ///
-/// view.blit(&point, Wrapping::Panic);
+/// view.blit(&pixel, Wrapping::Panic);
 ///
 /// view.display_render().unwrap();
 /// ```
@@ -77,17 +77,17 @@ impl View {
 
     /// Blit a struct implementing [`ViewElement`] to the `View`
     pub fn blit(&mut self, element: &impl ViewElement, wrapping: Wrapping) {
-        for point in element.active_pixels() {
-            self.plot(point.pos, point.fill_char, wrapping);
+        for pixel in element.active_pixels() {
+            self.plot(pixel.pos, pixel.fill_char, wrapping);
         }
     }
 
     /// Blit a struct implementing [`ViewElement`] to the `View` with a doubled width. Blitting a `Pixel` at `Vec2D(5,3)`, for example, will result in a blit at `Vec2D(10,3)` and `Vec2D(11,3)` being plotted to. Useful when you want to work with more square pixels, as single text characters are much taller than they are wide
     pub fn blit_double_width(&mut self, element: &impl ViewElement, wrapping: Wrapping) {
-        for point in element.active_pixels() {
-            let pos = point.pos * Vec2D::new(2, 1);
-            self.plot(pos, point.fill_char, wrapping);
-            self.plot(pos + Vec2D::new(1, 0), point.fill_char, wrapping);
+        for pixel in element.active_pixels() {
+            let pos = pixel.pos * Vec2D::new(2, 1);
+            self.plot(pos, pixel.fill_char, wrapping);
+            self.plot(pos + Vec2D::new(1, 0), pixel.fill_char, wrapping);
         }
     }
 

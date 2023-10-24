@@ -13,7 +13,7 @@ fn main() {
     let mut view = View::new(60, 10, BACKGROUND_CHAR);
     view.coord_numbers_in_render = true;
 
-    let mut point = Pixel::new(Vec2D::from((5u8, 9u8)), FILL_CHAR);
+    let mut pixel = Pixel::new(Vec2D::from((5u8, 9u8)), FILL_CHAR);
 
     let mut line = Line::new(Vec2D::new(2, 8), Vec2D::new(28, 7), FILL_CHAR);
     let mut line1_direction = -1;
@@ -39,9 +39,9 @@ fn main() {
     let mut render_elapsed = Duration::default();
     fps_gameloop!(
         {
-            point.pos.x += 2;
-            // loop the position back to the other side. This can be done with `Wrapping::Wrap` but it won't change the element's actual position, so the point position being printed would continue to increase without looping
-            point.pos %= view.size();
+            pixel.pos.x += 2;
+            // loop the position back to the other side. This can be done with `Wrapping::Wrap` but it won't change the element's actual position, so the pixel position being printed would continue to increase without looping
+            pixel.pos %= view.size();
 
             line.pos1.y += line1_direction;
             line.pos0.y = 10 - line.pos1.y;
@@ -57,7 +57,7 @@ fn main() {
             view.clear();
 
             let now = Instant::now();
-            view.blit(&point, Wrapping::Panic);
+            view.blit(&pixel, Wrapping::Panic);
             view.blit(&line, Wrapping::Panic);
             view.blit(&rect, Wrapping::Panic);
             view.blit(&sprite, Wrapping::Wrap);
@@ -75,7 +75,7 @@ fn main() {
                 render_elapsed.as_micros(),
                 total_elapsed.as_micros()
             );
-            println!("Pixel position: {}", point.pos);
+            println!("Pixel position: {}", pixel.pos);
         }
     );
 }

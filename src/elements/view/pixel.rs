@@ -13,7 +13,7 @@ pub struct Pixel {
 }
 
 impl Pixel {
-    /// Create a new Point from a [`Vec2D`] and [`ColChar`]
+    /// Create a new `Pixel` from a [`Vec2D`] and [`ColChar`]
     pub const fn new(pos: Vec2D, fill_char: ColChar) -> Self {
         Self { pos, fill_char }
     }
