@@ -66,6 +66,7 @@ impl ColChar {
 
     /// Return a ColChar with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from RGB values
     pub fn with_rgb(&self, r: u8, g: u8, b: u8) -> Self {
+        // TODO: consume self instead of taking references
         Self {
             text_char: self.text_char,
             modifier: Modifier::from_rgb(r, g, b),
