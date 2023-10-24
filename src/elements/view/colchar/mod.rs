@@ -49,7 +49,7 @@ impl ColChar {
     }
 
     /// Return a ColChar with the same `modifier` and new `text_char`
-    pub fn with_char(&self, text_char: char) -> Self {
+    pub fn with_char(self, text_char: char) -> Self {
         Self {
             text_char,
             modifier: self.modifier,
@@ -57,7 +57,7 @@ impl ColChar {
     }
 
     /// Return a ColChar with the same `text_char` and new `modifier`
-    pub fn with_mod(&self, modifier: Modifier) -> Self {
+    pub fn with_mod(self, modifier: Modifier) -> Self {
         Self {
             text_char: self.text_char,
             modifier,
@@ -65,7 +65,7 @@ impl ColChar {
     }
 
     /// Return a ColChar with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from RGB values
-    pub fn with_rgb(&self, r: u8, g: u8, b: u8) -> Self {
+    pub fn with_rgb(self, r: u8, g: u8, b: u8) -> Self {
         // TODO: consume self instead of taking references
         Self {
             text_char: self.text_char,
@@ -74,7 +74,7 @@ impl ColChar {
     }
 
     /// Return a ColChar with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from HSV values
-    pub fn with_hsv(&self, h: u8, s: u8, v: u8) -> Self {
+    pub fn with_hsv(self, h: u8, s: u8, v: u8) -> Self {
         Self {
             text_char: self.text_char,
             modifier: Modifier::from_hsv(h, s, v),
@@ -82,7 +82,7 @@ impl ColChar {
     }
 
     /// Return a ColChar with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from an HSV value
-    pub fn with_colour(&self, colour: Colour) -> Self {
+    pub fn with_colour(self, colour: Colour) -> Self {
         Self {
             text_char: self.text_char,
             modifier: Modifier::Colour(colour),

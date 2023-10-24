@@ -48,7 +48,7 @@ impl<'a> Text<'a> {
     ///
     /// # Panics
     /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite]
-    pub fn new_with_align(pos: Vec2D, content: &str, align: TextAlign, modifier: Modifier) -> Text {
+    pub fn with_align(pos: Vec2D, content: &str, align: TextAlign, modifier: Modifier) -> Text {
         let mut tmp = Text::new(pos, content, modifier);
         tmp.align = align;
 
