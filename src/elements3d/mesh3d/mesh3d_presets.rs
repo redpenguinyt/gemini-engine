@@ -76,13 +76,13 @@ impl Mesh3D {
         Mesh3D::new_at_origin(vertices, faces)
     }
 
-    /// A gimbal to help you orient in gemini_engine's 3D space. The orientation is as follows (from the default [`Viewport`](super::Viewport))
+    /// A gimbal to help you orient in gemini_engine's 3D space. The orientation is as follows (from the default [`Viewport`](super::super::Viewport))
     /// - X (red) increases as you move to the right
     /// - Y (green) increases as you move up
     /// - Z (blue) increases as you move away from the viewport
     ///
     /// Think of it like Blender's axes but with Y and Z swapped.
-    /// This Mesh does not render in `DisplayMode::SOLID` (see [`DisplayMode`](super::DisplayMode) documentation)
+    /// This Mesh does not render in `DisplayMode::SOLID` (see [`DisplayMode`](super::super::DisplayMode) documentation)
     pub fn gimbal() -> Self {
         Self::new_at_origin(
             vec![
