@@ -35,18 +35,17 @@ impl Light {
         }
     }
 
-	pub fn calculate_intensity(&self, normal: Vec3D) -> f64 {
-		match self.light_type {
-			LightType::Ambient => self.intensity,
-			LightType::Directional { direction } => {
-				let n_dot_l = normal.dot(direction);
-				if n_dot_l > 0.0 {
-					self.intensity * n_dot_l
-						/ (normal.magnitude() * direction.magnitude())
-				} else {
-					0.0
-				}
-			}
-		}
-	}
+    pub fn calculate_intensity(&self, normal: Vec3D) -> f64 {
+        match self.light_type {
+            LightType::Ambient => self.intensity,
+            LightType::Directional { direction } => {
+                let n_dot_l = normal.dot(direction);
+                if n_dot_l > 0.0 {
+                    self.intensity * n_dot_l / (normal.magnitude() * direction.magnitude())
+                } else {
+                    0.0
+                }
+            }
+        }
+    }
 }

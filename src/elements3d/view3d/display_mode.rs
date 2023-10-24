@@ -16,5 +16,5 @@ pub enum DisplayMode {
     /// `DisplayMode::Solid` renders the full faces of all the meshes. This is normally the final render
     Solid,
     /// `DisplayMode::Illuminated` will replace your faces' `text_char`s with a character of different size to emulate light, based on a given list of [`Light`]s
-    Illuminated { lights: Vec<Light> }
+    Illuminated { lights: Vec<Light> },
 }

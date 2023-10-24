@@ -28,8 +28,11 @@
 //! You can use the `fps_gameloop!` macro to achieve the same result. Read about how to use it in the [`fps_gameloop!`](crate::fps_gameloop) documentation
 
 pub use std::time::{Duration, Instant};
+
 mod sleep_fps;
-pub mod with_root;
 pub use sleep_fps::sleep_fps;
+
+pub mod with_root;
 pub use with_root::MainLoopRoot;
+
 mod macros;
