@@ -2,6 +2,17 @@
 
 use super::view::{ColChar, Modifier, Pixel, Vec2D, ViewElement};
 
+/// Remove all leading newlines from the string
+pub fn remove_leading_newlines(texture: &str) -> String {
+    let mut texture: Vec<char> = texture.chars().rev().collect();
+
+    while *texture.last().expect("Texture consists of only newlines") == '\n' {
+        texture.pop();
+    }
+
+    texture.iter().rev().collect()
+}
+
 /// An enum to set the alignment of a Text element's content
 #[derive(Debug, Clone, Copy)]
 pub enum TextAlign {
@@ -110,15 +121,9 @@ pub struct Sprite {
 impl Sprite {
     /// Create a new `Sprite` struct. All newlines at the beginning of the texture will be removed
     pub fn new(pos: Vec2D, texture: &str, modifier: Modifier) -> Self {
-        let mut texture: Vec<char> = texture.chars().rev().collect();
-
-        while *texture.last().expect("Texture consists of only newlines") == '\n' {
-            texture.pop();
-        }
-
         Self {
             pos,
-            texture: texture.iter().rev().collect(),
+            texture: remove_leading_newlines(texture),
             modifier,
         }
     }
@@ -128,11 +133,7 @@ impl Sprite {
 
         let lines = texture.split('\n');
         for (y, line) in lines.enumerate() {
-            pixels.extend(Text::draw(
-                pos + Vec2D::new(0, y as isize),
-                line,
-                modifier,
-            ));
+            pixels.extend(Text::draw(pos + Vec2D::new(0, y as isize), line, modifier));
         }
 
         pixels
