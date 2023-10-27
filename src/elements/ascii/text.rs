@@ -14,7 +14,7 @@ pub struct Text<'a> {
     pub content: &'a str,
     /// How the content should align to the position
     pub align: TextAlign,
-    /// A raw [`Modifier`], determining the appearance of the `Sprite`
+    /// A raw [`Modifier`], determining the appearance of the `Text`
     pub modifier: Modifier,
 }
 
@@ -22,7 +22,7 @@ impl<'a> Text<'a> {
     /// Create a new Text element with a position, content and modifier
     ///
     /// # Panics
-    /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite]
+    /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite](super::Sprite)
     pub fn new(pos: Vec2D, content: &str, modifier: Modifier) -> Text {
         if content.contains('\n') {
             panic!("Text was created with a content string containing a \n character")
@@ -39,7 +39,7 @@ impl<'a> Text<'a> {
     /// Create a `Text` element with an [`align`](Text::align) parameter to set the `Text`'s align (see the [TextAlign] documentation)
     ///
     /// # Panics
-    /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite]
+    /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite](super::Sprite)
     pub fn with_align(pos: Vec2D, content: &str, align: TextAlign, modifier: Modifier) -> Text {
         let mut tmp = Text::new(pos, content, modifier);
         tmp.align = align;
