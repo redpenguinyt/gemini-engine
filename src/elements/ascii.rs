@@ -122,21 +122,25 @@ impl Sprite {
             modifier,
         }
     }
-}
 
-impl ViewElement for Sprite {
-    fn active_pixels(&self) -> Vec<Pixel> {
+    pub fn draw(pos: Vec2D, texture: &str, modifier: Modifier) -> Vec<Pixel> {
         let mut pixels = vec![];
 
-        let lines = self.texture.split('\n');
+        let lines = texture.split('\n');
         for (y, line) in lines.enumerate() {
             pixels.extend(Text::draw(
-                self.pos + Vec2D::new(0, y as isize),
+                pos + Vec2D::new(0, y as isize),
                 line,
-                self.modifier,
+                modifier,
             ));
         }
 
         pixels
+    }
+}
+
+impl ViewElement for Sprite {
+    fn active_pixels(&self) -> Vec<Pixel> {
+        Self::draw(self.pos, &self.texture, self.modifier)
     }
 }
