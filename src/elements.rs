@@ -23,7 +23,7 @@
 //! There you have it! You've written your first program with Gemini! As of me writing this now it's still very much a work in progress, so any feedback or issue requests would be appreciated :)
 
 pub mod ascii;
-pub use ascii::{Sprite, Text};
+pub use ascii::{AnimatedSprite, Sprite, Text};
 
 pub mod containers;
 pub use containers::PixelContainer;
