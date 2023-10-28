@@ -4,7 +4,7 @@ use std::{
 };
 
 /// A pair of `isize` used for coordinates, size or direction on a 2D plane
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd)]
 pub struct Vec2D {
     /// X-coordinate
     pub x: isize,
