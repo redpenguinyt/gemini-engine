@@ -45,7 +45,7 @@ impl<'a> Text<'a> {
         tmp.align = align;
 
         tmp
-    }
+    } // TODO: make this a modifier, not a new func
 
     /// Return a vector of Pixels to display the given content
     pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Pixel> {
@@ -80,6 +80,6 @@ impl<'a> Text<'a> {
 
 impl ViewElement for Text<'_> {
     fn active_pixels(&self) -> Vec<Pixel> {
-        Text::draw(self.pos, self.content, self.modifier)
+        Text::draw_with_align(self.pos, self.content, self.align, self.modifier)
     }
 }
