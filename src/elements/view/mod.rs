@@ -58,22 +58,24 @@ impl View {
         view
     }
 
+    /// Return the `View` with its [`coord_numbers_in_render`](View::coord_numbers_in_render) field set to the chosen value. Consumes the original `View`
     pub fn with_coord_numbers(mut self, coord_numbers_in_render: bool) -> View {
         self.coord_numbers_in_render = coord_numbers_in_render;
         self
     }
 
+    /// Return the `View` with its [`block_until_resized`](View::block_until_resized) field set to the chosen value. Consumes the original `View`
     pub fn with_block_until_resized(mut self, block_until_resized: bool) -> View {
         self.block_until_resized = block_until_resized;
         self
     }
 
-    /// Return the size of the `View` as a [`Vec2D`]
+    /// Return the width and height of the `View` as a [`Vec2D`]
     pub fn size(&self) -> Vec2D {
         Vec2D::new(self.width as isize, self.height as isize)
     }
 
-    /// Return a [`Vec2D`] representing the centre of the `View`
+    /// Return [`Vec2D`] coordinates of the centre of the `View`
     pub fn center(&self) -> Vec2D {
         self.size() / 2
     }

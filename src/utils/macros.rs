@@ -1,4 +1,4 @@
-//! Macros for near-identical implementations in Vec2D and Vec3D
+/// Macros for near-identical implementations in Vec2D and Vec3D
 
 /// Ignore all parameters after the first and just return the first
 macro_rules! ignore_rest {
