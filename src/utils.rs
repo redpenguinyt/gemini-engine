@@ -1,5 +1,5 @@
-use std::{fmt, io, sync::OnceLock};
 use crate::elements::Vec2D;
+use std::{fmt, io, sync::OnceLock};
 
 #[macro_use]
 pub mod macros;
