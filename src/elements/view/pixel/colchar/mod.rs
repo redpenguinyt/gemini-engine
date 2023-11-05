@@ -90,7 +90,7 @@ impl ColChar {
     }
 
     /// Return the displayed ColChar, omitting the `Modifier`s where necessary
-    pub(super) fn display_with_prev_and_next(
+    pub(crate) fn display_with_prev_and_next(
         self,
         f: &mut fmt::Formatter,
         prev_mod: Option<Modifier>,

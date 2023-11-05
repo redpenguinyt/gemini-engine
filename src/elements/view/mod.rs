@@ -1,27 +1,29 @@
 //! This module is home to the [`View`] struct, which handles the printing of pixels to an ANSI standard text output
-
+use crate::utils as crate_utils;
 use std::{
-    fmt::{self, Display},
+    fmt::{self, Display, Formatter},
     io::{self, Write},
 };
-mod colchar;
+
 mod pixel;
 pub mod utils;
-mod vec2d;
+mod view_element;
 mod wrapping;
-pub use colchar::{ColChar, Colour, Modifier};
-pub use pixel::{Pixel, Point};
-pub use vec2d::Vec2D;
-pub use wrapping::Wrapping;
 
-use crate::utils as crate_utils;
+pub use pixel::{
+    colchar::{ColChar, Colour, Modifier},
+    vec2d::Vec2D,
+    Pixel, Point,
+};
+pub use view_element::ViewElement;
+pub use wrapping::Wrapping;
 
 /// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Pixel in the middle
 /// ```
 /// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Pixel, Vec2D};
 ///
 /// let mut view = View::new(9, 3, ColChar::BACKGROUND);
-/// let pixel = Pixel::new(Vec2D::new(4,1), ColChar::SOLID);
+/// let pixel = Pixel::new(view.center(), ColChar::SOLID);
 ///
 /// view.blit(&pixel, Wrapping::Panic);
 ///
@@ -115,16 +117,7 @@ impl View {
         let mut stdout = io::stdout().lock();
         if self.block_until_resized {
             let view_size = self.size();
-            if let Some(size) = crate_utils::get_termsize_as_vec2d() {
-                if size < view_size {
-                    println!("Please resize your console window to fit the render\r");
-                    loop {
-                        if crate_utils::get_termsize_as_vec2d().unwrap_or_else(|| unreachable!()) > view_size {
-                            break;
-                        }
-                    }
-                }
-            }
+            crate_utils::block_until_resized(view_size);
         }
 
         write!(stdout, "{self}")
@@ -132,7 +125,7 @@ impl View {
 }
 
 impl Display for View {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let _ = crate::utils::prepare_terminal(f);
         f.write_str("\x1b[H\x1b[J")?;
         if self.coord_numbers_in_render {
@@ -166,10 +159,4 @@ impl Display for View {
 
         Ok(())
     }
-}
-
-/// `ViewElement` is a trait that must be implemented by any element that can be blitted to a [`View`]
-pub trait ViewElement {
-    /// Return a vector of every coordinate where a pixel should be placed and its respective [`ColChar`]. If your whole object is a solid colour, consider using [`utils::points_to_pixels()`] which will add the same [`ColChar`] to every point and can then be used as this function's output
-    fn active_pixels(&self) -> Vec<Pixel>;
 }

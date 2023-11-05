@@ -1,4 +1,10 @@
-use super::{ColChar, Vec2D, ViewElement};
+use super::ViewElement;
+
+pub mod colchar;
+pub mod vec2d;
+
+use colchar::ColChar;
+use vec2d::Vec2D;
 
 #[deprecated = "Renamed to Pixel, please use that instead"]
 pub type Point = Pixel;
