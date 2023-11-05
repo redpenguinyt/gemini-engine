@@ -14,6 +14,8 @@ pub use pixel::{Pixel, Point};
 pub use vec2d::Vec2D;
 pub use wrapping::Wrapping;
 
+use crate::utils as crate_utils;
+
 /// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Pixel in the middle
 /// ```
 /// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Pixel, Vec2D};
@@ -35,6 +37,8 @@ pub struct View {
     pub background_char: ColChar,
     /// A boolean determining whether the render should contain numbers on the top and left signifying the corresponding pixels' X/Y value values
     pub coord_numbers_in_render: bool,
+    /// If true, [`View.display_render`] will block until the console window is resized to fit the `View`
+    pub block_until_resized: bool,
     pixels: Vec<ColChar>,
 }
 
@@ -46,11 +50,22 @@ impl View {
             height,
             background_char,
             coord_numbers_in_render: false,
+            block_until_resized: false,
             pixels: Vec::with_capacity(width * height),
         };
         view.clear();
 
         view
+    }
+
+    pub fn with_coord_numbers(mut self, coord_numbers_in_render: bool) -> View {
+        self.coord_numbers_in_render = coord_numbers_in_render;
+        self
+    }
+
+    pub fn with_block_until_resized(mut self, block_until_resized: bool) -> View {
+        self.block_until_resized = block_until_resized;
+        self
     }
 
     /// Return the size of the `View` as a [`Vec2D`]
@@ -93,9 +108,23 @@ impl View {
 
     /// Display the `View`. `View` implements the `Display` trait and so can be rendered in many ways (such as `println!("{view}");`), but this is intended to be the fastest way possible.
     ///
-    /// Returns the `Result` from writing to `io::stdout()`
+    /// Returns the `Result` from writing to `io::stdout().lock()`
     pub fn display_render(&self) -> io::Result<()> {
         let mut stdout = io::stdout().lock();
+        if self.block_until_resized {
+            let view_size = self.size();
+            if let Some(size) = crate_utils::get_termsize_as_vec2d() {
+                if size < view_size {
+                    println!("Please resize your console window to fit the render\r");
+                    loop {
+                        if crate_utils::get_termsize_as_vec2d().unwrap_or_else(|| unreachable!()) > view_size {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         write!(stdout, "{self}")
     }
 }

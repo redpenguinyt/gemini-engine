@@ -1,8 +1,15 @@
 use std::{fmt, io, sync::OnceLock};
+use crate::elements::Vec2D;
+
 #[macro_use]
 pub mod macros;
 
 static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
+
+pub fn get_termsize_as_vec2d() -> Option<Vec2D> {
+    let size = termsize::get()?;
+    Some(Vec2D::new(size.cols as isize, size.rows as isize + 1))
+}
 
 /// Prepare the console by printing lines to move previous console lines out of the way. Can only be called once in a program run
 ///
@@ -15,15 +22,8 @@ pub(crate) fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> io::Result<()> {
                 std::io::ErrorKind::NotFound,
                 "Couldnt get termsize",
             ))?
-            .rows;
-        let rows_us = usize::try_from(rows).expect("u16 couldnt convert to usize");
-        writeln!(
-            f,
-            "{}",
-            vec!['\n'; rows_us].iter().cloned().collect::<String>()
-        )
-        .unwrap();
-        println!("terminal prepared");
+            .rows as usize;
+        write!(f, "{}", vec!['\n'; rows].iter().collect::<String>()).unwrap();
         TERMINAL_PREPARED.get_or_init(|| true);
     }
 
