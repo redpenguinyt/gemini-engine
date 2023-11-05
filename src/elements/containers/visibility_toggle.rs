@@ -1,4 +1,4 @@
-use crate::elements::{view::ViewElement, Pixel};
+use crate::elements::{view::ViewElement, Pixel, Vec2D};
 
 /// `VisibilityToggle` is a container for a [`ViewElement`] with a property `visible`. When blit to the view the contained element will only appear if `visible` is `true`
 #[derive(Debug, Clone)]
@@ -23,6 +23,13 @@ impl<T: ViewElement> ViewElement for VisibilityToggle<T> {
     fn active_pixels(&self) -> Vec<Pixel> {
         match self.visible {
             true => self.element.active_pixels(),
+            false => vec![],
+        }
+    }
+
+    fn active_points(&self) -> Vec<Vec2D> {
+        match self.visible {
+            true => self.element.active_points(),
             false => vec![],
         }
     }

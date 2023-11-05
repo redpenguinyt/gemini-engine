@@ -1,7 +1,4 @@
-use crate::elements::{
-    view::{utils, ViewElement},
-    Pixel, Vec2D,
-};
+use crate::elements::{view::ViewElement, Pixel, Vec2D};
 
 /// Contains references to all added objects. Meant to be used specifically for collision calculations
 #[derive(Clone)]
@@ -24,7 +21,7 @@ impl<'a> CollisionContainer<'a> {
     /// Return a list of all the positions at which the
     pub fn generate_collision_points(&self) -> Vec<Vec2D> {
         // TODO: make this part of `ViewElement` as `active_points`
-        utils::pixels_to_points(self.active_pixels())
+        self.active_points()
     }
 
     /// Returns true if there is an element from the `CollisionContainer` at the given coordinates
@@ -43,8 +40,8 @@ impl<'a> CollisionContainer<'a> {
     pub fn will_overlap_element(&self, element: &impl ViewElement, offset: Vec2D) -> bool {
         let collision_points = self.generate_collision_points();
 
-        for element_pixel in utils::pixels_to_points(element.active_pixels()) {
-            if collision_points.contains(&(element_pixel + offset)) {
+        for element_point in element.active_points() {
+            if collision_points.contains(&(element_point + offset)) {
                 return true;
             }
         }
@@ -64,6 +61,13 @@ impl<'a> ViewElement for CollisionContainer<'a> {
         self.elements
             .iter()
             .flat_map(|e| e.active_pixels())
+            .collect()
+    }
+
+    fn active_points(&self) -> Vec<Vec2D> {
+        self.elements
+            .iter()
+            .flat_map(|e| e.active_points())
             .collect()
     }
 }

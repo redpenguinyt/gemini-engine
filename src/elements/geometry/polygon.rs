@@ -32,6 +32,10 @@ impl Polygon {
 
 impl ViewElement for Polygon {
     fn active_pixels(&self) -> Vec<Pixel> {
-        utils::points_to_pixels(Self::draw(&self.points), self.fill_char)
+        utils::points_to_pixels(self.active_points(), self.fill_char)
+    }
+
+    fn active_points(&self) -> Vec<Vec2D> {
+        Self::draw(&self.points)
     }
 }
