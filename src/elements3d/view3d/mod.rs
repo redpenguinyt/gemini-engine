@@ -62,7 +62,7 @@ impl Viewport {
     pub fn get_vertices_on_screen(&self, object: &dyn ViewElement3D) -> (Vec<Vec2D>, Vec<f64>) {
         self.transform_vertices(object)
             .iter()
-            .map(|vertex| (self.perspective(*vertex), vertex.z))
+            .map(|vertex: &Vec3D| (self.perspective(*vertex), vertex.magnitude()))
             .unzip()
     }
 
