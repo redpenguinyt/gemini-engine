@@ -1,13 +1,13 @@
 use super::Vec3D;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum LightType {
     Ambient,
     // Point { position: Vec3D },
     Directional { direction: Vec3D },
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Light {
     pub light_type: LightType,
     pub intensity: f64,

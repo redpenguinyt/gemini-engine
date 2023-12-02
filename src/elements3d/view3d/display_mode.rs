@@ -3,6 +3,7 @@ use crate::elements::view::ColChar;
 use super::Light;
 
 /// `DisplayMode` determines how the [`Viewport`](super::Viewport) renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
+#[derive(Debug, Clone, PartialEq)]
 pub enum DisplayMode {
     /// `DisplayMode::Debug` does the same thing, but shows the vertices as the indices that represent them (this is useful when you are constructing a mesh)
     Debug,
