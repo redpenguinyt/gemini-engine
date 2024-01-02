@@ -11,7 +11,7 @@ mod transform3d;
 mod vec3d;
 pub use display_mode::DisplayMode;
 pub use face::{IndexFace as Face, ProjectedFace};
-pub use light::{Light, LightType};
+pub use light::{Light, LightType, BRIGHTNESS_CHARS};
 pub use transform3d::Transform3D;
 pub use vec3d::Vec3D;
 
@@ -161,7 +161,7 @@ impl Viewport {
             DisplayMode::Illuminated { lights } => {
                 let screen_faces = self.project_faces(objects, true, true);
 
-                let brightness_chars: Vec<char> = ".,-~:;=!*#$@".chars().collect();
+                let brightness_chars: Vec<char> = BRIGHTNESS_CHARS.chars().collect();
 
                 for face in screen_faces {
                     let fill_char = if let Some(normal) = face.get_normal() {
