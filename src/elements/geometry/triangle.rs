@@ -1,5 +1,7 @@
 use crate::elements::view::{utils, ColChar, Pixel, Vec2D, ViewElement};
 
+use super::Line;
+
 /// The `Triangle` takes three [`Vec2D`]s and returns a triangle with those vertices when blit to a [`View`](super::super::View)
 pub struct Triangle {
     pub pos0: Vec2D,
@@ -77,6 +79,11 @@ impl Triangle {
                 points.push(Vec2D::new(x, y));
             }
         }
+
+        // Outline (will probably remove later)
+        points.append(&mut Line::draw(corners[0], corners[1]));
+        points.append(&mut Line::draw(corners[1], corners[2]));
+        points.append(&mut Line::draw(corners[2], corners[0]));
 
         points
     }
