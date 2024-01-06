@@ -1,6 +1,6 @@
 use super::Vec3D;
 
-pub const BRIGHTNESS_CHARS: &str = ".,-~:;=!*#$@";
+pub const BRIGHTNESS_CHARS: &str = ".,-~:;=!*(%#$@";
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum LightType {
