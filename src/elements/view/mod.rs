@@ -135,11 +135,13 @@ impl Display for View {
             writeln!(f, " {}", nums).unwrap();
         }
         for y in 0..self.height {
-            let row = &self.pixels[self.width * y..self.width * (y + 1)];
             if self.coord_numbers_in_render {
                 let num = y.to_string().chars().last().unwrap_or(' ');
                 write!(f, "{num}").unwrap();
             }
+
+            let row = &self.pixels[self.width * y..self.width * (y + 1)];
+
             row[0].display_with_prev_and_next(f, None, Some(row[1].modifier))?;
             for x in 1..(row.len() - 1) {
                 row[x].display_with_prev_and_next(

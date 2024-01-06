@@ -109,10 +109,10 @@ impl Mul<Vec3D> for Transform3D {
     /// Apply the transform to the `Vec3D`
     #[allow(clippy::let_and_return)]
     fn mul(self, rhs: Vec3D) -> Self::Output {
-        let scaled = rhs * self.scale;
-        let rotated = self.rotate(scaled);
-        let translated = rotated + self.translation;
+        let rhs = rhs * self.scale;
+        let rhs = self.rotate(rhs);
+        let rhs = rhs + self.translation;
 
-        translated
+        rhs
     }
 }
