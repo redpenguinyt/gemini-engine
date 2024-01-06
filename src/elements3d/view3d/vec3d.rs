@@ -1,6 +1,7 @@
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},
+    str::FromStr,
 };
 
 /// A point in 3D space, using `f64`s
@@ -45,6 +46,37 @@ impl Vec3D {
 
     pub fn normal(self) -> Vec3D {
         self / self.magnitude()
+    }
+}
+
+impl FromStr for Vec3D {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::prelude::v1::Result<Self, Self::Err> {
+        let s = s.replace(' ', "");
+        let s = s.strip_prefix("Vec3D").unwrap_or(&s);
+        let s = s.strip_prefix('(').unwrap_or(s);
+        let s = s.strip_suffix(')').unwrap_or(s);
+        let parts: Vec<&str> = s.split(',').collect();
+
+        if parts.len() != 3 {
+            return Err(String::from("Incorrect number of arguments, string must be in format x,y,z to be parsed correctly"));
+        }
+
+        let mut nums = Vec::new();
+
+        for part in parts {
+            nums.push(match part.parse::<f64>() {
+                Ok(val) => val,
+                Err(_) => {
+                    return Err(String::from(
+                        "Could not parse part of argument, make sure it's a valid number",
+                    ))
+                }
+            });
+        }
+
+        Ok(Vec3D::from((nums[0], nums[1], nums[2])))
     }
 }
 
