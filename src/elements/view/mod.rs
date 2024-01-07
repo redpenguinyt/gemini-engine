@@ -6,6 +6,7 @@ use std::{
 };
 
 mod pixel;
+mod scale_to_fit;
 pub mod utils;
 mod view_element;
 mod wrapping;
@@ -15,6 +16,7 @@ pub use pixel::{
     vec2d::Vec2D,
     Pixel, Point,
 };
+pub use scale_to_fit::ScaleFitView;
 pub use view_element::ViewElement;
 pub use wrapping::Wrapping;
 
