@@ -15,7 +15,7 @@ impl Default for ScaleFitView {
     fn default() -> Self {
         ScaleFitView {
             view: View::new(0, 0, ColChar::EMPTY),
-            empty_row_count: 2,
+            empty_row_count: 1,
         }
     }
 }
@@ -38,7 +38,7 @@ impl ScaleFitView {
     /// Returns the size of the terminal, with the y adjusted as intended using the [`empty_row_count`](ScaleFitView::empty_row_count) property
     pub fn intended_size(&self) -> Vec2D {
         let mut term_size = utils::get_termsize_as_vec2d().expect("Failed to get terminal size");
-        term_size.y -= self.empty_row_count;
+        term_size.y -= self.empty_row_count + 1;
         term_size
     }
 
