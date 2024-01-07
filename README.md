@@ -13,3 +13,8 @@ Looking for input? The [console-input](https://crates.io/crates/console-input) c
 - [Changelog](https://github.com/redpenguinyt/gemini-rust/commits)
 
 As of now this is still a work in progress, so any feedback or issue requests would be very much appreciated :)
+
+## Projects created using Gemini
+- [display3d](https://github.com/redpenguinyt/display3d), a command line tool for displaying 3d objects in the terminal
+- [A Tetris clone](https://github.com/redpenguinyt/console-tetris) written using Gemini and [console-input](https://crates.io/crates/console-input), an input library for Gemini
+- [console-video-player](https://github.com/redpenguinyt/console-video-player), a command line tool for displaying videos with ANSI escape code colours
