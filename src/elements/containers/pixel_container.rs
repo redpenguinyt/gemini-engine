@@ -3,6 +3,8 @@ use crate::elements::{
     Pixel, Vec2D,
 };
 
+use super::CanShade;
+
 /// A `PixelContainer` only has a [`pixels`](PixelContainer::pixels) property, which gets returned directly to the View during blit
 #[derive(Debug, Clone)]
 pub struct PixelContainer {
@@ -41,6 +43,17 @@ impl PixelContainer {
         let mut active_pixels = element.active_pixels();
 
         self.append(&mut active_pixels);
+    }
+
+    /// Applies the shader to the [PixelContainer]'s active pixels. A "shader" in this case is any object which implements [CanShade]
+    pub fn shade_with(&self, shader: &mut Box<dyn CanShade>) -> PixelContainer {
+        let shaded_pixels: Vec<Pixel> = self
+            .active_pixels()
+            .iter()
+            .map(|p| shader.shade(*p))
+            .collect();
+
+        PixelContainer::from(shaded_pixels.as_slice())
     }
 }
 
