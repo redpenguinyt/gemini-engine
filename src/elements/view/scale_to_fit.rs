@@ -4,6 +4,7 @@ use crate::utils;
 /// A wrapper around a [`View`] which auto resizes to fit the terminal window
 ///
 /// The wrapper's [`update()`](ScaleFitView::update()) function replaces the `View`'s `clear()` function to handle the resizing
+#[non_exhaustive]
 pub struct ScaleFitView {
     /// The [`View`] that this struct wraps around
     pub view: View,
@@ -13,20 +14,19 @@ pub struct ScaleFitView {
 
 impl Default for ScaleFitView {
     fn default() -> Self {
-        ScaleFitView {
-            view: View::new(0, 0, ColChar::EMPTY),
-            empty_row_count: 1,
-        }
+        ScaleFitView::new(ColChar::EMPTY)
     }
 }
 
 impl ScaleFitView {
     /// Create a new `ScaleFitView` with the given background `ColChar`
     pub fn new(background_char: ColChar) -> ScaleFitView {
-        ScaleFitView {
+        let mut tmp = ScaleFitView {
             view: View::new(0, 0, background_char),
-            ..Default::default()
-        }
+            empty_row_count: 1
+        };
+        tmp.update();
+        tmp
     }
 
     /// Returns the `ScaleFitView` with the updated [`empty_row_count`](ScaleFitView::empty_row_count)
