@@ -1,5 +1,6 @@
-use super::Vec3D;
 use std::ops::Mul;
+mod vec3d;
+pub use vec3d::Vec3D;
 
 enum SpatialAxis {
     X,

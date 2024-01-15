@@ -8,12 +8,10 @@ mod display_mode;
 mod face;
 mod light;
 mod transform3d;
-mod vec3d;
 pub use display_mode::DisplayMode;
 pub use face::{IndexFace as Face, ProjectedFace};
 pub use light::{Light, LightType, BRIGHTNESS_CHARS};
-pub use transform3d::Transform3D;
-pub use vec3d::Vec3D;
+pub use transform3d::{Transform3D, Vec3D};
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`](crate::elements::View), and also acts as the scene's camera.
 pub struct Viewport {
