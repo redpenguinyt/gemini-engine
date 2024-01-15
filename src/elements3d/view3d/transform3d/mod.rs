@@ -61,6 +61,9 @@ impl Transform3D {
 
     /// Rotate the [`Vec3D`] on one axis
     fn rotate_one_axis(translation: Vec3D, axis: SpatialAxis, single_rotation: f64) -> Vec3D {
+        if single_rotation == 0.0 {
+            return translation;
+        }
         let mut translation = translation;
         let (x, y) = match axis {
             SpatialAxis::X => (&mut translation.y, &mut translation.z),
