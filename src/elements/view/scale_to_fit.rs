@@ -23,7 +23,7 @@ impl ScaleFitView {
     pub fn new(background_char: ColChar) -> ScaleFitView {
         let mut tmp = ScaleFitView {
             view: View::new(0, 0, background_char),
-            empty_row_count: 1
+            empty_row_count: 1,
         };
         tmp.update();
         tmp
