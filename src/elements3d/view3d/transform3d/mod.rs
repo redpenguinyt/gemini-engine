@@ -1,12 +1,8 @@
 use std::ops::Mul;
 mod vec3d;
 pub use vec3d::Vec3D;
-
-enum SpatialAxis {
-    X,
-    Y,
-    Z,
-}
+mod cached_rotation;
+use cached_rotation::CachedRotation3D;
 
 /// The `Transform3D` struct is used to manipulate the position of objects in 3D space
 #[derive(Debug, Clone, Copy)]
@@ -17,6 +13,12 @@ pub struct Transform3D {
     pub rotation: Vec3D,
     /// The object's scale
     pub scale: Vec3D,
+}
+
+impl Default for Transform3D {
+    fn default() -> Self {
+        Self::DEFAULT
+    }
 }
 
 impl Transform3D {
@@ -59,39 +61,29 @@ impl Transform3D {
         }
     }
 
-    /// Rotate the [`Vec3D`] on one axis
-    fn rotate_one_axis(translation: Vec3D, axis: SpatialAxis, single_rotation: f64) -> Vec3D {
-        if single_rotation == 0.0 {
-            return translation;
-        }
-        let mut translation = translation;
-        let (x, y) = match axis {
-            SpatialAxis::X => (&mut translation.y, &mut translation.z),
-            SpatialAxis::Y => (&mut translation.x, &mut translation.z),
-            SpatialAxis::Z => (&mut translation.x, &mut translation.y),
-        };
+    /// Apply the transform to a slice of vertices
+    #[allow(clippy::let_and_return)]
+    pub fn apply_to(&self, vertices: &[Vec3D]) -> Vec<Vec3D> {
+        let rotation = CachedRotation3D::new(self.rotation);
 
-        let s = single_rotation.sin();
-        let c = single_rotation.cos();
-        (*x, *y) = (*x * c - *y * s, *x * s + *y * c);
+        vertices
+            .iter()
+            .map(|v| {
+                let rhs = *v;
+                let rhs = rhs * self.scale;
+                let rhs = rotation.rotate(rhs);
+                let rhs = rhs + self.translation;
 
-        translation
+                rhs
+            })
+            .collect()
     }
 
     /// Rotate the given [`Vec3D`] using the `Transform3D`'s rotation field
-    #[allow(clippy::let_and_return)]
     pub fn rotate(&self, value: Vec3D) -> Vec3D {
-        let ry = Self::rotate_one_axis(value, SpatialAxis::Y, self.rotation.y);
-        let rx = Self::rotate_one_axis(ry, SpatialAxis::X, self.rotation.x);
-        let rz = Self::rotate_one_axis(rx, SpatialAxis::Z, self.rotation.z);
+        let rotation = CachedRotation3D::new(self.rotation);
 
-        rz
-    }
-}
-
-impl Default for Transform3D {
-    fn default() -> Self {
-        Self::DEFAULT
+        rotation.rotate(value)
     }
 }
 

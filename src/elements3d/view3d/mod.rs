@@ -49,11 +49,7 @@ impl Viewport {
 
     /// Return the object's vertices, transformed
     pub fn transform_vertices(&self, object: &dyn ViewElement3D) -> Vec<Vec3D> {
-        object
-            .get_vertices()
-            .iter()
-            .map(|v| (self.transform * object.get_transform()) * *v)
-            .collect()
+        (self.transform * object.get_transform()).apply_to(object.get_vertices())
     }
 
     /// Return the screen coordinates and distance from the view for each vertex, as parallel vectors
