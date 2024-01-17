@@ -6,6 +6,7 @@ use crate::elements::{
 
 /// The `AnimatedSprite` struct contains a list of `String`s into which it indexes based on its [`current_frame`](AnimatedSprite::current_frame) property. You can cycle through frames with the [`AnimatedSprite::next_frame()`](AnimatedSprite::next_frame()) function
 pub struct AnimatedSprite {
+    /// The position from which the animated sprite will be drawn from
     pub pos: Vec2D,
     /// A collection of frames - ACII textures to be displayed by the `AnimatedSprite`
     pub frames: Vec<String>,

@@ -2,7 +2,9 @@ use crate::elements::view::{utils, ColChar, Pixel, Vec2D, ViewElement};
 
 /// The `Line` takes two [`Vec2D`]s and returns a line between those vertices when blit to a [`View`](super::super::View)
 pub struct Line {
+    /// The start positon of the line
     pub pos0: Vec2D,
+    /// The end position of the line
     pub pos1: Vec2D,
     /// The [`ColChar`] used to colour the line
     pub fill_char: ColChar,

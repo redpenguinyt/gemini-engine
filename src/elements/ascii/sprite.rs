@@ -8,6 +8,7 @@ use crate::elements::{
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub struct Sprite {
+    /// The position from which the sprite will be drawn from
     pub pos: Vec2D,
     /// The ACII texture (pun intended) displayed by the `Sprite`
     pub texture: String,
@@ -25,6 +26,7 @@ impl Sprite {
         }
     }
 
+    /// Render a string texture at a given position in a [`ViewElement::active_pixels()`]-readable format
     pub fn draw(pos: Vec2D, texture: &str, modifier: Modifier) -> Vec<Pixel> {
         let mut pixels = vec![];
 

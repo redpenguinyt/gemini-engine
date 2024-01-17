@@ -9,6 +9,7 @@ use super::TextAlign;
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub struct Text<'a> {
+    /// The position of the text. You can use [`Text::align`] to determine how it aligns to this position
     pub pos: Vec2D,
     /// The actual text content of the element
     pub content: &'a str,
