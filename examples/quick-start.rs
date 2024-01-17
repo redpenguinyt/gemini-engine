@@ -1,3 +1,4 @@
+//! The quick start example
 use gemini_engine::elements::{
     view::{ColChar, View, Wrapping},
     Pixel, Vec2D,

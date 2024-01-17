@@ -1,3 +1,4 @@
+//! An example of a self-resizing view using `ScaleFitView`
 use std::{thread::sleep, time::Duration};
 
 use gemini_engine::elements::{

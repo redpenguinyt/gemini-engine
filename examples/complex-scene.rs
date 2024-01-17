@@ -1,3 +1,4 @@
+//! An example of a more complex scene in Gemini
 use gemini_engine::elements::{
     view::{ColChar, Modifier, Vec2D, Wrapping},
     Line, Pixel, Rect, Sprite, View,

@@ -1,3 +1,4 @@
+//! An example of a spinning cube with `elements3d`
 use gemini_engine::elements::view::{ColChar, View, Wrapping};
 use gemini_engine::elements3d::{DisplayMode, Mesh3D, Transform3D, Vec3D, Viewport};
 use gemini_engine::fps_gameloop;
