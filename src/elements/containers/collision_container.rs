@@ -18,15 +18,15 @@ impl<'a> CollisionContainer<'a> {
         self.elements.push(element)
     }
 
-    /// Return a list of all the positions at which the
+    /// Return a list of all the positions at which the collision box is active
+    #[deprecated = "This is now just a proxy for active_points, use `CollisionContainer::active_points` instead"]
     pub fn generate_collision_points(&self) -> Vec<Vec2D> {
-        // TODO: make this part of `ViewElement` as `active_points`
         self.active_points()
     }
 
     /// Returns true if there is an element from the `CollisionContainer` at the given coordinates
     pub fn contains(&self, pos: Vec2D) -> bool {
-        let collision_points = self.generate_collision_points();
+        let collision_points = self.active_points();
 
         collision_points.contains(&pos)
     }
@@ -38,7 +38,7 @@ impl<'a> CollisionContainer<'a> {
 
     /// Returns true if the element will be overlapping the `CollisionContainer` when the offset is applied
     pub fn will_overlap_element(&self, element: &impl ViewElement, offset: Vec2D) -> bool {
-        let collision_points = self.generate_collision_points();
+        let collision_points = self.active_points();
 
         for element_point in element.active_points() {
             if collision_points.contains(&(element_point + offset)) {
