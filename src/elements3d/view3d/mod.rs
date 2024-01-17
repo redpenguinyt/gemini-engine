@@ -164,7 +164,9 @@ impl Viewport {
                     let fill_char = if let Some(normal) = face.get_normal() {
                         let intensity: f64 = lights
                             .iter()
-                            .map(|light| light.calculate_intensity(normal))
+                            .map(|light| {
+                                light.calculate_intensity(face.get_average_centre(), normal)
+                            })
                             .sum();
 
                         let intensity_char =

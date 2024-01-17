@@ -106,3 +106,14 @@ impl_vec_mul_single!(Vec3D, f64, (x, y, z));
 impl_vec_div!(Vec3D, (x, y, z));
 impl_vec_div_single!(Vec3D, f64, (x, y, z));
 impl_vec_rem!(Vec3D, (x, y, z));
+
+impl std::iter::Sum for Vec3D {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        let mut sum = Vec3D::ZERO;
+        for item in iter {
+            sum += item;
+        }
+
+        sum
+    }
+}

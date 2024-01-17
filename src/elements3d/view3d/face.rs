@@ -54,6 +54,11 @@ impl ProjectedFace {
         }
     }
 
+    /// Get the "centre" of the face in 3D space, calculated based on the average of the original vertices
+    pub fn get_average_centre(&self) -> Vec3D {
+        self.original_vertices.iter().copied().sum::<Vec3D>() / self.original_vertices.len() as f64
+    }
+
     /// Get the normal of the face
     pub fn get_normal(&self) -> Option<Vec3D> {
         if self.original_vertices.len() >= 3 {
