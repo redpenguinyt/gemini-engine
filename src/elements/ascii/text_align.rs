@@ -33,7 +33,7 @@ pub struct TextAlign2D {
 
 impl Default for TextAlign2D {
     fn default() -> Self {
-        TextAlign2D::new(TextAlign::Begin, TextAlign::End)
+        TextAlign2D::new(TextAlign::Begin, TextAlign::Begin)
     }
 }
 
