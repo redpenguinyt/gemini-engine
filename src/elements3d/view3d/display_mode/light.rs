@@ -1,6 +1,4 @@
-// TODO: make this a child of display_mode
-
-use super::Vec3D;
+use crate::elements3d::Vec3D;
 
 /// Characters for brightness. The first character is the darkest and the rightmost character is the brightest
 pub const BRIGHTNESS_CHARS: &str = ".,-~:;=!*(%#$@";

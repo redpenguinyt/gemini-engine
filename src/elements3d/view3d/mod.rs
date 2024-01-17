@@ -6,12 +6,13 @@ use crate::elements::{
 };
 mod display_mode;
 mod face;
-mod light;
 mod transform3d;
-pub use display_mode::DisplayMode;
+pub use display_mode::{
+    light::{Light, LightType, BRIGHTNESS_CHARS},
+    DisplayMode,
+};
 pub use face::IndexFace as Face;
 use face::ProjectedFace;
-pub use light::{Light, LightType, BRIGHTNESS_CHARS};
 pub use transform3d::{Transform3D, Vec3D};
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`](crate::elements::View), and also acts as the scene's camera.
