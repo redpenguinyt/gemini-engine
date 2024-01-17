@@ -1,4 +1,7 @@
-use std::ops::{Add, AddAssign, Mul, MulAssign};
+use std::{
+    ops::{Add, AddAssign, Mul, MulAssign},
+    str::FromStr,
+};
 
 fn mul_u8_by_f64(value: u8, rhs: f64) -> u8 {
     (value as f64 * rhs).round() as u8
@@ -13,6 +16,36 @@ pub struct Colour {
     pub g: u8,
     /// The blue channel of the colour
     pub b: u8,
+}
+
+impl FromStr for Colour {
+    type Err = String;
+
+    /// Colours should be passed in the format `<r>,<g>,<b>`, for example `255,0,0` for red
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let s = s.replace(' ', "");
+        let parts: Vec<&str> = s.split(',').collect();
+
+        if parts.len() != 3 {
+            return Err(String::from("Incorrect number of arguments, string must be in format r,g,b to be parsed correctly"));
+        }
+        println!("{:?}", parts);
+
+        let mut nums = Vec::new();
+
+        for part in parts {
+            nums.push(match part.parse::<u8>() {
+                Ok(val) => val,
+                Err(_) => {
+                    return Err(String::from(
+                        "Could not parse part of argument, make sure it's a valid number",
+                    ))
+                }
+            });
+        }
+
+        Ok(Colour::rgb(nums[0], nums[1], nums[2]))
+    }
 }
 
 impl Colour {
