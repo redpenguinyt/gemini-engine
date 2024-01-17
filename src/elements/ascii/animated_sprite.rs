@@ -31,7 +31,7 @@ impl AnimatedSprite {
             frames: processed_frames,
             current_frame: 0,
             modifier,
-            align: TextAlign2D::default()
+            align: TextAlign2D::default(),
         }
     }
 

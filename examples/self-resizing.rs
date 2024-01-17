@@ -2,8 +2,8 @@ use std::{thread::sleep, time::Duration};
 
 use gemini_engine::elements::{
     ascii::{TextAlign, TextAlign2D},
-    view::{ColChar, Modifier, Wrapping, ScaleFitView},
-    Text, Vec2D, Sprite,
+    view::{ColChar, Modifier, ScaleFitView, Wrapping},
+    Sprite, Text, Vec2D,
 };
 
 const TEXTURE: &str = "
@@ -19,11 +19,12 @@ fn main() {
     let mut text = Text::new(Vec2D::ZERO, "This is some centered text!", Modifier::None)
         .with_align(TextAlign::Centered);
 
-    let mut sprite = Sprite::new(Vec2D::ZERO, TEXTURE, Modifier::None).with_align(TextAlign2D::CENTERED);
+    let mut sprite =
+        Sprite::new(Vec2D::ZERO, TEXTURE, Modifier::None).with_align(TextAlign2D::CENTERED);
 
     loop {
-        text.pos = scale_view.intended_size()/2;
-        sprite.pos = scale_view.intended_size()/2;
+        text.pos = scale_view.intended_size() / 2;
+        sprite.pos = scale_view.intended_size() / 2;
         sprite.pos.y -= 5;
 
         scale_view.update();

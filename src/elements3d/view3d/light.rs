@@ -14,7 +14,7 @@ pub enum LightType {
     /// Lights the scene from a specific direction. A surface facing the specified direction will be lit with the most intensity and a surface facing away from the direction will be lit with the least intensity or no intensity at all
     Directional {
         /// The direction the light is pointing
-        direction: Vec3D
+        direction: Vec3D,
     },
 }
 

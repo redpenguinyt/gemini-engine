@@ -18,10 +18,7 @@ impl Triangle {
 
     /// Takes the corners of the triangle as an array rather than as separate parameters
     pub const fn with_array(corners: [Vec2D; 3], fill_char: ColChar) -> Self {
-        Self {
-            corners,
-            fill_char,
-        }
+        Self { corners, fill_char }
     }
 
     /// Return the triangle's points as an array
