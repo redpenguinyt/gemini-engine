@@ -57,7 +57,7 @@ impl Sprite {
     ) -> Vec<Pixel> {
         let content_size = Vec2D::new(
             texture.lines().count() as isize,
-            texture.lines().map(|line| line.len()).max().unwrap() as isize,
+            texture.lines().map(|line| line.len()).max().unwrap_or(0) as isize,
         );
         let pos = align.apply_to(pos, content_size);
 

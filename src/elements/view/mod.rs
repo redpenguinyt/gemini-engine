@@ -135,12 +135,12 @@ impl Display for View {
             let nums: String = (0..self.width)
                 .map(|i| i.to_string().chars().last().unwrap_or(' '))
                 .collect();
-            writeln!(f, " {}", nums).unwrap();
+            writeln!(f, " {}", nums)?;
         }
         for y in 0..self.height {
             if self.coord_numbers_in_render {
                 let num = y.to_string().chars().last().unwrap_or(' ');
-                write!(f, "{num}").unwrap();
+                write!(f, "{num}")?;
             }
 
             let row = &self.pixels[self.width * y..self.width * (y + 1)];
