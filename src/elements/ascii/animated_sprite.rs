@@ -1,4 +1,4 @@
-use super::{remove_leading_newlines, Sprite};
+use super::{remove_leading_newlines, Sprite, TextAlign2D};
 use crate::elements::{
     view::{Modifier, ViewElement},
     Pixel, Vec2D,
@@ -14,7 +14,8 @@ pub struct AnimatedSprite {
     pub current_frame: usize,
     /// A raw [`Modifier`], determining the appearance of the `AnimatedSprite`
     pub modifier: Modifier,
-    // TODO: add x and y align
+    /// How the Sprite should align to the position
+    pub align: TextAlign2D,
 }
 
 impl AnimatedSprite {
@@ -30,6 +31,7 @@ impl AnimatedSprite {
             frames: processed_frames,
             current_frame: 0,
             modifier,
+            align: TextAlign2D::default()
         }
     }
 

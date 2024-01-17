@@ -1,4 +1,4 @@
-use super::{remove_leading_newlines, Text};
+use super::{remove_leading_newlines, Text, TextAlign2D};
 use crate::elements::{
     view::{Modifier, ViewElement},
     Pixel, Vec2D,
@@ -14,8 +14,10 @@ pub struct Sprite {
     pub texture: String,
     /// A raw [`Modifier`], determining the appearance of the `Sprite`
     pub modifier: Modifier,
-    // TODO: add x and y align
+    /// How the Sprite should align to the position
+    pub align: TextAlign2D,
 }
+
 impl Sprite {
     /// Create a new `Sprite` struct. All newlines at the beginning of the texture will be removed
     pub fn new(pos: Vec2D, texture: &str, modifier: Modifier) -> Self {
@@ -23,7 +25,15 @@ impl Sprite {
             pos,
             texture: remove_leading_newlines(texture),
             modifier,
+            align: TextAlign2D::default(),
         }
+    }
+
+    /// Return the `Sprite` with the modified align property
+    pub fn with_align(self, align: TextAlign2D) -> Sprite {
+        let mut tmp = self;
+        tmp.align = align;
+        tmp
     }
 
     /// Render a string texture at a given position in a [`ViewElement::active_pixels()`]-readable format
@@ -37,10 +47,26 @@ impl Sprite {
 
         pixels
     }
+
+    /// Return a vector of Pixels to display the given content, aligning the content to the position as directed by the `align` attribute
+    pub fn draw_with_align(
+        pos: Vec2D,
+        texture: &str,
+        align: TextAlign2D,
+        modifier: Modifier,
+    ) -> Vec<Pixel> {
+        let content_size = Vec2D::new(
+            texture.lines().count() as isize,
+            texture.lines().map(|line| line.len()).max().unwrap() as isize,
+        );
+        let pos = align.apply_to(pos, content_size);
+
+        Sprite::draw(pos, texture, modifier)
+    }
 }
 
 impl ViewElement for Sprite {
     fn active_pixels(&self) -> Vec<Pixel> {
-        Self::draw(self.pos, &self.texture, self.modifier)
+        Self::draw_with_align(self.pos, &self.texture, self.align, self.modifier)
     }
 }

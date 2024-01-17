@@ -8,18 +8,18 @@ use super::TextAlign;
 /// Displays text at the given position
 #[non_exhaustive]
 #[derive(Debug, Clone)]
-pub struct Text<'a> {
+pub struct Text {
     /// The position of the text. You can use [`Text::align`] to determine how it aligns to this position
     pub pos: Vec2D,
     /// The actual text content of the element
-    pub content: &'a str,
+    pub content: String,
     /// How the content should align to the position
     pub align: TextAlign,
     /// A raw [`Modifier`], determining the appearance of the `Text`
     pub modifier: Modifier,
 }
 
-impl<'a> Text<'a> {
+impl Text {
     /// Create a new Text element with a position, content and modifier
     ///
     /// # Panics
@@ -31,22 +31,18 @@ impl<'a> Text<'a> {
 
         Text {
             pos,
-            content,
-            align: TextAlign::Left,
+            content: String::from(content),
+            align: TextAlign::Begin,
             modifier,
         }
     }
 
-    /// Create a `Text` element with an [`align`](Text::align) parameter to set the `Text`'s align (see the [TextAlign] documentation)
-    ///
-    /// # Panics
-    /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite](super::Sprite)
-    pub fn with_align(pos: Vec2D, content: &str, align: TextAlign, modifier: Modifier) -> Text {
-        let mut tmp = Text::new(pos, content, modifier);
+    /// Return the `Text` with the modified align property
+    pub fn with_align(self, align: TextAlign) -> Text {
+        let mut tmp = self;
         tmp.align = align;
-
         tmp
-    } // TODO: make this a modifier, not a new func
+    }
 
     /// Return a vector of Pixels to display the given content
     pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Pixel> {
@@ -73,14 +69,14 @@ impl<'a> Text<'a> {
         align: TextAlign,
         modifier: Modifier,
     ) -> Vec<Pixel> {
-        let pos = align.apply_to(pos, content.len() as isize);
+        let pos = Vec2D::new(align.apply_to(pos.x, content.len() as isize), pos.y);
 
         Text::draw(pos, content, modifier)
     }
 }
 
-impl ViewElement for Text<'_> {
+impl ViewElement for Text {
     fn active_pixels(&self) -> Vec<Pixel> {
-        Text::draw_with_align(self.pos, self.content, self.align, self.modifier)
+        Text::draw_with_align(self.pos, &self.content, self.align, self.modifier)
     }
 }

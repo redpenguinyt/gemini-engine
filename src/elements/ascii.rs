@@ -10,7 +10,7 @@ mod text;
 pub use text::Text;
 
 mod text_align;
-pub use text_align::TextAlign;
+pub use text_align::{TextAlign, TextAlign2D};
 
 /// Remove all leading newlines from the string
 pub fn remove_leading_newlines(texture: &str) -> String {
