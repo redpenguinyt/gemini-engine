@@ -29,10 +29,14 @@ impl IndexFace {
 }
 
 // TODO: private this and all associated functions
-pub struct ProjectedFace {
+pub(crate) struct ProjectedFace {
+    /// Where the points appear on the screen
     pub screen_points: Vec<Vec2D>,
+    /// The original vertices in 3d space
     pub original_vertices: Vec<Vec3D>,
+    /// The vertices' associated z indexes
     pub z_index: Option<f64>,
+    /// The face's fill char
     pub fill_char: ColChar,
 }
 

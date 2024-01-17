@@ -9,7 +9,8 @@ mod face;
 mod light;
 mod transform3d;
 pub use display_mode::DisplayMode;
-pub use face::{IndexFace as Face, ProjectedFace};
+pub use face::IndexFace as Face;
+use face::ProjectedFace;
 pub use light::{Light, LightType, BRIGHTNESS_CHARS};
 pub use transform3d::{Transform3D, Vec3D};
 
@@ -37,7 +38,7 @@ impl Viewport {
     }
 
     /// Project the [`Vec3D`] on a flat plane using the `Viewport`'s [fov](Viewport::fov) and [character_width_multiplier](Viewport::character_width_multiplier)
-    pub fn perspective(&self, pos: Vec3D) -> Vec2D {
+    fn perspective(&self, pos: Vec3D) -> Vec2D {
         let f = self.fov / -pos.z;
         let (sx, sy) = (-pos.x * f, pos.y * f);
 
@@ -49,12 +50,12 @@ impl Viewport {
     }
 
     /// Return the object's vertices, transformed
-    pub fn transform_vertices(&self, object: &dyn ViewElement3D) -> Vec<Vec3D> {
+    fn transform_vertices(&self, object: &dyn ViewElement3D) -> Vec<Vec3D> {
         (self.transform * object.get_transform()).apply_to(object.get_vertices())
     }
 
     /// Return the screen coordinates and distance from the view for each vertex, as parallel vectors
-    pub fn get_vertices_on_screen(&self, object: &dyn ViewElement3D) -> (Vec<Vec2D>, Vec<f64>) {
+    fn get_vertices_on_screen(&self, object: &dyn ViewElement3D) -> (Vec<Vec2D>, Vec<f64>) {
         self.transform_vertices(object)
             .iter()
             .map(|vertex: &Vec3D| (self.perspective(*vertex), vertex.magnitude()))
@@ -62,7 +63,7 @@ impl Viewport {
     }
 
     /// Project the faces onto a 2D plane. Returns a collection of faces, each stored as a list of the points it appears at, the normal of the face and the [`ColChar`] assigned to it
-    pub fn project_faces(
+    fn project_faces(
         &self,
         objects: Vec<&dyn ViewElement3D>,
         sort_faces: bool,
