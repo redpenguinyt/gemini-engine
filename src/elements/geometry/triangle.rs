@@ -4,9 +4,8 @@ use super::Line;
 
 /// The `Triangle` takes three [`Vec2D`]s and returns a triangle with those vertices when blit to a [`View`](super::super::View)
 pub struct Triangle {
-    pub pos0: Vec2D, // TODO: make this an array instead
-    pub pos1: Vec2D,
-    pub pos2: Vec2D,
+    /// The 3 cornes of the triangle
+    pub corners: [Vec2D; 3],
     /// The [`ColChar`] used to fill the triange
     pub fill_char: ColChar,
 }
@@ -14,27 +13,21 @@ pub struct Triangle {
 impl Triangle {
     /// Create
     pub const fn new(pos0: Vec2D, pos1: Vec2D, pos2: Vec2D, fill_char: ColChar) -> Self {
-        Triangle {
-            pos0,
-            pos1,
-            pos2,
+        Triangle::with_array([pos0, pos1, pos2], fill_char)
+    }
+
+    /// Takes the corners of the triangle as an array rather than as separate parameters
+    pub const fn with_array(corners: [Vec2D; 3], fill_char: ColChar) -> Self {
+        Self {
+            corners,
             fill_char,
         }
     }
 
-    /// Takes the corners of the triangle as an array rather than as separate parameters
-    pub const fn with_array(points: &[Vec2D], fill_char: ColChar) -> Self {
-        if points.len() != 3 {
-            panic!(
-                "points parameter should have exactly 3 items, one for each point of the triangle"
-            )
-        }
-        Self::new(points[0], points[1], points[2], fill_char)
-    }
-
     /// Return the triangle's points as an array
+    #[deprecated = "Triangle has been restructured, just use `Triangle.corners` now"]
     pub fn corners(&self) -> [Vec2D; 3] {
-        [self.pos0, self.pos1, self.pos2]
+        self.corners
     }
 
     /// Draw a pseudo-line between the independent and dependent positions. Returns rounded values as `isize`s. If you don't want the values rounded, use [`Triangle::interpolate_floating()`]
@@ -105,6 +98,6 @@ impl ViewElement for Triangle {
     }
 
     fn active_points(&self) -> Vec<Vec2D> {
-        Self::draw(self.corners())
+        Self::draw(self.corners)
     }
 }
