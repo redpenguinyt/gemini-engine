@@ -22,13 +22,11 @@ impl IndexFace {
 
     /// Returns a vector with the elements found at the vertex indices of the given slice
     pub fn index_into<T: Copy>(&self, vertices: &[T]) -> Vec<T> {
-        // TODO: make sure the list of vertices is long enough to index into
-        // TODO: return a slice here instead
+        // TODO: return `None` if the input slice isnt large enough
         self.v_indices.iter().map(|vi| vertices[*vi]).collect()
     }
 }
 
-// TODO: private this and all associated functions
 pub(crate) struct ProjectedFace {
     /// Where the points appear on the screen
     pub screen_points: Vec<Vec2D>,
