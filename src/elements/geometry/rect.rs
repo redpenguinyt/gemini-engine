@@ -12,14 +12,18 @@ pub struct Rect {
 
 impl Rect {
     /// Create a new rectangle using a given position, size and [`ColChar`]
-    pub const fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Self {
-        Self {
+    pub const fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Rect {
+        Rect {
             pos,
             size,
             fill_char,
         }
     }
-    // TODO: add a new_from_to function to have two points in space instead of a point and a size
+
+    /// Create a new rectangle between two position to fill with a [`ColChar`]
+    pub fn new_from_to(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Rect {
+        Rect::new(pos0, pos1 - pos0, fill_char)
+    }
 
     /// Draw a Rectangle with a given position (representing the top-left corner) and size
     pub fn draw(pos: Vec2D, size: Vec2D) -> Vec<Vec2D> {
