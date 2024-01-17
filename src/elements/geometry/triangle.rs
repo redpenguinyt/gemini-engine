@@ -4,13 +4,15 @@ use super::Line;
 
 /// The `Triangle` takes three [`Vec2D`]s and returns a triangle with those vertices when blit to a [`View`](super::super::View)
 pub struct Triangle {
-    pub pos0: Vec2D,
+    pub pos0: Vec2D, // TODO: make this an array instead
     pub pos1: Vec2D,
     pub pos2: Vec2D,
+    /// The [`ColChar`] used to fill the triange
     pub fill_char: ColChar,
 }
 
 impl Triangle {
+    /// Create
     pub const fn new(pos0: Vec2D, pos1: Vec2D, pos2: Vec2D, fill_char: ColChar) -> Self {
         Triangle {
             pos0,

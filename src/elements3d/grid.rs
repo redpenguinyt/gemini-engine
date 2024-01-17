@@ -3,6 +3,7 @@ use crate::elements::view::ColChar;
 
 /// A flat grid to display where the ground is
 pub struct Grid3D {
+    /// The transform of the centre of the grid (position, rotation, scale) in 3D space
     pub transform: Transform3D,
     /// The length of each cell's width and depth
     pub cell_size: f64,
@@ -10,6 +11,7 @@ pub struct Grid3D {
     pub cell_count: usize,
     generated_vertices: Vec<Vec3D>,
     generated_faces: Vec<Face>,
+    /// The [`ColChar`] used for the grid's lines
     pub fill_char: ColChar,
 }
 

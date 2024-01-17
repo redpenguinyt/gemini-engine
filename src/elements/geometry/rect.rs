@@ -6,10 +6,12 @@ pub struct Rect {
     pub pos: Vec2D,
     /// The size of the `Rect`, extending from [`Rect::pos`]
     pub size: Vec2D,
+    /// The [`ColChar`] used to fill the rectangle
     pub fill_char: ColChar,
 }
 
 impl Rect {
+    /// Create a new rectangle using a given position, size and [`ColChar`]
     pub const fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Self {
         Self {
             pos,
@@ -17,6 +19,7 @@ impl Rect {
             fill_char,
         }
     }
+    // TODO: add a new_from_to function to have two points in space instead of a point and a size
 
     /// Draw a Rectangle with a given position (representing the top-left corner) and size
     pub fn draw(pos: Vec2D, size: Vec2D) -> Vec<Vec2D> {

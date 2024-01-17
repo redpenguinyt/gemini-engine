@@ -4,10 +4,12 @@ use crate::elements::view::{utils, ColChar, Pixel, Vec2D, ViewElement};
 pub struct Line {
     pub pos0: Vec2D,
     pub pos1: Vec2D,
+    /// The [`ColChar`] used to colour the line
     pub fill_char: ColChar,
 }
 
 impl Line {
+    /// Create a new line with a start and end point and a [`ColChar`]
     pub const fn new(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Self {
         Line {
             pos0,

@@ -26,6 +26,7 @@ pub struct Viewport {
 }
 
 impl Viewport {
+    /// Create a new Viewport with a default [character_width_multiplier](Viewport::character_width_multiplier) of 2.2
     pub const fn new(transform: Transform3D, fov: f64, screen_origin: Vec2D) -> Self {
         Self {
             transform,

@@ -6,6 +6,7 @@ pub mod macros;
 
 static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
 
+/// Returns the size of the terminal as a Vec2D, using the termsize crate's [get function](https://docs.rs/termsize/latest/termsize/fn.get.html)
 pub fn get_termsize_as_vec2d() -> Option<Vec2D> {
     let size = termsize::get()?;
     Some(Vec2D::new(size.cols as isize, size.rows as isize + 1))

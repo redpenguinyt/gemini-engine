@@ -11,6 +11,7 @@ pub mod utils;
 mod view_element;
 mod wrapping;
 
+#[allow(deprecated)]
 pub use pixel::{
     colchar::{ColChar, Colour, Modifier},
     vec2d::Vec2D,

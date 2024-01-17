@@ -28,6 +28,7 @@ impl IndexFace {
     }
 }
 
+// TODO: private this and all associated functions
 pub struct ProjectedFace {
     pub screen_points: Vec<Vec2D>,
     pub original_vertices: Vec<Vec3D>,
@@ -36,6 +37,7 @@ pub struct ProjectedFace {
 }
 
 impl ProjectedFace {
+    /// Create a new `ProjectedFace`
     pub fn new(
         screen_points: Vec<Vec2D>,
         original_vertices: Vec<Vec3D>,

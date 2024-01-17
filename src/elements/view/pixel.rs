@@ -6,6 +6,7 @@ pub mod vec2d;
 use colchar::ColChar;
 use vec2d::Vec2D;
 
+/// Old name for [`Pixel`], this is now deprecated
 #[deprecated = "Renamed to Pixel, please use that instead"]
 pub type Point = Pixel;
 

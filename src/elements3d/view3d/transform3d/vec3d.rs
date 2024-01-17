@@ -36,6 +36,7 @@ impl Vec3D {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
+    /// The cross product of two vectors is a vector perpendicular to both of them. See [a more detailed explanation](https://www.gabrielgambetta.com/computer-graphics-from-scratch/A0-linear-algebra.html#cross-product)
     pub fn cross(&self, other: Vec3D) -> Vec3D {
         Vec3D::new(
             self.y * other.z - self.z * other.y,
@@ -44,6 +45,7 @@ impl Vec3D {
         )
     }
 
+    /// Generate a normal from the Vec3D
     pub fn normal(self) -> Vec3D {
         self / self.magnitude()
     }

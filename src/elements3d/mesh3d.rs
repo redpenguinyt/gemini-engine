@@ -4,6 +4,7 @@ mod mesh3d_presets;
 /// The struct for a Mesh3D object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
 #[derive(Debug, Clone)]
 pub struct Mesh3D {
+    /// The mesh's transform (position, rotation, scale) in 3D space
     pub transform: Transform3D,
     /// A vector of the [`Mesh3D`]'s
     pub vertices: Vec<Vec3D>,

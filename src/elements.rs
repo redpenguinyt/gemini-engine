@@ -32,4 +32,5 @@ pub mod geometry;
 pub use geometry::{Line, Polygon, Rect, Triangle};
 
 pub mod view;
+#[allow(deprecated)]
 pub use view::{Pixel, Point, Vec2D, View};

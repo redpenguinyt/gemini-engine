@@ -32,6 +32,7 @@ impl Mesh3D {
         )
     }
 
+    /// Create a torus (donut shape)
     pub fn torus(
         outer_radius: f64,
         inner_radius: f64,
