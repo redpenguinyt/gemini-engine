@@ -39,7 +39,10 @@ impl CachedRotation {
         let mut translation = value;
         let (x, y) = axis.get_perpendicular_plane(&mut translation);
 
-        (*x, *y) = ((*x).mul_add(self.c, -(*y * self.s)), (*x).mul_add(self.s, *y * self.c));
+        (*x, *y) = (
+            (*x).mul_add(self.c, -(*y * self.s)),
+            (*x).mul_add(self.s, *y * self.c),
+        );
 
         translation
     }

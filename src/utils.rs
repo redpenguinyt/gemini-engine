@@ -34,10 +34,7 @@ pub fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> io::Result<()> {
     let cell = TERMINAL_PREPARED.get();
     if cell.is_none() {
         let rows = termsize::get()
-            .ok_or_else(|| io::Error::new(
-                std::io::ErrorKind::NotFound,
-                "Couldnt get termsize",
-            ))?
+            .ok_or_else(|| io::Error::new(std::io::ErrorKind::NotFound, "Couldnt get termsize"))?
             .rows as usize;
         write!(f, "{}", vec!['\n'; rows].iter().collect::<String>()).unwrap();
         TERMINAL_PREPARED.get_or_init(|| true);
