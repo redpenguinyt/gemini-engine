@@ -18,6 +18,7 @@ termsize = "0.1"
 
 [lints.rust]
 missing_docs = "warn"
+unsafe_code = "forbid"
 
 [lints.clippy]
 enum_global_use = "warn"
