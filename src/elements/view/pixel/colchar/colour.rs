@@ -68,27 +68,31 @@ impl Colour {
 
     /// Create a `Colour` from an HSV value
     #[must_use]
-    pub fn hsv(h: u8, s: u8, v: u8) -> Self {
-        let h = h as f32 / 255.0;
-        let s = s as f32 / 255.0;
-        let v = v as f32 / 255.0;
+    pub fn hsv(hue: u8, sat: u8, val: u8) -> Self {
+        let hue = f32::from(hue) / 255.0;
+        let sat = f32::from(sat) / 255.0;
+        let val = f32::from(val) / 255.0;
 
-        let i = (h * 6.0).floor();
-        let f = h * 6.0 - i;
-        let p = v * (1.0 - f * s);
-        let q = v * (1.0 - f * s);
-        let t = v * (1.0 - (1.0 - f) * s);
+        let i = (hue * 6.0).floor();
+        let f = hue.mul_add(6.0, -i);
+        let p = val * f.mul_add(-sat, 1.0);
+        let q = val * f.mul_add(-sat, 1.0);
+        let t = val * (1.0 - f).mul_add(-sat, 1.0);
 
-        let (r, g, b) = [
-            (v, t, p),
-            (q, v, p),
-            (p, v, t),
-            (p, q, v),
-            (t, p, v),
-            (v, p, q),
+        let (red, green, blue) = [
+            (val, t, p),
+            (q, val, p),
+            (p, val, t),
+            (p, q, val),
+            (t, p, val),
+            (val, p, q),
         ][(i % 6.0).floor() as usize];
 
-        Self::rgb((r * 255.0) as u8, (g * 255.0) as u8, (b * 255.0) as u8)
+        Self::rgb(
+            (red * 255.0) as u8,
+            (green * 255.0) as u8,
+            (blue * 255.0) as u8,
+        )
     }
 }
 

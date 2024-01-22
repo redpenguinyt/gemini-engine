@@ -120,7 +120,8 @@ impl View {
 
     /// Display the `View`. `View` implements the `Display` trait and so can be rendered in many ways (such as `println!("{view}");`), but this is intended to be the fastest way possible.
     ///
-    /// Returns the `Result` from writing to `io::stdout().lock()`
+    /// # Errors
+    /// Returns the `Result` from writing to `io::stdout().lock()`. You can ignore it with `let _ = ...` most of the time
     pub fn display_render(&self) -> io::Result<()> {
         let mut stdout = io::stdout().lock();
         if self.block_until_resized {

@@ -26,9 +26,10 @@ impl Text {
     /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite](super::Sprite)
     #[must_use]
     pub fn new(pos: Vec2D, content: &str, modifier: Modifier) -> Self {
-        if content.contains('\n') {
-            panic!("Text was created with a content string containing a \n character")
-        }
+        assert!(
+            !content.contains('\n'),
+            "Text was created with a content string containing a \n character"
+        );
 
         Self {
             pos,

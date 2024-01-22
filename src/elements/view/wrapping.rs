@@ -13,6 +13,9 @@ pub enum Wrapping {
 
 impl Wrapping {
     /// Handle the position based on the given bounds and the Wrapping variation (See the [Wrapping] documentation for more info)
+    ///
+    /// # Panics
+    /// `Wrapping::Panic` will panic if the position is out of bounds
     #[must_use]
     pub fn handle_bounds(&self, pos: Vec2D, bounds: Vec2D) -> Option<Vec2D> {
         let in_bounds_pos = pos % bounds;

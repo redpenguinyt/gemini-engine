@@ -17,7 +17,7 @@ pub use text_align::{TextAlign, TextAlign2D};
 pub fn remove_leading_newlines(texture: &str) -> String {
     let mut texture: Vec<char> = texture.chars().rev().collect();
 
-    while *texture.last().expect("Texture consists of only newlines") == '\n' {
+    while texture.last() == Some(&'\n') {
         texture.pop();
     }
 

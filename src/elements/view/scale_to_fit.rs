@@ -38,6 +38,9 @@ impl ScaleFitView {
     }
 
     /// Returns the size of the terminal, with the y adjusted as intended using the [`empty_row_count`](ScaleFitView::empty_row_count) property
+    ///
+    /// # Panics
+    /// This will panic if [`termsize::get`] returns a None value.
     #[must_use]
     pub fn intended_size(&self) -> Vec2D {
         let mut term_size = utils::get_termsize_as_vec2d().expect("Failed to get terminal size");

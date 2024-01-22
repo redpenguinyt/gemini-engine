@@ -51,13 +51,12 @@ impl AnimatedSprite {
 
 impl ViewElement for AnimatedSprite {
     fn active_pixels(&self) -> Vec<Pixel> {
-        if !self.is_within_frame_range() {
-            panic!(
-                "AnimatedSprite tried indexing at {} in list of frames size {}",
-                self.current_frame,
-                self.frames.len()
-            );
-        }
+        assert!(
+            self.is_within_frame_range(),
+            "AnimatedSprite tried indexing at {} in list of frames size {}",
+            self.current_frame,
+            self.frames.len()
+        );
 
         Sprite::draw(self.pos, &self.frames[self.current_frame], self.modifier)
     }

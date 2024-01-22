@@ -1,3 +1,5 @@
+#![allow(clippy::suboptimal_flops)] // The code is much more readadble this way
+
 use std::{
     cmp::PartialEq,
     fmt::{Display, Result},

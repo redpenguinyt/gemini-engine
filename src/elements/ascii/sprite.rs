@@ -32,7 +32,7 @@ impl Sprite {
 
     /// Return the `Sprite` with the modified align property
     #[must_use]
-    pub const fn with_align(self, align: TextAlign2D) -> Sprite {
+    pub const fn with_align(self, align: TextAlign2D) -> Self {
         let mut tmp = self;
         tmp.align = align;
         tmp
