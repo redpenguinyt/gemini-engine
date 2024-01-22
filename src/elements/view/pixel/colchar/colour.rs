@@ -3,8 +3,10 @@ use std::{
     str::FromStr,
 };
 
-fn mul_u8_by_f64(value: u8, rhs: f64) -> u8 {
-    (value as f64 * rhs).round() as u8
+/// Only used on f64 values between 0.0 and 255.0
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+fn mul_by_f64_to_u8<T: Into<f64>>(value: T, rhs: f64) -> u8 {
+    (value.into() * rhs).round() as u8
 }
 
 /// A struct to contain colour values. Can be created from RGB, HSV or greyscale values, but is ultimately stored as RGB.
@@ -73,8 +75,8 @@ impl Colour {
         let sat = f32::from(sat) / 255.0;
         let val = f32::from(val) / 255.0;
 
-        let i = (hue * 6.0).floor();
-        let f = hue.mul_add(6.0, -i);
+        let index = (hue * 6.0).floor();
+        let f = hue.mul_add(6.0, -index);
         let p = val * f.mul_add(-sat, 1.0);
         let q = val * f.mul_add(-sat, 1.0);
         let t = val * (1.0 - f).mul_add(-sat, 1.0);
@@ -86,12 +88,12 @@ impl Colour {
             (p, q, val),
             (t, p, val),
             (val, p, q),
-        ][(i % 6.0).floor() as usize];
+        ][(index % 6.0).floor() as usize];
 
         Self::rgb(
-            (red * 255.0) as u8,
-            (green * 255.0) as u8,
-            (blue * 255.0) as u8,
+            mul_by_f64_to_u8(red, 255.0),
+            mul_by_f64_to_u8(green, 255.0),
+            mul_by_f64_to_u8(blue, 255.0),
         )
     }
 }
@@ -115,17 +117,17 @@ impl Mul<f64> for Colour {
     type Output = Self;
     fn mul(self, rhs: f64) -> Self::Output {
         Self::rgb(
-            mul_u8_by_f64(self.r, rhs),
-            mul_u8_by_f64(self.g, rhs),
-            mul_u8_by_f64(self.b, rhs),
+            mul_by_f64_to_u8(self.r, rhs),
+            mul_by_f64_to_u8(self.g, rhs),
+            mul_by_f64_to_u8(self.b, rhs),
         )
     }
 }
 
 impl MulAssign<f64> for Colour {
     fn mul_assign(&mut self, rhs: f64) {
-        self.r = mul_u8_by_f64(self.r, rhs);
-        self.r = mul_u8_by_f64(self.g, rhs);
-        self.r = mul_u8_by_f64(self.b, rhs);
+        self.r = mul_by_f64_to_u8(self.r, rhs);
+        self.r = mul_by_f64_to_u8(self.g, rhs);
+        self.r = mul_by_f64_to_u8(self.b, rhs);
     }
 }

@@ -105,7 +105,8 @@ impl Viewport {
         }
 
         if sort_faces {
-            screen_faces.sort_by_key(|face| (face.z_index.unwrap_or(0.0) * -1000.0).round() as isize);
+            screen_faces
+                .sort_by_key(|face| (face.z_index.unwrap_or(0.0) * -1000.0).round() as isize);
         }
 
         screen_faces
@@ -162,6 +163,7 @@ impl Viewport {
                 let screen_faces = self.project_faces(objects, true, true);
 
                 let brightness_chars: Vec<char> = BRIGHTNESS_CHARS.chars().collect();
+                let len_brightness_chars: f64 = brightness_chars.len() as f64;
 
                 for face in screen_faces {
                     let fill_char = if let Some(normal) = face.get_normal() {
@@ -172,10 +174,10 @@ impl Viewport {
                             })
                             .sum();
 
-                        let intensity_char =
-                            brightness_chars[((intensity * brightness_chars.len() as f64).round()
-                                as usize)
-                                .clamp(0, brightness_chars.len() - 1)];
+                        let brightness_char_index = ((intensity * len_brightness_chars).round()
+                            as usize)
+                            .clamp(0, brightness_chars.len() - 1);
+                        let intensity_char = brightness_chars[brightness_char_index];
 
                         ColChar::new(intensity_char, face.fill_char.modifier)
                     } else {

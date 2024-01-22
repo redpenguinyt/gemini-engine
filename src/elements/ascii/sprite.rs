@@ -44,8 +44,8 @@ impl Sprite {
         let mut pixels = vec![];
 
         let lines = texture.split('\n');
-        for (y, line) in lines.enumerate() {
-            pixels.extend(Text::draw(pos + Vec2D::new(0, y as isize), line, modifier));
+        for (y, line) in (0isize..).zip(lines) {
+            pixels.extend(Text::draw(pos + Vec2D::new(0, y), line, modifier));
         }
 
         pixels

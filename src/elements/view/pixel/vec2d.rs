@@ -38,6 +38,7 @@ impl<T: Into<isize>> From<(T, T)> for Vec2D {
         }
     }
 }
+
 impl_vec_add!(Vec2D, (x, y));
 impl_vec_sub!(Vec2D, (x, y));
 impl_vec_neg!(Vec2D, 0, (x, y));

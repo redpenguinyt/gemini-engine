@@ -51,10 +51,10 @@ impl Text {
     #[must_use]
     pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Pixel> {
         let mut pixels = vec![];
-        for (x, text_char) in content.chars().enumerate() {
+        for (x, text_char) in (0isize..).zip(content.chars()) {
             if text_char != ' ' {
                 pixels.push(Pixel::new(
-                    pos + Vec2D::new(x as isize, 0),
+                    pos + Vec2D::new(x, 0),
                     ColChar {
                         text_char,
                         modifier,
