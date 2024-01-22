@@ -28,7 +28,7 @@ fn main() {
                 &viewport.render(vec![&cube], DisplayMode::Solid),
                 Wrapping::Ignore,
             );
-            view.display_render().unwrap();
+            let _ = view.display_render();
         },
         FPS,
         |elapsed: gameloop::Duration, frame_skip| {

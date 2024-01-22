@@ -31,8 +31,8 @@ fn main() {
         scale_view.update();
         scale_view.view.blit(&text, Wrapping::Wrap);
         scale_view.view.blit(&sprite, Wrapping::Wrap);
-        scale_view.view.display_render().unwrap();
+        let _ = scale_view.view.display_render();
 
-        sleep(Duration::from_millis(10))
+        sleep(Duration::from_millis(10));
     }
 }

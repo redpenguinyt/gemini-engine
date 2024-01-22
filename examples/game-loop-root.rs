@@ -14,8 +14,8 @@ struct Game {
 }
 
 impl Game {
-    fn new() -> Game {
-        Game {
+    fn new() -> Self {
+        Self {
             view: View::new(40, 8, ColChar::BACKGROUND),
             pixel: Pixel::new(Vec2D { x: 10, y: 5 }, ColChar::SOLID),
         }
@@ -30,7 +30,7 @@ impl MainLoopRoot for Game {
     fn render_frame(&mut self) {
         self.view.clear();
         self.view.blit(&self.pixel, Wrapping::Wrap);
-        self.view.display_render().unwrap();
+        let _ = self.view.display_render();
     }
 }
 

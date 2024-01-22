@@ -1,6 +1,6 @@
-//! A GeminiEngine (py) example, recreated in its rusty successor
+//! A `GeminiEngine` (py) example, recreated in its rusty successor
 //! You can find the original here:
-//! https://github.com/redpenguinyt/GeminiExamples/blob/master/test_multiple_movement.py
+//! <https://github.com/redpenguinyt/GeminiExamples/blob/master/test_multiple_movement.py>
 
 use std::{thread, time::Duration};
 
@@ -31,8 +31,8 @@ fn main() {
     fps_gameloop!(
         {
             i += 1;
-            for (j, block) in blocks.iter_mut().enumerate() {
-                if i % 2_u32.pow(j as u32) == 0 {
+            for (j, block) in (0u32..).zip(blocks.iter_mut()) {
+                if i % 2_u32.pow(j) == 0 {
                     block.pos.x += 1;
                 }
             }
@@ -42,9 +42,9 @@ fn main() {
             for block in &blocks {
                 view.blit(block, Wrapping::Wrap);
             }
-            view.display_render().unwrap();
+            let _ = view.display_render();
 
-            if blocks.iter().all(|b| b.pos.x % view.width as isize == 0) {
+            if blocks.iter().all(|b| b.pos.x % isize::try_from(view.width).expect("Wrapped usize") == 0) {
                 thread::sleep(Duration::from_secs(2));
             };
         },

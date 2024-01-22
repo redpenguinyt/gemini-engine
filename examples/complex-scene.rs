@@ -65,7 +65,7 @@ fn main() {
             blit_elapsed = now.elapsed();
 
             let now = Instant::now();
-            view.display_render().unwrap();
+            let _ = view.display_render();
             render_elapsed = now.elapsed();
         },
         FPS,

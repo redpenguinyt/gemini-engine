@@ -17,8 +17,8 @@ fn main() {
         pixel.pos.x += 1;
 
         view.blit(&pixel, Wrapping::Wrap);
-        view.display_render().unwrap();
+        let _ = view.display_render();
 
-        gameloop::sleep_fps(FPS, None);
+        let _ = gameloop::sleep_fps(FPS, None);
     }
 }
