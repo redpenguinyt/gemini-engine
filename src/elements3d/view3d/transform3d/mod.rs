@@ -1,8 +1,8 @@
 use std::ops::Mul;
 mod vec3d;
 pub use vec3d::Vec3D;
-mod cached_rotation;
-use cached_rotation::CachedRotation3D;
+mod fast_rotate;
+use fast_rotate::CachedRotation3D;
 
 /// The `Transform3D` struct is used to manipulate the position of objects in 3D space
 #[derive(Debug, Clone, Copy)]

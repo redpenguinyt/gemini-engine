@@ -7,10 +7,16 @@ pub mod macros;
 static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
 
 /// Returns the size of the terminal as a `Vec2D`, using the termsize crate's [get function](https://docs.rs/termsize/latest/termsize/fn.get.html)
+///
+/// # Panics
+/// This function will panic if your target cannot safely convert an i16 to an isize
 #[must_use]
 pub fn get_termsize_as_vec2d() -> Option<Vec2D> {
     let size = termsize::get()?;
-    Some(Vec2D::new(size.cols as isize, size.rows as isize + 1))
+    Some(Vec2D::new(
+        isize::try_from(size.cols).expect("isize cannot fit i16"),
+        isize::try_from(size.rows).expect("isize cannot fit i16"),
+    ))
 }
 
 /// Block the process until the console window is resized to

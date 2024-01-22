@@ -1,7 +1,7 @@
 use crate::elements::view::ColChar;
 
-pub mod light;
-use light::Light;
+pub mod lighting;
+use lighting::Light;
 
 /// `DisplayMode` determines how the [`Viewport`](super::Viewport) renders our 3D objects. This is the Gemini equivalent of Blender's Viewport Shading options
 #[derive(Debug, Clone, PartialEq)]

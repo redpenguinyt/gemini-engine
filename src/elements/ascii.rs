@@ -9,8 +9,8 @@ pub use sprite::Sprite;
 mod text;
 pub use text::Text;
 
-mod text_align;
-pub use text_align::{TextAlign, TextAlign2D};
+mod alignment;
+pub use alignment::{TextAlign, TextAlign2D};
 
 /// Remove all leading newlines from the string
 #[must_use]

@@ -5,14 +5,14 @@ use crate::elements::{
     Line, Pixel, PixelContainer, Polygon, Text, Vec2D,
 };
 mod display_mode;
-mod face;
+mod faces;
 mod transform3d;
 pub use display_mode::{
-    light::{Light, LightType, BRIGHTNESS_CHARS},
+    lighting::{Light, LightType, BRIGHTNESS_CHARS},
     DisplayMode,
 };
-pub use face::IndexFace as Face;
-use face::ProjectedFace;
+pub use faces::IndexFace as Face;
+use faces::ProjectedFace;
 pub use transform3d::{Transform3D, Vec3D};
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`](crate::elements::View), and also acts as the scene's camera.
@@ -105,7 +105,7 @@ impl Viewport {
         }
 
         if sort_faces {
-            screen_faces.sort_by_key(|face| (face.z_index.unwrap_or(0.0) * -1000.0).round() as i64);
+            screen_faces.sort_by_key(|face| (face.z_index.unwrap_or(0.0) * -1000.0).round() as isize);
         }
 
         screen_faces
