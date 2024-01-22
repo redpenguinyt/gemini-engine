@@ -1,6 +1,7 @@
 use super::{Face, Transform3D, Vec3D, ViewElement3D};
 use crate::elements::view::ColChar;
 
+// TODO: remove Grid3D
 /// A flat grid to display where the ground is
 pub struct Grid3D {
     /// The transform of the centre of the grid (position, rotation, scale) in 3D space
