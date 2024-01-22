@@ -44,7 +44,10 @@ fn main() {
             }
             let _ = view.display_render();
 
-            if blocks.iter().all(|b| b.pos.x % isize::try_from(view.width).expect("Wrapped usize") == 0) {
+            if blocks
+                .iter()
+                .all(|b| b.pos.x % isize::try_from(view.width).expect("Wrapped usize") == 0)
+            {
                 thread::sleep(Duration::from_secs(2));
             };
         },
