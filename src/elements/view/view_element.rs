@@ -7,6 +7,6 @@ pub trait ViewElement {
 
     /// Return the positions the `ViewElement` occupies, essentially [`active_pixels()`](ViewElement::active_pixels()) without the [`ColChar`](super::ColChar)s. This has a default setting that extracts the [`Vec2D`]s from [`active_pixels`](ViewElement::active_pixels()) but you can set it to something else to make it faster
     fn active_points(&self) -> Vec<Vec2D> {
-        utils::pixels_to_points(self.active_pixels())
+        utils::pixels_to_points(&self.active_pixels())
     }
 }

@@ -148,7 +148,7 @@ impl Viewport {
                             face.screen_points[fi],
                             face.screen_points[(fi + 1) % face.screen_points.len()],
                         );
-                        canvas.append_points(Line::draw(i0, i1), face.fill_char);
+                        canvas.append_points(&Line::draw(i0, i1), face.fill_char);
                     }
                 }
             }
@@ -156,7 +156,7 @@ impl Viewport {
                 let screen_faces = self.project_faces(objects, true, true);
 
                 for face in screen_faces {
-                    canvas.append_points(Polygon::draw(&face.screen_points), face.fill_char);
+                    canvas.append_points(&Polygon::draw(&face.screen_points), face.fill_char);
                 }
             }
             DisplayMode::Illuminated { lights } => {
@@ -184,7 +184,7 @@ impl Viewport {
                         face.fill_char
                     };
 
-                    canvas.append_points(Polygon::draw(&face.screen_points), fill_char);
+                    canvas.append_points(&Polygon::draw(&face.screen_points), fill_char);
                 }
             }
         }

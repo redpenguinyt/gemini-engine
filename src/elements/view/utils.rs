@@ -4,7 +4,7 @@ pub use crate::utils::get_termsize_as_vec2d;
 
 /// Combine a vector of [`Vec2D`]s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your [`ViewElement`](super::ViewElement) only has one fill character across all of it
 #[must_use]
-pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Pixel> {
+pub fn points_to_pixels(points: &[Vec2D], fill_char: ColChar) -> Vec<Pixel> {
     points
         .iter()
         .map(|point| Pixel::new(*point, fill_char))
@@ -13,7 +13,7 @@ pub fn points_to_pixels(points: Vec<Vec2D>, fill_char: ColChar) -> Vec<Pixel> {
 
 /// Extract the positions from a vector of [`Pixel`]s
 #[must_use]
-pub fn pixels_to_points(pixels: Vec<Pixel>) -> Vec<Vec2D> {
+pub fn pixels_to_points(pixels: &[Pixel]) -> Vec<Vec2D> {
     pixels.iter().map(|p| p.pos).collect()
 }
 

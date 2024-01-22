@@ -30,7 +30,7 @@ impl PixelContainer {
     }
 
     /// Append vector of coordinates and a single [`ColChar`] for all of them.
-    pub fn append_points(&mut self, points: Vec<Vec2D>, fill_char: ColChar) {
+    pub fn append_points(&mut self, points: &[Vec2D], fill_char: ColChar) {
         self.append(&mut utils::points_to_pixels(points, fill_char));
     }
 

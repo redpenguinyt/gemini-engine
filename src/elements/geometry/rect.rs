@@ -38,7 +38,7 @@ impl Rect {
 
 impl ViewElement for Rect {
     fn active_pixels(&self) -> Vec<Pixel> {
-        utils::points_to_pixels(self.active_points(), self.fill_char)
+        utils::points_to_pixels(&self.active_points(), self.fill_char)
     }
 
     fn active_points(&self) -> Vec<Vec2D> {
