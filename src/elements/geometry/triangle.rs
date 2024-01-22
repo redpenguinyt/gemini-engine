@@ -32,8 +32,8 @@ impl Triangle {
 
     /// Draw a pseudo-line between the independent and dependent positions. Returns rounded values as `isize`s. If you don't want the values rounded, use [`Triangle::interpolate_floating()`]
     #[must_use]
-    pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
-        Self::interpolate_floating(i0, d0, i1, d1)
+    pub fn interpolate(i0: isize, d0: isize, i1: isize, d1: isize) -> Vec<isize> {
+        Self::interpolate_floating(i0, d0 as f64, i1, d1 as f64)
             .iter()
             .map(|n| n.round() as isize)
             .collect()
@@ -66,18 +66,19 @@ impl Triangle {
         let (x1, y1) = corners[1].as_tuple();
         let (x2, y2) = corners[2].as_tuple();
 
-        let mut x01 = Self::interpolate(y0, x0 as f64, y1, x1 as f64);
-        let x12 = Self::interpolate(y1, x1 as f64, y2, x2 as f64);
-        let x02 = Self::interpolate(y0, x0 as f64, y2, x2 as f64);
+        let mut x01 = Self::interpolate(y0, x0, y1, x1);
+        let x12 = Self::interpolate(y1, x1, y2, x2);
+        let x02 = Self::interpolate(y0, x0, y2, x2);
 
+        // Concat the two shorter sides
         x01.pop();
-        let x012 = [x01, x12].concat();
+        let x01_12 = [x01, x12].concat();
 
-        let m = (x012.len() as f64 / 2.0).floor() as usize;
-        let (x_left, x_right) = if x02[m] < x012[m] {
-            (x02, x012)
+        let m = (x01_12.len() as f64 / 2.0).floor() as usize;
+        let (x_left, x_right) = if x02[m] < x01_12[m] {
+            (x02, x01_12)
         } else {
-            (x012, x02)
+            (x01_12, x02)
         };
 
         for (i, y) in (y0..y2).enumerate() {

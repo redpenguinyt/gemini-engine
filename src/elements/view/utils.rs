@@ -21,7 +21,7 @@ pub fn pixels_to_points(pixels: Vec<Pixel>) -> Vec<Vec2D> {
 #[deprecated = "Please use `Triangle::interpolate` instead"]
 #[must_use]
 pub fn interpolate(i0: isize, d0: f64, i1: isize, d1: f64) -> Vec<isize> {
-    super::super::Triangle::interpolate(i0, d0, i1, d1)
+    super::super::Triangle::interpolate(i0, d0 as isize, i1, d1 as isize)
 }
 
 /// Returns true if the [`Vec2D`]s in the vector are arranged clockwise
