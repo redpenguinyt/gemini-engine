@@ -8,8 +8,6 @@
 //! - [`elements`], which handles the printing of various objects to a [`View`](elements::View), the central object in a Gemini project.
 //! - [`elements3d`], which handles everything 3D-related. Objects that [`elements3d`] converts to a 2d object will then be printed to the screen by a [`View`](elements::View)
 
-#![warn(missing_docs)] // For making sure everything's documented
-
 #[macro_use]
 mod utils;
 
