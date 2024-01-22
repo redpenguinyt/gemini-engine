@@ -1,4 +1,4 @@
-//! An object oriented approach to the gameloop, separate from [`fps_gameloop!`](crate::fps_gameloop). Read the [MainLoopRoot] documentation for more info
+//! An object oriented approach to the gameloop, separate from [`fps_gameloop!`](crate::fps_gameloop). Read the [`MainLoopRoot`] documentation for more info
 
 use std::time::{Duration, Instant};
 
@@ -78,7 +78,7 @@ pub trait MainLoopRoot {
         (super::sleep_fps(fps, Some(elapsed)), None)
     }
 
-    /// The main loop function of the main loop root. This shouldnt be overriden. The `fps` parameter will be passed straight to [`sleep_and_get_input()`](MainLoopRoot::sleep_and_get_input_data()). See the [MainLoopRoot] documentation for more info
+    /// The main loop function of the main loop root. This shouldnt be overriden. The `fps` parameter will be passed straight to [`sleep_and_get_input()`](MainLoopRoot::sleep_and_get_input_data()). See the [`MainLoopRoot`] documentation for more info
     /// ```rust, no_run
     /// # use gemini_engine::gameloop::MainLoopRoot;
     /// # struct Game {}

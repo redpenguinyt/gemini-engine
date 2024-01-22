@@ -21,16 +21,18 @@ impl<E: ViewElement> VisibilityToggle<E> {
 
 impl<T: ViewElement> ViewElement for VisibilityToggle<T> {
     fn active_pixels(&self) -> Vec<Pixel> {
-        match self.visible {
-            true => self.element.active_pixels(),
-            false => vec![],
+        if self.visible {
+            self.element.active_pixels()
+        } else {
+            vec![]
         }
     }
 
     fn active_points(&self) -> Vec<Vec2D> {
-        match self.visible {
-            true => self.element.active_points(),
-            false => vec![],
+        if self.visible {
+            self.element.active_points()
+        } else {
+            vec![]
         }
     }
 }

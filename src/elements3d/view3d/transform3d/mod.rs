@@ -25,7 +25,8 @@ impl Transform3D {
     /// The default transform - no translation, no rotation and 1x scaling
     pub const DEFAULT: Self = Self::new_trs(Vec3D::ZERO, Vec3D::ZERO, Vec3D::ONE);
 
-    /// Create a Transform3D with chosen translation, rotation and scale
+    /// Create a `Transform3D` with chosen translation, rotation and scale
+    #[must_use]
     pub const fn new_trs(translation: Vec3D, rotation: Vec3D, scale: Vec3D) -> Self {
         Self {
             translation,
@@ -34,7 +35,8 @@ impl Transform3D {
         }
     }
 
-    /// Create a Transform3D with chosen translation and rotation
+    /// Create a `Transform3D` with chosen translation and rotation
+    #[must_use]
     pub const fn new_tr(translation: Vec3D, rotation: Vec3D) -> Self {
         Self {
             translation,
@@ -43,7 +45,8 @@ impl Transform3D {
         }
     }
 
-    /// Create a Transform3D with chosen translation
+    /// Create a `Transform3D` with chosen translation
+    #[must_use]
     pub const fn new_t(translation: Vec3D) -> Self {
         Self {
             translation,
@@ -52,7 +55,8 @@ impl Transform3D {
         }
     }
 
-    /// Create a Transform3D with chosen rotation
+    /// Create a `Transform3D` with chosen rotation
+    #[must_use]
     pub const fn new_r(rotation: Vec3D) -> Self {
         Self {
             translation: Vec3D::ZERO,
@@ -63,6 +67,7 @@ impl Transform3D {
 
     /// Apply the transform to a slice of vertices
     #[allow(clippy::let_and_return)]
+    #[must_use]
     pub fn apply_to(&self, vertices: &[Vec3D]) -> Vec<Vec3D> {
         let rotation = CachedRotation3D::new(self.rotation);
 
@@ -80,6 +85,7 @@ impl Transform3D {
     }
 
     /// Rotate the given [`Vec3D`] using the `Transform3D`'s rotation field
+    #[must_use]
     pub fn rotate(&self, value: Vec3D) -> Vec3D {
         let rotation = CachedRotation3D::new(self.rotation);
 
@@ -87,10 +93,10 @@ impl Transform3D {
     }
 }
 
-impl Mul<Transform3D> for Transform3D {
-    type Output = Transform3D;
+impl Mul<Self> for Transform3D {
+    type Output = Self;
 
-    fn mul(self, rhs: Transform3D) -> Self::Output {
+    fn mul(self, rhs: Self) -> Self::Output {
         Self::new_trs(
             self.translation + rhs.translation,
             self.rotation + rhs.rotation,

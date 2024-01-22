@@ -29,7 +29,7 @@ impl FromStr for Colour {
         if parts.len() != 3 {
             return Err(String::from("Incorrect number of arguments, string must be in format r,g,b to be parsed correctly"));
         }
-        println!("{:?}", parts);
+        println!("{parts:?}");
 
         let mut nums = Vec::new();
 
@@ -44,7 +44,7 @@ impl FromStr for Colour {
             });
         }
 
-        Ok(Colour::rgb(nums[0], nums[1], nums[2]))
+        Ok(Self::rgb(nums[0], nums[1], nums[2]))
     }
 }
 
@@ -55,16 +55,19 @@ impl Colour {
     pub const WHITE: Self = Self::greyscale(255);
 
     /// Create a `Colour` from an RGB value
+    #[must_use]
     pub const fn rgb(r: u8, g: u8, b: u8) -> Self {
         Self { r, g, b }
     }
 
     /// Create a `Colour` from a single brightness value, resulting in a shade of grey
+    #[must_use]
     pub const fn greyscale(v: u8) -> Self {
         Self::rgb(v, v, v)
     }
 
     /// Create a `Colour` from an HSV value
+    #[must_use]
     pub fn hsv(h: u8, s: u8, v: u8) -> Self {
         let h = h as f32 / 255.0;
         let s = s as f32 / 255.0;
@@ -105,7 +108,7 @@ impl AddAssign for Colour {
 }
 
 impl Mul<f64> for Colour {
-    type Output = Colour;
+    type Output = Self;
     fn mul(self, rhs: f64) -> Self::Output {
         Self::rgb(
             mul_u8_by_f64(self.r, rhs),

@@ -41,6 +41,7 @@ impl ColChar {
     };
 
     /// Create a new `ColChar` with a text character and a [`Modifier`]
+    #[must_use]
     pub const fn new(text_char: char, modifier: Modifier) -> Self {
         Self {
             text_char,
@@ -48,31 +49,35 @@ impl ColChar {
         }
     }
 
-    /// Return a ColChar with the same `modifier` and new `text_char`
-    pub fn with_char(self, text_char: char) -> Self {
+    /// Return a `ColChar` with the same `modifier` and new `text_char`
+    #[must_use]
+    pub const fn with_char(self, text_char: char) -> Self {
         Self {
             text_char,
             modifier: self.modifier,
         }
     }
 
-    /// Return a ColChar with the same `text_char` and new `modifier`
-    pub fn with_mod(self, modifier: Modifier) -> Self {
+    /// Return a `ColChar` with the same `text_char` and new `modifier`
+    #[must_use]
+    pub const fn with_mod(self, modifier: Modifier) -> Self {
         Self {
             text_char: self.text_char,
             modifier,
         }
     }
 
-    /// Return a ColChar with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from RGB values
-    pub fn with_rgb(self, r: u8, g: u8, b: u8) -> Self {
+    /// Return a `ColChar` with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from RGB values
+    #[must_use]
+    pub const fn with_rgb(self, r: u8, g: u8, b: u8) -> Self {
         Self {
             text_char: self.text_char,
             modifier: Modifier::from_rgb(r, g, b),
         }
     }
 
-    /// Return a ColChar with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from HSV values
+    /// Return a `ColChar` with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from HSV values
+    #[must_use]
     pub fn with_hsv(self, h: u8, s: u8, v: u8) -> Self {
         Self {
             text_char: self.text_char,
@@ -80,28 +85,31 @@ impl ColChar {
         }
     }
 
-    /// Return a ColChar with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from an HSV value
-    pub fn with_colour(self, colour: Colour) -> Self {
+    /// Return a `ColChar` with the same `text_char` and new `modifier` of the `Modifier::Colour` enum variant from an HSV value
+    #[must_use]
+    pub const fn with_colour(self, colour: Colour) -> Self {
         Self {
             text_char: self.text_char,
             modifier: Modifier::Colour(colour),
         }
     }
 
-    /// Return the displayed ColChar, omitting the `Modifier`s where necessary
+    /// Return the displayed `ColChar`, omitting the `Modifier`s where necessary
     pub(crate) fn display_with_prev_and_next(
         self,
         f: &mut fmt::Formatter,
         prev_mod: Option<Modifier>,
         next_mod: Option<Modifier>,
     ) -> fmt::Result {
-        let modifier = match prev_mod == Some(self.modifier) {
-            true => Modifier::None,
-            false => self.modifier,
+        let modifier = if prev_mod == Some(self.modifier) {
+            Modifier::None
+        } else {
+            self.modifier
         };
-        let end = match next_mod == Some(self.modifier) {
-            true => Modifier::None,
-            false => Modifier::END,
+        let end = if next_mod == Some(self.modifier) {
+            Modifier::None
+        } else {
+            Modifier::END
         };
 
         write!(f, "{}{}{}", modifier, self.text_char, end)

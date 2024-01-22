@@ -13,6 +13,7 @@ mod text_align;
 pub use text_align::{TextAlign, TextAlign2D};
 
 /// Remove all leading newlines from the string
+#[must_use]
 pub fn remove_leading_newlines(texture: &str) -> String {
     let mut texture: Vec<char> = texture.chars().rev().collect();
 

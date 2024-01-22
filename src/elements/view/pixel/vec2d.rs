@@ -18,6 +18,7 @@ impl Vec2D {
     impl_vec_core!(Vec2D, isize, (x, y));
 
     /// The length/magnitude of the `Vec2D`
+    #[must_use]
     pub fn magnitude(&self) -> f64 {
         ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt()
     }
@@ -52,16 +53,16 @@ mod tests {
 
     #[test]
     fn eq_vec2_both() {
-        assert_eq!(Vec2D::new(5, 4), Vec2D::new(5, 4))
+        assert_eq!(Vec2D::new(5, 4), Vec2D::new(5, 4));
     }
 
     #[test]
     fn eq_vec2_only_one() {
-        assert_ne!(Vec2D::new(5, 2), Vec2D::new(5, 4))
+        assert_ne!(Vec2D::new(5, 2), Vec2D::new(5, 4));
     }
 
     #[test]
     fn eq_vec2_neither() {
-        assert_ne!(Vec2D::new(17, 2), Vec2D::new(5, 4))
+        assert_ne!(Vec2D::new(17, 2), Vec2D::new(5, 4));
     }
 }

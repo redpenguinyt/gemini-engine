@@ -13,11 +13,12 @@ pub enum TextAlign {
 
 impl TextAlign {
     /// Align the given 1-dimentional coordinate as dictated by the `TextAlign` enum variation
-    pub fn apply_to(&self, pos: isize, text_length: isize) -> isize {
+    #[must_use]
+    pub const fn apply_to(&self, pos: isize, text_length: isize) -> isize {
         match self {
-            TextAlign::Begin => pos,
-            TextAlign::Centered => pos - text_length / 2,
-            TextAlign::End => pos - text_length,
+            Self::Begin => pos,
+            Self::Centered => pos - text_length / 2,
+            Self::End => pos - text_length,
         }
     }
 }
@@ -33,24 +34,26 @@ pub struct TextAlign2D {
 
 impl Default for TextAlign2D {
     fn default() -> Self {
-        TextAlign2D::new(TextAlign::Begin, TextAlign::Begin)
+        Self::new(TextAlign::Begin, TextAlign::Begin)
     }
 }
 
 impl TextAlign2D {
     /// Align to centre of text
-    pub const CENTERED: TextAlign2D = TextAlign2D::new(TextAlign::Centered, TextAlign::Centered);
+    pub const CENTERED: Self = Self::new(TextAlign::Centered, TextAlign::Centered);
 
-    /// Create a new TextAlign2D with a given x and y align
-    pub const fn new(x_align: TextAlign, y_align: TextAlign) -> TextAlign2D {
-        TextAlign2D {
+    /// Create a new `TextAlign2D` with a given x and y align
+    #[must_use]
+    pub const fn new(x_align: TextAlign, y_align: TextAlign) -> Self {
+        Self {
             x: x_align,
             y: y_align,
         }
     }
 
     /// Align the given position as dictated by the X and Y `TextAlign` enum variations
-    pub fn apply_to(&self, pos: Vec2D, text_block_size: Vec2D) -> Vec2D {
+    #[must_use]
+    pub const fn apply_to(&self, pos: Vec2D, text_block_size: Vec2D) -> Vec2D {
         Vec2D::new(
             self.x.apply_to(pos.x, text_block_size.x),
             self.y.apply_to(pos.y, text_block_size.y),

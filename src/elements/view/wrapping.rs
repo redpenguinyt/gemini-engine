@@ -13,23 +13,24 @@ pub enum Wrapping {
 
 impl Wrapping {
     /// Handle the position based on the given bounds and the Wrapping variation (See the [Wrapping] documentation for more info)
+    #[must_use]
     pub fn handle_bounds(&self, pos: Vec2D, bounds: Vec2D) -> Option<Vec2D> {
         let in_bounds_pos = pos % bounds;
 
         match self {
-            Wrapping::Wrap => Some(in_bounds_pos),
-            Wrapping::Ignore => {
-                if pos != in_bounds_pos {
-                    None
-                } else {
+            Self::Wrap => Some(in_bounds_pos),
+            Self::Ignore => {
+                if pos == in_bounds_pos {
                     Some(pos)
+                } else {
+                    None
                 }
             }
-            Wrapping::Panic => {
-                if pos != in_bounds_pos {
-                    panic!("{} is out of bounds", pos);
-                } else {
+            Self::Panic => {
+                if pos == in_bounds_pos {
                     Some(pos)
+                } else {
+                    panic!("{pos} is out of bounds");
                 }
             }
         }

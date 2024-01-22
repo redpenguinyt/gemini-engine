@@ -32,11 +32,13 @@ impl Modifier {
     pub const CYAN: Self = Self::Coded(36);
 
     /// Create a `Modifier::Colour` from an RGB value
-    pub fn from_rgb(r: u8, g: u8, b: u8) -> Self {
+    #[must_use]
+    pub const fn from_rgb(r: u8, g: u8, b: u8) -> Self {
         Self::Colour(Colour::rgb(r, g, b))
     }
 
     /// Create a `Modifier::Colour` from an HSV value
+    #[must_use]
     pub fn from_hsv(h: u8, s: u8, v: u8) -> Self {
         Self::Colour(Colour::hsv(h, s, v))
     }
@@ -45,7 +47,7 @@ impl Modifier {
 impl Display for Modifier {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Coded(code) => write!(f, "\x1b[{}m", code),
+            Self::Coded(code) => write!(f, "\x1b[{code}m"),
             Self::Colour(c) => write!(f, "\x1b[38;2;{};{};{}m", c.r, c.g, c.b),
             Self::None => Ok(()),
         }

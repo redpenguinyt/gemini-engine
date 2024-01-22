@@ -12,8 +12,9 @@ pub struct Line {
 
 impl Line {
     /// Create a new line with a start and end point and a [`ColChar`]
+    #[must_use]
     pub const fn new(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Self {
-        Line {
+        Self {
             pos0,
             pos1,
             fill_char,
@@ -21,6 +22,7 @@ impl Line {
     }
 
     /// Draw a line using Bresenham's line algorithm. Returns a list of the pixels to print to
+    #[must_use]
     pub fn draw(pos0: Vec2D, pos1: Vec2D) -> Vec<Vec2D> {
         // Use Bresenham's line algorithm to generate active pixels at rendertime
         let mut points = Vec::new();

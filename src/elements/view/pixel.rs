@@ -21,6 +21,7 @@ pub struct Pixel {
 
 impl Pixel {
     /// Create a new `Pixel` from a [`Vec2D`] and [`ColChar`]
+    #[must_use]
     pub const fn new(pos: Vec2D, fill_char: ColChar) -> Self {
         Self { pos, fill_char }
     }

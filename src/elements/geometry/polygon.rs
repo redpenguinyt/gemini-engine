@@ -11,21 +11,24 @@ pub struct Polygon {
 
 impl Polygon {
     /// Create a new polygon
+    #[must_use]
     pub const fn new(points: Vec<Vec2D>, fill_char: ColChar) -> Self {
         Self { points, fill_char }
     }
 
     /// Split a polygon up into triangles. Returns a vec of coordinate sets for each triangle
+    #[must_use]
     pub fn triangulate(vertices: &[Vec2D]) -> Vec<[Vec2D; 3]> {
         // TODO: add an actual triangulation algorithm here!
         let mut points = vec![];
         for fi in 1..(vertices.len() - 1) {
-            points.push([vertices[0], vertices[fi], vertices[fi + 1]])
+            points.push([vertices[0], vertices[fi], vertices[fi + 1]]);
         }
         points
     }
 
     /// Draw a polygon from points. Only supports convex polygons as of now
+    #[must_use]
     pub fn draw(vertices: &[Vec2D]) -> Vec<Vec2D> {
         Self::triangulate(vertices)
             .iter()

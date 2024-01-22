@@ -17,8 +17,9 @@ pub struct Grid3D {
 
 impl Grid3D {
     /// Create a new grid with the specified cell size and count
-    pub fn new(cell_size: f64, cell_count: usize, fill_char: ColChar) -> Grid3D {
-        let mut tmp = Grid3D {
+    #[must_use]
+    pub fn new(cell_size: f64, cell_count: usize, fill_char: ColChar) -> Self {
+        let mut tmp = Self {
             transform: Transform3D::DEFAULT,
             cell_size,
             cell_count,

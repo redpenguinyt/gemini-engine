@@ -14,14 +14,15 @@ pub struct ScaleFitView {
 
 impl Default for ScaleFitView {
     fn default() -> Self {
-        ScaleFitView::new(ColChar::EMPTY)
+        Self::new(ColChar::EMPTY)
     }
 }
 
 impl ScaleFitView {
     /// Create a new `ScaleFitView` with the given background `ColChar`
-    pub fn new(background_char: ColChar) -> ScaleFitView {
-        let mut tmp = ScaleFitView {
+    #[must_use]
+    pub fn new(background_char: ColChar) -> Self {
+        let mut tmp = Self {
             view: View::new(0, 0, background_char),
             empty_row_count: 1,
         };
@@ -30,12 +31,14 @@ impl ScaleFitView {
     }
 
     /// Returns the `ScaleFitView` with the updated [`empty_row_count`](ScaleFitView::empty_row_count)
-    pub fn with_empty_row_count(mut self, empty_row_count: isize) -> ScaleFitView {
+    #[must_use]
+    pub const fn with_empty_row_count(mut self, empty_row_count: isize) -> Self {
         self.empty_row_count = empty_row_count;
         self
     }
 
     /// Returns the size of the terminal, with the y adjusted as intended using the [`empty_row_count`](ScaleFitView::empty_row_count) property
+    #[must_use]
     pub fn intended_size(&self) -> Vec2D {
         let mut term_size = utils::get_termsize_as_vec2d().expect("Failed to get terminal size");
         term_size.y -= self.empty_row_count + 1;
@@ -48,6 +51,6 @@ impl ScaleFitView {
         self.view.width = term_size.x as usize;
         self.view.height = term_size.y as usize;
 
-        self.view.clear()
+        self.view.clear();
     }
 }

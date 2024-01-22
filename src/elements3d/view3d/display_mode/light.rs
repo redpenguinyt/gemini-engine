@@ -22,7 +22,7 @@ pub enum LightType {
     },
 }
 
-/// A light object used to define a scene's lighting. Used by [DisplayMode::Illuminated](super::DisplayMode::Illuminated)
+/// A light object used to define a scene's lighting. Used by [`DisplayMode::Illuminated`](super::DisplayMode::Illuminated)
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Light {
     /// The type of light and the way it affects
@@ -33,6 +33,7 @@ pub struct Light {
 
 impl Light {
     /// Create a new ambient light
+    #[must_use]
     pub const fn new_ambient(intensity: f64) -> Self {
         Self {
             light_type: LightType::Ambient,
@@ -41,6 +42,7 @@ impl Light {
     }
 
     /// Create a new directional light
+    #[must_use]
     pub const fn new_directional(intensity: f64, direction: Vec3D) -> Self {
         Self {
             light_type: LightType::Directional { direction },
@@ -49,6 +51,7 @@ impl Light {
     }
 
     /// Create a new point light
+    #[must_use]
     pub const fn new_point(intensity: f64, position: Vec3D) -> Self {
         Self {
             light_type: LightType::Point { position },
@@ -66,6 +69,7 @@ impl Light {
     }
 
     /// Calculate the intensity of the light as it affects a surface with the given normal
+    #[must_use]
     pub fn calculate_intensity(&self, point: Vec3D, normal: Vec3D) -> f64 {
         match self.light_type {
             LightType::Ambient => self.intensity,

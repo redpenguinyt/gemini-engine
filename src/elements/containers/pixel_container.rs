@@ -14,6 +14,7 @@ pub struct PixelContainer {
 
 impl PixelContainer {
     /// Create a new, empty `PixelContainer`
+    #[must_use]
     pub const fn new() -> Self {
         Self { pixels: vec![] }
     }
@@ -33,27 +34,28 @@ impl PixelContainer {
         self.append(&mut utils::points_to_pixels(points, fill_char));
     }
 
-    /// Plot a pixel to the PixelContainer
+    /// Plot a pixel to the `PixelContainer`
     pub fn plot(&mut self, pos: Vec2D, c: ColChar) {
-        self.push(Pixel::new(pos, c))
+        self.push(Pixel::new(pos, c));
     }
 
-    /// Blit a [`ViewElement`] to the PixelContainer.
+    /// Blit a [`ViewElement`] to the `PixelContainer`.
     pub fn blit<E: ViewElement>(&mut self, element: &E) {
         let mut active_pixels = element.active_pixels();
 
         self.append(&mut active_pixels);
     }
 
-    /// Applies the shader to the [PixelContainer]'s active pixels. A "shader" in this case is any object which implements [CanShade]
-    pub fn shade_with(&self, shader: &mut Box<dyn CanShade>) -> PixelContainer {
+    /// Applies the shader to the `PixelContainer`'s active pixels. A "shader" in this case is any object which implements [`CanShade`]
+    #[must_use]
+    pub fn shade_with(&self, shader: &mut Box<dyn CanShade>) -> Self {
         let shaded_pixels: Vec<Pixel> = self
             .active_pixels()
             .iter()
             .map(|p| shader.shade(*p))
             .collect();
 
-        PixelContainer::from(shaded_pixels.as_slice())
+        Self::from(shaded_pixels.as_slice())
     }
 }
 

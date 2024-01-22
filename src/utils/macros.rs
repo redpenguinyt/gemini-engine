@@ -1,4 +1,4 @@
-/// Macros for near-identical implementations in Vec2D and Vec3D
+//! Macros for near-identical implementations in `Vec2D` and `Vec3D`
 
 /// Ignore all parameters after the first and just return the first
 macro_rules! ignore_rest {
@@ -10,12 +10,14 @@ macro_rules! ignore_rest {
 macro_rules! impl_vec_core {
     ($struct:ty, $field_type:ty, ($( $field:ident ),+)) => {
         #[doc = concat!("Create a `", stringify!($struct), "` from the provided `", stringify!($field_type), "` values")]
+        #[must_use]
         pub const fn new($( $field: $field_type, )*) -> Self {
             Self { $( $field, )* }
         }
 
         #[doc = concat!("Return the `", stringify!($struct), "` as a tuple")]
-        pub fn as_tuple(&self) -> (
+        #[must_use]
+        pub const fn as_tuple(&self) -> (
             $( ignore_rest!($field_type, $field), )*
         ) {
             (

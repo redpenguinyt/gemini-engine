@@ -24,12 +24,13 @@ impl Text {
     ///
     /// # Panics
     /// This function will panic if the content contains a newline, as Text only works with single lines. For multi-line strings, see [Sprite](super::Sprite)
-    pub fn new(pos: Vec2D, content: &str, modifier: Modifier) -> Text {
+    #[must_use]
+    pub fn new(pos: Vec2D, content: &str, modifier: Modifier) -> Self {
         if content.contains('\n') {
             panic!("Text was created with a content string containing a \n character")
         }
 
-        Text {
+        Self {
             pos,
             content: String::from(content),
             align: TextAlign::Begin,
@@ -38,13 +39,15 @@ impl Text {
     }
 
     /// Return the `Text` with the modified align property
-    pub fn with_align(self, align: TextAlign) -> Text {
+    #[must_use]
+    pub const fn with_align(self, align: TextAlign) -> Self {
         let mut tmp = self;
         tmp.align = align;
         tmp
     }
 
     /// Return a vector of Pixels to display the given content
+    #[must_use]
     pub fn draw(pos: Vec2D, content: &str, modifier: Modifier) -> Vec<Pixel> {
         let mut pixels = vec![];
         for (x, text_char) in content.chars().enumerate() {
@@ -63,6 +66,7 @@ impl Text {
     }
 
     /// Return a vector of Pixels to display the given content, aligning the content to the position as directed by the `align` attribute
+    #[must_use]
     pub fn draw_with_align(
         pos: Vec2D,
         content: &str,
@@ -71,12 +75,12 @@ impl Text {
     ) -> Vec<Pixel> {
         let pos = Vec2D::new(align.apply_to(pos.x, content.len() as isize), pos.y);
 
-        Text::draw(pos, content, modifier)
+        Self::draw(pos, content, modifier)
     }
 }
 
 impl ViewElement for Text {
     fn active_pixels(&self) -> Vec<Pixel> {
-        Text::draw_with_align(self.pos, &self.content, self.align, self.modifier)
+        Self::draw_with_align(self.pos, &self.content, self.align, self.modifier)
     }
 }

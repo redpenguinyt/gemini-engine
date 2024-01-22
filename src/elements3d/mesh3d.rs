@@ -1,7 +1,7 @@
 use super::{Face, Transform3D, Vec3D, ViewElement3D};
 mod mesh3d_presets;
 
-/// The struct for a Mesh3D object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
+/// The struct for a `Mesh3D` object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
 #[derive(Debug, Clone)]
 pub struct Mesh3D {
     /// The mesh's transform (position, rotation, scale) in 3D space
@@ -14,6 +14,7 @@ pub struct Mesh3D {
 
 impl Mesh3D {
     /// Create a `Mesh3D` with a default `Transform3D`
+    #[must_use]
     pub const fn new(transform: Transform3D, vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
         Self {
             transform,
@@ -23,8 +24,9 @@ impl Mesh3D {
     }
 
     /// Create a `Mesh3D` with a default `Transform3D`
-    pub const fn new_at_origin(vertices: Vec<Vec3D>, faces: Vec<Face>) -> Mesh3D {
-        Mesh3D {
+    #[must_use]
+    pub const fn new_at_origin(vertices: Vec<Vec3D>, faces: Vec<Face>) -> Self {
+        Self {
             transform: Transform3D::DEFAULT,
             vertices,
             faces,

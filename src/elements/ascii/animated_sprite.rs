@@ -20,6 +20,7 @@ pub struct AnimatedSprite {
 
 impl AnimatedSprite {
     /// Create a new `AnimatedSprite` struct. All newlines at the beginning of each texture will be removed
+    #[must_use]
     pub fn new(pos: Vec2D, frames: &[&str], modifier: Modifier) -> Self {
         let processed_frames: Vec<String> = frames
             .iter()
@@ -42,6 +43,7 @@ impl AnimatedSprite {
     }
 
     /// Returns true if the `current_frame` property is within range of the list of frames. Also returns false if the list of frames is empty
+    #[must_use]
     pub fn is_within_frame_range(&self) -> bool {
         self.current_frame < self.frames.len()
     }

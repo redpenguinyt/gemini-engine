@@ -22,31 +22,36 @@ impl Vec3D {
     impl_vec_core!(Vec3D, f64, (x, y, z));
 
     /// Return the dot product in combination with another `Vec3D`
-    pub fn dot(&self, other: Vec3D) -> f64 {
+    #[must_use]
+    pub fn dot(&self, other: Self) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
     /// Returns the dot product in combination with itself
+    #[must_use]
     pub fn dot_self(&self) -> f64 {
         self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
     }
 
-    /// The length/magnitude of the Vec3D
+    /// The length/magnitude of the `Vec3D`
+    #[must_use]
     pub fn magnitude(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
     /// The cross product of two vectors is a vector perpendicular to both of them. See [a more detailed explanation](https://www.gabrielgambetta.com/computer-graphics-from-scratch/A0-linear-algebra.html#cross-product)
-    pub fn cross(&self, other: Vec3D) -> Vec3D {
-        Vec3D::new(
+    #[must_use]
+    pub fn cross(&self, other: Self) -> Self {
+        Self::new(
             self.y * other.z - self.z * other.y,
             self.z * other.x - self.x * other.z,
             self.x * other.y - self.y * other.x,
         )
     }
 
-    /// Generate a normal from the Vec3D
-    pub fn normal(self) -> Vec3D {
+    /// Generate a normal from the `Vec3D`
+    #[must_use]
+    pub fn normal(self) -> Self {
         self / self.magnitude()
     }
 }
@@ -78,7 +83,7 @@ impl FromStr for Vec3D {
             });
         }
 
-        Ok(Vec3D::from((nums[0], nums[1], nums[2])))
+        Ok(Self::from((nums[0], nums[1], nums[2])))
     }
 }
 
@@ -109,7 +114,7 @@ impl_vec_rem!(Vec3D, (x, y, z));
 
 impl std::iter::Sum for Vec3D {
     fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
-        let mut sum = Vec3D::ZERO;
+        let mut sum = Self::ZERO;
         for item in iter {
             sum += item;
         }

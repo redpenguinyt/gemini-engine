@@ -3,6 +3,7 @@
 use super::Vec3D;
 
 /// Enum to indicate a 3D axis
+#[derive(Debug, Clone, Copy)]
 enum SpatialAxis {
     X,
     Y,
@@ -10,12 +11,12 @@ enum SpatialAxis {
 }
 
 impl SpatialAxis {
-    /// Returns the two axes on the plane perpendicular to the SpatialAxis' variation
-    pub fn get_perpendicular_plane<'a>(&self, value: &'a mut Vec3D) -> (&'a mut f64, &'a mut f64) {
+    /// Returns the two axes on the plane perpendicular to the `SpatialAxis`' variation
+    pub fn get_perpendicular_plane(self, value: &mut Vec3D) -> (&mut f64, &mut f64) {
         match self {
-            SpatialAxis::X => (&mut value.y, &mut value.z),
-            SpatialAxis::Y => (&mut value.x, &mut value.z),
-            SpatialAxis::Z => (&mut value.x, &mut value.y),
+            Self::X => (&mut value.y, &mut value.z),
+            Self::Y => (&mut value.x, &mut value.z),
+            Self::Z => (&mut value.x, &mut value.y),
         }
     }
 }
@@ -27,8 +28,8 @@ struct CachedRotation {
 }
 
 impl CachedRotation {
-    pub fn new(r: f64) -> CachedRotation {
-        CachedRotation {
+    pub fn new(r: f64) -> Self {
+        Self {
             s: r.sin(),
             c: r.cos(),
         }
@@ -38,7 +39,7 @@ impl CachedRotation {
         let mut translation = value;
         let (x, y) = axis.get_perpendicular_plane(&mut translation);
 
-        (*x, *y) = (*x * self.c - *y * self.s, *x * self.s + *y * self.c);
+        (*x, *y) = ((*x).mul_add(self.c, -(*y * self.s)), (*x).mul_add(self.s, *y * self.c));
 
         translation
     }
@@ -52,8 +53,8 @@ pub struct CachedRotation3D {
 }
 
 impl CachedRotation3D {
-    pub fn new(rot: Vec3D) -> CachedRotation3D {
-        CachedRotation3D {
+    pub fn new(rot: Vec3D) -> Self {
+        Self {
             x: CachedRotation::new(rot.x),
             y: CachedRotation::new(rot.y),
             z: CachedRotation::new(rot.z),

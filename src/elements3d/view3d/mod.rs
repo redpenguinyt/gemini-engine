@@ -28,7 +28,8 @@ pub struct Viewport {
 }
 
 impl Viewport {
-    /// Create a new Viewport with a default [character_width_multiplier](Viewport::character_width_multiplier) of 2.2
+    /// Create a new Viewport with a default [`character_width_multiplier`](Viewport::character_width_multiplier) of 2.2
+    #[must_use]
     pub const fn new(transform: Transform3D, fov: f64, screen_origin: Vec2D) -> Self {
         Self {
             transform,
@@ -38,7 +39,7 @@ impl Viewport {
         }
     }
 
-    /// Project the [`Vec3D`] on a flat plane using the `Viewport`'s [fov](Viewport::fov) and [character_width_multiplier](Viewport::character_width_multiplier)
+    /// Project the [`Vec3D`] on a flat plane using the `Viewport`'s [fov](Viewport::fov) and [`character_width_multiplier`](Viewport::character_width_multiplier)
     fn perspective(&self, pos: Vec3D) -> Vec2D {
         let f = self.fov / -pos.z;
         let (sx, sy) = (-pos.x * f, pos.y * f);
@@ -83,12 +84,13 @@ impl Viewport {
                     continue;
                 }
 
-                let mean_z = match sort_faces {
-                    true => Some(
+                let mean_z = if sort_faces {
+                    Some(
                         face.index_into(&vertex_depths).into_iter().sum::<f64>()
                             / face_vertices.len() as f64,
-                    ),
-                    false => None,
+                    )
+                } else {
+                    None
                 };
 
                 let original_vertices = face.index_into(&self.transform_vertices(object));
@@ -110,6 +112,7 @@ impl Viewport {
     }
 
     /// Render the objects (implementing [`ViewElement3D`]) given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
+    #[must_use]
     pub fn render(
         &self,
         objects: Vec<&dyn ViewElement3D>,
@@ -152,7 +155,7 @@ impl Viewport {
                 let screen_faces = self.project_faces(objects, true, true);
 
                 for face in screen_faces {
-                    canvas.append_points(Polygon::draw(&face.screen_points), face.fill_char)
+                    canvas.append_points(Polygon::draw(&face.screen_points), face.fill_char);
                 }
             }
             DisplayMode::Illuminated { lights } => {

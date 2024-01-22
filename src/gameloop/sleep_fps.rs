@@ -20,6 +20,7 @@ use std::{thread::sleep, time::Duration};
 ///
 ///     frame_skip = gameloop::sleep_fps(FPS, Some(now.elapsed()));
 /// }
+#[must_use]
 pub fn sleep_fps(fps: f32, elapsed: Option<Duration>) -> bool {
     let elapsed = elapsed.unwrap_or(Duration::ZERO);
     let frame_length = Duration::from_secs_f32(1.0 / fps);

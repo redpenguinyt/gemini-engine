@@ -20,6 +20,7 @@ pub struct Sprite {
 
 impl Sprite {
     /// Create a new `Sprite` struct. All newlines at the beginning of the texture will be removed
+    #[must_use]
     pub fn new(pos: Vec2D, texture: &str, modifier: Modifier) -> Self {
         Self {
             pos,
@@ -30,13 +31,15 @@ impl Sprite {
     }
 
     /// Return the `Sprite` with the modified align property
-    pub fn with_align(self, align: TextAlign2D) -> Sprite {
+    #[must_use]
+    pub const fn with_align(self, align: TextAlign2D) -> Sprite {
         let mut tmp = self;
         tmp.align = align;
         tmp
     }
 
     /// Render a string texture at a given position in a [`ViewElement::active_pixels()`]-readable format
+    #[must_use]
     pub fn draw(pos: Vec2D, texture: &str, modifier: Modifier) -> Vec<Pixel> {
         let mut pixels = vec![];
 
@@ -49,6 +52,7 @@ impl Sprite {
     }
 
     /// Return a vector of Pixels to display the given content, aligning the content to the position as directed by the `align` attribute
+    #[must_use]
     pub fn draw_with_align(
         pos: Vec2D,
         texture: &str,
@@ -61,7 +65,7 @@ impl Sprite {
         );
         let pos = align.apply_to(pos, content_size);
 
-        Sprite::draw(pos, texture, modifier)
+        Self::draw(pos, texture, modifier)
     }
 }
 

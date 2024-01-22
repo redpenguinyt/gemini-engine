@@ -8,23 +8,26 @@ pub struct CollisionContainer<'a> {
 }
 
 impl<'a> CollisionContainer<'a> {
-    /// Create a new CollisionContainer
+    /// Create a new `CollisionContainer`
+    #[must_use]
     pub const fn new() -> CollisionContainer<'a> {
         CollisionContainer { elements: vec![] }
     }
 
     /// Add an element to the container
     pub fn push(&mut self, element: &'a impl ViewElement) {
-        self.elements.push(element)
+        self.elements.push(element);
     }
 
     /// Return a list of all the positions at which the collision box is active
     #[deprecated = "This is now just a proxy for active_points, use `CollisionContainer::active_points` instead"]
+    #[must_use]
     pub fn generate_collision_points(&self) -> Vec<Vec2D> {
         self.active_points()
     }
 
     /// Returns true if there is an element from the `CollisionContainer` at the given coordinates
+    #[must_use]
     pub fn contains(&self, pos: Vec2D) -> bool {
         let collision_points = self.active_points();
 

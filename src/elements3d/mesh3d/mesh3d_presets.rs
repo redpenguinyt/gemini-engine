@@ -8,7 +8,8 @@ use crate::{
 };
 
 impl Mesh3D {
-    /// The gemini_engine equivalent of Blender's default cube. Has side lengths of 2
+    /// The `gemini_engine` equivalent of Blender's default cube. Has side lengths of 2
+    #[must_use]
     pub fn default_cube() -> Self {
         Self::new_at_origin(
             vec![
@@ -33,6 +34,7 @@ impl Mesh3D {
     }
 
     /// Create a torus (donut shape)
+    #[must_use]
     pub fn torus(
         outer_radius: f64,
         inner_radius: f64,
@@ -74,16 +76,17 @@ impl Mesh3D {
             }
         }
 
-        Mesh3D::new_at_origin(vertices, faces)
+        Self::new_at_origin(vertices, faces)
     }
 
-    /// A gimbal to help you orient in gemini_engine's 3D space. The orientation is as follows (from the default [`Viewport`](super::super::Viewport))
+    /// A gimbal to help you orient in `gemini_engine`'s 3D space. The orientation is as follows (from the default [`Viewport`](super::super::Viewport))
     /// - X (red) increases as you move to the right
     /// - Y (green) increases as you move up
     /// - Z (blue) increases as you move away from the viewport
     ///
     /// Think of it like Blender's axes but with Y and Z swapped.
     /// This Mesh does not render in `DisplayMode::SOLID` (see [`DisplayMode`](super::super::DisplayMode) documentation)
+    #[must_use]
     pub fn gimbal() -> Self {
         Self::new_at_origin(
             vec![

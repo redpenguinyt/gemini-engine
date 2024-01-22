@@ -2,7 +2,7 @@ use crate::elements::{view::ColChar, Vec2D};
 
 use super::Vec3D;
 
-/// A Face contains indices to a mesh's collection of vertices and a fill_char to fill the face. Indices should be arranged in a clockwise order, as if they appear counter-clockwise when rendering they will not be rendered at all (this is how gemini-engine handles backface culling and maximises performance)
+/// A Face contains indices to a mesh's collection of vertices and a `ColChar` to fill the face. Indices should be arranged in a clockwise order, as if they appear counter-clockwise when rendering they will not be rendered at all (this is how gemini-engine handles backface culling and maximises performance)
 #[derive(Debug, Clone)]
 pub struct IndexFace {
     /// The vertex indices of the face
@@ -13,6 +13,7 @@ pub struct IndexFace {
 
 impl IndexFace {
     /// Create a new face with the given indexes and [`ColChar`]
+    #[must_use]
     pub const fn new(v_indices: Vec<usize>, fill_char: ColChar) -> Self {
         Self {
             v_indices,
@@ -27,7 +28,7 @@ impl IndexFace {
     }
 }
 
-pub(crate) struct ProjectedFace {
+pub struct ProjectedFace {
     /// Where the points appear on the screen
     pub screen_points: Vec<Vec2D>,
     /// The original vertices in 3d space

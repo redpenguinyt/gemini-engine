@@ -21,7 +21,7 @@ pub use scale_to_fit::ScaleFitView;
 pub use view_element::ViewElement;
 pub use wrapping::Wrapping;
 
-/// The View struct is the canvas on which you will print all of your ViewElements. In normal use, you would clear the View, `blit` all your ViewElements to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Pixel in the middle
+/// The View struct is the canvas on which you will print all of your `ViewElement`s. In normal use, you would clear the View, `blit` all your `ViewElement`s to it and then render. The following example demonstrates a piece of code that will render a View of width 9 and height 3, with a single Pixel in the middle
 /// ```
 /// use gemini_engine::elements::{view::{Wrapping, ColChar}, View, Pixel, Vec2D};
 ///
@@ -49,8 +49,9 @@ pub struct View {
 
 impl View {
     /// Create a new `View` using [`width`](View::width), [`height`](View::height) and [`background_char`](View::background_char) parameters
-    pub fn new(width: usize, height: usize, background_char: ColChar) -> View {
-        let mut view = View {
+    #[must_use]
+    pub fn new(width: usize, height: usize, background_char: ColChar) -> Self {
+        let mut view = Self {
             width,
             height,
             background_char,
@@ -64,30 +65,34 @@ impl View {
     }
 
     /// Return the `View` with its [`coord_numbers_in_render`](View::coord_numbers_in_render) field set to the chosen value. Consumes the original `View`
-    pub fn with_coord_numbers(mut self, coord_numbers_in_render: bool) -> View {
+    #[must_use]
+    pub const fn with_coord_numbers(mut self, coord_numbers_in_render: bool) -> Self {
         self.coord_numbers_in_render = coord_numbers_in_render;
         self
     }
 
     /// Return the `View` with its [`block_until_resized`](View::block_until_resized) field set to the chosen value. Consumes the original `View`
-    pub fn with_block_until_resized(mut self, block_until_resized: bool) -> View {
+    #[must_use]
+    pub const fn with_block_until_resized(mut self, block_until_resized: bool) -> Self {
         self.block_until_resized = block_until_resized;
         self
     }
 
     /// Return the width and height of the `View` as a [`Vec2D`]
-    pub fn size(&self) -> Vec2D {
+#[must_use]
+    pub const fn size(&self) -> Vec2D {
         Vec2D::new(self.width as isize, self.height as isize)
     }
 
     /// Return [`Vec2D`] coordinates of the centre of the `View`
+    #[must_use]
     pub fn center(&self) -> Vec2D {
         self.size() / 2
     }
 
     /// Clear the `View` of all pixels
     pub fn clear(&mut self) {
-        self.pixels = vec![self.background_char; self.width * self.height]
+        self.pixels = vec![self.background_char; self.width * self.height];
     }
 
     /// Plot a pixel to the `View`. Accepts a [`Vec2D`] (the position of the pixel), [`ColChar`] (what the pixel should look like/what colour it should be), and a [`Wrapping`] enum variant (Please see the [Wrapping] documentation for more info)
@@ -135,7 +140,7 @@ impl Display for View {
             let nums: String = (0..self.width)
                 .map(|i| i.to_string().chars().last().unwrap_or(' '))
                 .collect();
-            writeln!(f, " {}", nums)?;
+            writeln!(f, " {nums}")?;
         }
         for y in 0..self.height {
             if self.coord_numbers_in_render {

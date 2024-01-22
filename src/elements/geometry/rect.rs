@@ -12,8 +12,9 @@ pub struct Rect {
 
 impl Rect {
     /// Create a new rectangle using a given position, size and [`ColChar`]
-    pub const fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Rect {
-        Rect {
+    #[must_use]
+    pub const fn new(pos: Vec2D, size: Vec2D, fill_char: ColChar) -> Self {
+        Self {
             pos,
             size,
             fill_char,
@@ -21,11 +22,13 @@ impl Rect {
     }
 
     /// Create a new rectangle between two position to fill with a [`ColChar`]
-    pub fn new_from_to(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Rect {
-        Rect::new(pos0, pos1 - pos0, fill_char)
+    #[must_use]
+    pub fn new_from_to(pos0: Vec2D, pos1: Vec2D, fill_char: ColChar) -> Self {
+        Self::new(pos0, pos1 - pos0, fill_char)
     }
 
     /// Draw a Rectangle with a given position (representing the top-left corner) and size
+    #[must_use]
     pub fn draw(pos: Vec2D, size: Vec2D) -> Vec<Vec2D> {
         (0..size.x)
             .flat_map(|x| (0..size.y).map(move |y| pos + Vec2D { x, y }))
@@ -39,6 +42,6 @@ impl ViewElement for Rect {
     }
 
     fn active_points(&self) -> Vec<Vec2D> {
-        Rect::draw(self.pos, self.size)
+        Self::draw(self.pos, self.size)
     }
 }
