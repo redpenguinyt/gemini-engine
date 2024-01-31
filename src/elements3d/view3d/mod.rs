@@ -41,8 +41,8 @@ impl Viewport {
 
     /// Project the [`Vec3D`] on a flat plane using the `Viewport`'s [fov](Viewport::fov) and [`character_width_multiplier`](Viewport::character_width_multiplier)
     fn perspective(&self, pos: Vec3D) -> Vec2D {
-        let f = self.fov / -pos.z;
-        let (sx, sy) = (-pos.x * f, pos.y * f);
+        let f = self.fov / pos.z;
+        let (sx, sy) = (pos.x * f, pos.y * f);
 
         // adjust for non-square pixels
         let sx = (sx * self.character_width_multiplier).round();
@@ -53,7 +53,9 @@ impl Viewport {
 
     /// Return the object's vertices, transformed
     fn transform_vertices(&self, object: &dyn ViewElement3D) -> Vec<Vec3D> {
-        (self.transform * object.get_transform()).apply_to(object.get_vertices())
+        let obj_transformed = object.get_transform().apply_to(object.get_vertices());
+
+        self.transform.apply_viewport_transform(&obj_transformed)
     }
 
     /// Return the screen coordinates and distance from the view for each vertex, as parallel vectors

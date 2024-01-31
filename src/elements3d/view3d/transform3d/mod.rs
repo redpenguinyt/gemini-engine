@@ -84,6 +84,24 @@ impl Transform3D {
             .collect()
     }
 
+    /// Apply the transform to a slice of vertices as if it is a viewport transform
+    #[allow(clippy::let_and_return)]
+    #[must_use]
+    pub(crate) fn apply_viewport_transform(&self, vertices: &[Vec3D]) -> Vec<Vec3D> {
+        let rotation = CachedRotation3D::new(-self.rotation);
+
+        vertices
+            .iter()
+            .map(|v| { // Don't do scale at all
+                let rhs = *v;
+                let rhs = rhs - self.translation; // Translate before rotating
+                let rhs = (rotation).rotate(rhs);
+
+                rhs
+            })
+            .collect()
+    }
+
     /// Rotate the given [`Vec3D`] using the `Transform3D`'s rotation field
     #[must_use]
     pub fn rotate(&self, value: Vec3D) -> Vec3D {
