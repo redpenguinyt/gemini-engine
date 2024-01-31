@@ -10,18 +10,18 @@ const FOV: f64 = 95.0;
 fn main() {
     let mut view = View::new(200, 90, ColChar::BACKGROUND);
 
-    let mut viewport = Viewport::new(
-        Transform3D::new_tr(Vec3D::new(0.0, 0.0, 5.0), Vec3D::new(-0.5, 0.3, 0.0)),
+    let viewport = Viewport::new(
+        Transform3D::new_tr(Vec3D::new(0.0, 1.5, 4.0), Vec3D::new(-0.4, 0.0, 0.0)),
         FOV,
         view.center(),
     );
 
-    let cube = Mesh3D::default_cube();
+    let mut cube = Mesh3D::default_cube();
 
     fps_gameloop!(
         {
             view.clear();
-            viewport.transform.rotation.y -= 0.05;
+            cube.transform.rotation.y -= 0.05;
         },
         {
             view.blit(
