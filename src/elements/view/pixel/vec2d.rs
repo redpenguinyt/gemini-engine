@@ -66,4 +66,9 @@ mod tests {
     fn eq_vec2_neither() {
         assert_ne!(Vec2D::new(17, 2), Vec2D::new(5, 4));
     }
+
+    #[test]
+    fn negative_vec2() {
+        assert_eq!(-Vec2D::new(4, -5), Vec2D::new(-4, 5));
+    }
 }
