@@ -8,7 +8,7 @@ const FPS: f32 = 30.0;
 const FOV: f64 = 95.0;
 
 fn main() {
-    let mut view = View::new(350, 90, ColChar::BACKGROUND);
+    let mut view = View::new(200, 90, ColChar::BACKGROUND);
 
     let mut viewport = Viewport::new(
         Transform3D::new_tr(Vec3D::new(0.0, 0.0, 5.0), Vec3D::new(-0.5, 0.3, 0.0)),
