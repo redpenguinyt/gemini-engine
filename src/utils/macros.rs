@@ -99,7 +99,7 @@ macro_rules! impl_vec_neg {
             fn neg(self) -> Self::Output {
                 Self {
                     $(
-                        $field: $zero,
+                        $field: $zero - self.$field,
                     )*
                 }
             }
