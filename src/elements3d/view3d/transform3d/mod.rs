@@ -92,8 +92,9 @@ impl Transform3D {
 
         vertices
             .iter()
-            .map(|v| { // Don't do scale at all
+            .map(|v| {
                 let rhs = *v;
+                // Don't do scale at all
                 let rhs = rhs - self.translation; // Translate before rotating
                 let rhs = (rotation).rotate(rhs);
 
