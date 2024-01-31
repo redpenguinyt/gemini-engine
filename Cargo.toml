@@ -21,7 +21,7 @@ missing_docs = "warn"
 unsafe_code = "forbid"
 
 [lints.clippy]
-enum_global_use = "warn"
+enum_glob_use = "warn"
 pedantic = "warn"
 nursery = "warn"
 unwrap_used = "warn"
