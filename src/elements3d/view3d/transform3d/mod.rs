@@ -1,4 +1,4 @@
-use std::ops::Mul;
+use std::ops::{Mul, MulAssign, Neg};
 mod vec3d;
 pub use vec3d::Vec3D;
 mod fast_rotate;
@@ -93,6 +93,14 @@ impl Transform3D {
     }
 }
 
+impl Neg for Transform3D {
+    type Output = Self;
+    
+    fn neg(self) -> Self::Output {
+        Self::new_trs(-self.translation, -self.rotation, self.scale)
+    }
+}
+
 impl Mul<Self> for Transform3D {
     type Output = Self;
 
@@ -102,6 +110,14 @@ impl Mul<Self> for Transform3D {
             self.rotation + rhs.rotation,
             self.scale * rhs.scale,
         )
+    }
+}
+
+impl MulAssign<Self> for Transform3D {
+    fn mul_assign(&mut self, rhs: Self) {
+        self.translation += rhs.translation;
+        self.rotation += rhs.rotation;
+        self.scale *= rhs.scale;
     }
 }
 
