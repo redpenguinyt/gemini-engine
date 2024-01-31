@@ -95,7 +95,7 @@ impl Transform3D {
 
 impl Neg for Transform3D {
     type Output = Self;
-    
+
     fn neg(self) -> Self::Output {
         Self::new_trs(-self.translation, -self.rotation, self.scale)
     }
