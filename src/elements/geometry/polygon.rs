@@ -92,7 +92,7 @@ impl Polygon {
         triangles
     }
 
-    /// Draw a polygon from points. Only supports convex polygons as of now
+    /// Draw a polygon from points. Supports convex and concave polygons
     #[must_use]
     pub fn draw(vertices: &[Vec2D]) -> Vec<Vec2D> {
         Self::triangulate(vertices)
