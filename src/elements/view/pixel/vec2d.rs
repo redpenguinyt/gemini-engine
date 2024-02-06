@@ -22,6 +22,12 @@ impl Vec2D {
     pub fn magnitude(&self) -> f64 {
         ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt()
     }
+
+    /// Returns the cross product between two vectors
+    #[must_use]
+    pub const fn cross(&self, other: Self) -> isize {
+        self.x * other.y - self.y * other.x
+    }
 }
 
 impl Display for Vec2D {
