@@ -1,19 +1,23 @@
 //! This module is home to the [`Viewport`], which handles the projecting of [`ViewElement3D`]s to a format then displayable by a [`View`](crate::elements::View)
 
+use std::{thread, time::Duration};
+
 use crate::elements::{
     view::{utils, ColChar, Modifier},
     Line, Pixel, PixelContainer, Polygon, Text, Vec2D,
 };
 mod display_mode;
-mod faces;
+mod render_helpers;
 mod transform3d;
 pub use display_mode::{
     lighting::{Light, LightType, BRIGHTNESS_CHARS},
     DisplayMode,
 };
-pub use faces::IndexFace as Face;
-use faces::ProjectedFace;
+pub use render_helpers::Face;
+use render_helpers::ProjectedFace;
 pub use transform3d::{Transform3D, Vec3D};
+
+use self::render_helpers::ProjectedVertex;
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`](crate::elements::View), and also acts as the scene's camera.
 pub struct Viewport {
@@ -59,11 +63,11 @@ impl Viewport {
     }
 
     /// Return the screen coordinates and distance from the view for each vertex, as parallel vectors
-    fn get_vertices_on_screen(&self, object: &dyn ViewElement3D) -> (Vec<Vec2D>, Vec<f64>) {
+    fn get_vertices_on_screen(&self, object: &dyn ViewElement3D) -> Vec<ProjectedVertex> {
         self.transform_vertices(object)
-            .iter()
-            .map(|vertex| (self.perspective(*vertex), vertex.magnitude()))
-            .unzip()
+            .into_iter()
+            .map(|vertex| ProjectedVertex::new(vertex, self.perspective(vertex)))
+            .collect()
     }
 
     /// Project the faces onto a 2D plane. Returns a collection of faces, each stored as a list of the points it appears at, the normal of the face and the [`ColChar`] assigned to it
@@ -76,30 +80,38 @@ impl Viewport {
         let mut screen_faces = vec![];
 
         for object in objects {
-            let (screen_coordinates, vertex_depths) = self.get_vertices_on_screen(object);
+            let vertices = self.get_vertices_on_screen(object);
 
             for face in object.get_faces() {
-                let face_vertices = face.index_into(&screen_coordinates);
+                let face_vertices = face.index_into(&vertices);
+                let face_screen_points: Vec<Vec2D> =
+                    face_vertices.iter().map(|v| v.displayed).collect();
 
                 // Backface culling
-                if !utils::is_clockwise(&face_vertices) && backface_culling {
+                if !utils::is_clockwise(&face_screen_points) && backface_culling {
+                    continue;
+                }
+
+                // Do not render if behind player
+                if face_vertices.iter().all(|v| v.original.z >= 0.0) {
                     continue;
                 }
 
                 let mean_z = if sort_faces {
                     Some(
-                        face.index_into(&vertex_depths).into_iter().sum::<f64>()
+                        face_vertices
+                            .iter()
+                            .map(ProjectedVertex::z_index)
+                            .sum::<f64>()
                             / face_vertices.len() as f64,
                     )
                 } else {
                     None
                 };
 
-                let original_vertices = face.index_into(&self.transform_vertices(object));
-
                 screen_faces.push(ProjectedFace::new(
-                    face_vertices,
-                    original_vertices,
+                    face_screen_points,
+                    face_vertices.iter().map(|v| v.original).collect(),
                     mean_z,
                     face.fill_char,
                 ));
@@ -126,18 +138,16 @@ impl Viewport {
         match display_mode {
             DisplayMode::Debug => {
                 for object in objects {
-                    for (i, screen_coordinates) in
-                        self.get_vertices_on_screen(object).0.iter().enumerate()
-                    {
+                    for (i, vertex) in self.get_vertices_on_screen(object).iter().enumerate() {
                         let index_text = i.to_string();
-                        canvas.blit(&Text::new(*screen_coordinates, &index_text, Modifier::None));
+                        canvas.blit(&Text::new(vertex.displayed, &index_text, Modifier::None));
                     }
                 }
             }
             DisplayMode::Points { fill_char } => {
                 for object in objects {
-                    for screen_coordinates in self.get_vertices_on_screen(object).0 {
-                        canvas.push(Pixel::new(screen_coordinates, fill_char));
+                    for vertex in self.get_vertices_on_screen(object) {
+                        canvas.push(Pixel::new(vertex.displayed, fill_char));
                     }
                 }
             }
@@ -156,6 +166,9 @@ impl Viewport {
             }
             DisplayMode::Solid => {
                 let screen_faces = self.project_faces(objects, true, true);
+
+                println!("number of faces rendered: {}", screen_faces.len());
+                thread::sleep(Duration::from_millis(500));
 
                 for face in screen_faces {
                     canvas.append_points(&Polygon::draw(&face.screen_points), face.fill_char);
