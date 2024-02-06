@@ -1,4 +1,7 @@
-use crate::{elements::{view::ColChar, Vec2D}, elements3d::Vec3D};
+use crate::{
+    elements::{view::ColChar, Vec2D},
+    elements3d::Vec3D,
+};
 
 pub struct ProjectedFace {
     /// Where the points appear on the screen

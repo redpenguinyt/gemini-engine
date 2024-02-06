@@ -14,7 +14,7 @@ impl ProjectedVertex {
         }
     }
 
-	pub fn z_index(&self) -> f64 {
-		self.original.magnitude()
-	}
+    pub fn z_index(&self) -> f64 {
+        self.original.magnitude()
+    }
 }
