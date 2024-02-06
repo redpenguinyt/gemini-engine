@@ -3,7 +3,7 @@ name = "gemini-engine"
 authors = ["RedPenguin"]
 edition = "2021"
 # when publishing, commit as "published <new version> to crates.io"
-version = "0.12.0"
+version = "0.13.0"
 description = "A 2D/3D monospaced ASCII rendering engine for the terminal"
 documentation = "https://docs.rs/gemini-engine"
 readme = "README.md"
