@@ -119,6 +119,3 @@ pub use view3d::{DisplayMode, Face, Light, Transform3D, Vec3D, ViewElement3D, Vi
 
 mod mesh3d;
 pub use mesh3d::Mesh3D;
-
-mod grid_element;
-pub use grid_element::Grid3D;
