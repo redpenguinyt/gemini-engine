@@ -1,7 +1,5 @@
 //! This module is home to the [`Viewport`], which handles the projecting of [`ViewElement3D`]s to a format then displayable by a [`View`](crate::elements::View)
 
-use std::{thread, time::Duration};
-
 use crate::elements::{
     view::{utils, ColChar, Modifier},
     Line, Pixel, PixelContainer, Polygon, Text, Vec2D,
@@ -166,9 +164,6 @@ impl Viewport {
             }
             DisplayMode::Solid => {
                 let screen_faces = self.project_faces(objects, true, true);
-
-                println!("number of faces rendered: {}", screen_faces.len());
-                thread::sleep(Duration::from_millis(500));
 
                 for face in screen_faces {
                     canvas.append_points(&Polygon::draw(&face.screen_points), face.fill_char);
