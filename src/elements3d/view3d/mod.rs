@@ -27,6 +27,8 @@ pub struct Viewport {
     pub origin: Vec2D,
     /// Most terminals don't have perfectly square characters. The value you set here is how much the final image will be stretched in the X axis to account for this. The default value is `2.2` but it will be different in most terminals
     pub character_width_multiplier: f64,
+    /// Any face with vertices closer to the viewport than this value will be clipped
+    pub clipping_distace: f64,
 }
 
 impl Viewport {
@@ -38,6 +40,7 @@ impl Viewport {
             fov,
             origin: screen_origin,
             character_width_multiplier: 2.2,
+            clipping_distace: 0.3,
         }
     }
 
@@ -91,7 +94,10 @@ impl Viewport {
                 }
 
                 // Do not render if behind player
-                if face_vertices.iter().all(|v| v.original.z >= 0.0) {
+                if face_vertices
+                    .iter()
+                    .any(|v| v.original.z >= -self.clipping_distace)
+                {
                     continue;
                 }
 
