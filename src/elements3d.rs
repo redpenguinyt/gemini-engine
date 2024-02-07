@@ -76,7 +76,7 @@
 //! `main()` begins with the creation of all the necessary objects to render 3D images:
 //! 1. [`View`](crate::elements::view::View) to handle the canvas and printing to the screen
 //! 2. [`Viewport`] to handle converting 3d objects to 2d images, as well as acting like the scene's camera
-//! 3. The actual objects you intend to use in the scene, all of which should implement the [`ViewElement3D`] trait
+//! 3. The actual objects you intend to use in the scene, as [`Mesh3D`]
 //!
 //! In this scenario, we create a [`View`](crate::elements::view::View) of width 350 and height 90 (you may have to zoom out and expand your terminal to fit the whole image), a [`Viewport`] with a transform of rotation 0.5 radians and translation 5 units away from the centre, our desired FOV and origin point (the centre of the view we're printing to) in the middle of the [`View`](crate::elements::view::View) and a single default cube, which is 2 units tall, wide and long and is placed directly in the middle of the scene.
 //!
@@ -115,7 +115,7 @@
 //! This part of the code renders all the 3d stuff to the [`View`](crate::elements::view::View) and blits it to the view before rendering as usual. [`Viewport.render()`](Viewport) takes a list of all the objects we want to render and a [`DisplayMode`] enum (more info in the [`DisplayMode`] documentation).
 
 pub mod view3d;
-pub use view3d::{DisplayMode, Face, Light, Transform3D, Vec3D, ViewElement3D, Viewport};
+pub use view3d::{DisplayMode, Face, Light, Transform3D, Vec3D, Viewport};
 
 mod mesh3d;
 pub use mesh3d::Mesh3D;

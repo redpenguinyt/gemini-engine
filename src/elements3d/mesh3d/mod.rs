@@ -1,4 +1,4 @@
-use super::{Face, Transform3D, Vec3D, ViewElement3D};
+use super::{Face, Transform3D, Vec3D};
 mod mesh3d_presets;
 
 /// The struct for a `Mesh3D` object, containing a position, rotation, collection of vertices and collection of [`Face`]s with indices to the vertex collection.
@@ -31,17 +31,5 @@ impl Mesh3D {
             vertices,
             faces,
         }
-    }
-}
-
-impl ViewElement3D for Mesh3D {
-    fn get_transform(&self) -> Transform3D {
-        self.transform
-    }
-    fn get_vertices(&self) -> &[Vec3D] {
-        &self.vertices
-    }
-    fn get_faces(&self) -> &[Face] {
-        &self.faces
     }
 }

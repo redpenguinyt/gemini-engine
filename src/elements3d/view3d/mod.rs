@@ -1,4 +1,4 @@
-//! This module is home to the [`Viewport`], which handles the projecting of [`ViewElement3D`]s to a format then displayable by a [`View`](crate::elements::View)
+//! This module is home to the [`Viewport`], which handles the projecting of [`Mesh3D`]s to a format then displayable by a [`View`](crate::elements::View)
 
 use crate::elements::{
     view::{utils, ColChar, Modifier},
@@ -16,6 +16,8 @@ use render_helpers::ProjectedFace;
 pub use transform3d::{Transform3D, Vec3D};
 
 use self::render_helpers::ProjectedVertex;
+
+use super::Mesh3D;
 
 /// The `Viewport` handles printing 3D objects to a 2D [`View`](crate::elements::View), and also acts as the scene's camera.
 pub struct Viewport {
@@ -57,14 +59,14 @@ impl Viewport {
     }
 
     /// Return the object's vertices, transformed
-    fn transform_vertices(&self, object: &dyn ViewElement3D) -> Vec<Vec3D> {
-        let obj_transformed = object.get_transform().apply_to(object.get_vertices());
+    fn transform_vertices(&self, object: &Mesh3D) -> Vec<Vec3D> {
+        let obj_transformed = object.transform.apply_to(&object.vertices);
 
         self.transform.apply_viewport_transform(&obj_transformed)
     }
 
     /// Return the screen coordinates and distance from the view for each vertex, as parallel vectors
-    fn get_vertices_on_screen(&self, object: &dyn ViewElement3D) -> Vec<ProjectedVertex> {
+    fn get_vertices_on_screen(&self, object: &Mesh3D) -> Vec<ProjectedVertex> {
         self.transform_vertices(object)
             .into_iter()
             .map(|vertex| ProjectedVertex::new(vertex, self.perspective(vertex)))
@@ -74,7 +76,7 @@ impl Viewport {
     /// Project the faces onto a 2D plane. Returns a collection of faces, each stored as a list of the points it appears at, the normal of the face and the [`ColChar`] assigned to it
     fn project_faces(
         &self,
-        objects: Vec<&dyn ViewElement3D>,
+        objects: Vec<&Mesh3D>,
         sort_faces: bool,
         backface_culling: bool,
     ) -> Vec<ProjectedFace> {
@@ -83,7 +85,7 @@ impl Viewport {
         for object in objects {
             let vertices = self.get_vertices_on_screen(object);
 
-            for face in object.get_faces() {
+            for face in &object.faces {
                 let face_vertices = face.index_into(&vertices);
                 let face_screen_points: Vec<Vec2D> =
                     face_vertices.iter().map(|v| v.displayed).collect();
@@ -130,11 +132,11 @@ impl Viewport {
         screen_faces
     }
 
-    /// Render the objects (implementing [`ViewElement3D`]) given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
+    /// Render the [`Mesh3D`]s given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
     #[must_use]
     pub fn render(
         &self,
-        objects: Vec<&dyn ViewElement3D>,
+        objects: Vec<&Mesh3D>,
         display_mode: DisplayMode,
     ) -> PixelContainer {
         let mut canvas = PixelContainer::new();
@@ -207,14 +209,4 @@ impl Viewport {
 
         canvas
     }
-}
-
-/// `ViewElement3D` is a trait that must be implemented by any 3D object to be rendered using a [`Viewport`]
-pub trait ViewElement3D {
-    /// This should return the object's transform
-    fn get_transform(&self) -> Transform3D;
-    /// This should return all of the object's vertices
-    fn get_vertices(&self) -> &[Vec3D];
-    /// This should return all of the object's `Face`s
-    fn get_faces(&self) -> &[Face];
 }
