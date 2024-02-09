@@ -12,5 +12,6 @@
 mod utils;
 
 pub mod elements;
+#[cfg(feature = "3D")]
 pub mod elements3d;
 pub mod gameloop;

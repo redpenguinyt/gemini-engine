@@ -13,6 +13,10 @@ license = "MIT"
 keywords = ["gemini", "command-line", "ascii", "game-engine", "rendering-engine"]
 categories = ["rendering", "rendering::engine", "graphics", "game-development", "command-line-interface"]
 
+[features]
+default = ["3D"]
+3D = []
+
 [dependencies]
 termsize = "0.1"
 
