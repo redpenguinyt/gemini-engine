@@ -134,11 +134,7 @@ impl Viewport {
 
     /// Render the [`Mesh3D`]s given the `Viewport`'s properties. Returns a [`PixelContainer`] which can then be blit to a [`View`](`crate::elements::View`)
     #[must_use]
-    pub fn render(
-        &self,
-        objects: Vec<&Mesh3D>,
-        display_mode: DisplayMode,
-    ) -> PixelContainer {
+    pub fn render(&self, objects: Vec<&Mesh3D>, display_mode: DisplayMode) -> PixelContainer {
         let mut canvas = PixelContainer::new();
 
         match display_mode {
