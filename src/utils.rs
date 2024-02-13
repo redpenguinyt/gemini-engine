@@ -1,5 +1,5 @@
 use crate::elements::Vec2D;
-use std::{fmt, io, sync::OnceLock};
+use std::{fmt, sync::OnceLock};
 
 #[macro_use]
 pub mod macros;
@@ -35,15 +35,18 @@ pub fn block_until_resized(view_size: Vec2D) {
 
 /// Prepare the console by printing lines to move previous console lines out of the way. Can only be called once in a program run
 ///
-/// Returns an error if [`termsize::get`] returns `None`
-pub fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> io::Result<()> {
-    let cell = TERMINAL_PREPARED.get();
-    if cell.is_none() {
-        let rows = termsize::get()
-            .ok_or_else(|| io::Error::new(std::io::ErrorKind::NotFound, "Couldnt get termsize"))?
-            .rows as usize;
-        write!(f, "{}", vec!['\n'; rows].iter().collect::<String>()).unwrap();
+/// Returns an error if [`termsize::get`] returns `None`, or if it fails to write to the formatter
+pub fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> Result<(), String> {
+    // If the console hasn't been prepared before
+    if TERMINAL_PREPARED.get().is_none() {
+        // Prevent the console from being prepared again
         TERMINAL_PREPARED.get_or_init(|| true);
+
+        let Some(size) = termsize::get() else {
+            return Err(String::from("Couldnt get termsize"));
+        };
+
+        write!(f, "{}", "\n".repeat(size.rows as usize)).map_err(|e| e.to_string())?;
     }
 
     Ok(())
