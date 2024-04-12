@@ -98,7 +98,7 @@ impl View {
     /// Plot a pixel to the `View`. Accepts a [`Vec2D`] (the position of the pixel), [`ColChar`] (what the pixel should look like/what colour it should be), and a [`Wrapping`] enum variant (Please see the [Wrapping] documentation for more info)
     pub fn plot(&mut self, pos: Vec2D, c: ColChar, wrapping: Wrapping) {
         if let Some(wrapped_pos) = wrapping.handle_bounds(pos, self.size()) {
-            let i = self.width * wrapped_pos.y.unsigned_abs() + (wrapped_pos.x.unsigned_abs());
+            let i = self.width * wrapped_pos.y.unsigned_abs() + wrapped_pos.x.unsigned_abs();
             self.pixels[i] = c;
         }
     }
