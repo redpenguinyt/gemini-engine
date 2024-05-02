@@ -26,9 +26,9 @@ impl TextAlign {
 /// Two-dimensional text align, used by [`Sprite`](super::Sprite) and all variations
 #[derive(Debug, Clone, Copy)]
 pub struct TextAlign2D {
-    /// X coordinate TextAlign. TextAlign::Begin is left
+    /// X coordinate [`TextAlign`]. `TextAlign::Begin` is left
     x: TextAlign,
-    /// Y coordinate TextAlign. TextAlign::Begin is top
+    /// Y coordinate [`TextAlign`]. `TextAlign::Begin` is top
     y: TextAlign,
 }
 
