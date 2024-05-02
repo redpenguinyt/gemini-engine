@@ -1,3 +1,4 @@
+use terminal_size::terminal_size;
 use crate::elements::Vec2D;
 use std::{fmt, sync::OnceLock};
 
@@ -12,10 +13,10 @@ static TERMINAL_PREPARED: OnceLock<bool> = OnceLock::new();
 /// This function will panic if your target cannot safely convert an i16 to an isize
 #[must_use]
 pub fn get_termsize_as_vec2d() -> Option<Vec2D> {
-    let size = termsize::get()?;
+    let (width, height) = terminal_size()?;
     Some(Vec2D::new(
-        isize::try_from(size.cols).expect("isize cannot fit i16"),
-        isize::try_from(size.rows).expect("isize cannot fit i16"),
+        isize::try_from(width.0).expect("isize cannot fit u16"),
+        isize::try_from(height.0).expect("isize cannot fit u16"),
     ))
 }
 
@@ -42,11 +43,11 @@ pub fn prepare_terminal(f: &mut fmt::Formatter<'_>) -> Result<(), String> {
         // Prevent the console from being prepared again
         TERMINAL_PREPARED.get_or_init(|| true);
 
-        let Some(size) = termsize::get() else {
+        let Some((_, height)) = terminal_size() else {
             return Err(String::from("Couldnt get termsize"));
         };
 
-        write!(f, "{}", "\n".repeat(size.rows as usize)).map_err(|e| e.to_string())?;
+        write!(f, "{}", "\n".repeat(height.0 as usize)).map_err(|e| e.to_string())?;
     }
 
     Ok(())
