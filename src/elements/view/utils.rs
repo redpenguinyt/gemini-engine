@@ -1,6 +1,6 @@
 //! A module containing various helper functions and structs
 use super::{ColChar, Pixel, Vec2D};
-pub use crate::utils::get_termsize_as_vec2d;
+pub use crate::utils::get_terminal_size_as_vec2d;
 
 /// Combine a vector of [`Vec2D`]s and a single `fill_char` into a vector of `(Vec2D, char)` tuples, ready to return for `ViewElement::active_pixels`. Useful if your [`ViewElement`](super::ViewElement) only has one fill character across all of it
 #[must_use]
