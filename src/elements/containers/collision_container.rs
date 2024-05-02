@@ -7,6 +7,12 @@ pub struct CollisionContainer<'a> {
     pub elements: Vec<&'a dyn ViewElement>,
 }
 
+impl<'a> Default for CollisionContainer<'a> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<'a> CollisionContainer<'a> {
     /// Create a new `CollisionContainer`
     #[must_use]

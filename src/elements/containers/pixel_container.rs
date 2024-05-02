@@ -12,6 +12,12 @@ pub struct PixelContainer {
     pub pixels: Vec<Pixel>,
 }
 
+impl Default for PixelContainer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PixelContainer {
     /// Create a new, empty `PixelContainer`
     #[must_use]
