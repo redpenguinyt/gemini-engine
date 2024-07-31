@@ -17,7 +17,7 @@ impl<'a> CollisionContainer<'a> {
     /// Create a new `CollisionContainer`
     #[must_use]
     pub const fn new() -> CollisionContainer<'a> {
-        CollisionContainer { elements: vec![] }
+        Self { elements: vec![] }
     }
 
     /// Add an element to the container

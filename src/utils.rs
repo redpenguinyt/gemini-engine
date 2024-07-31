@@ -1,6 +1,6 @@
-use terminal_size::terminal_size;
 use crate::elements::Vec2D;
 use std::{fmt, sync::OnceLock};
+use terminal_size::terminal_size;
 
 #[macro_use]
 pub mod macros;
