@@ -16,7 +16,7 @@ pub struct ProjectedFace {
 
 impl ProjectedFace {
     /// Create a new `ProjectedFace`
-    pub fn new(
+    pub const fn new(
         screen_points: Vec<Vec2D>,
         original_vertices: Vec<Vec3D>,
         z_index: Option<f64>,
